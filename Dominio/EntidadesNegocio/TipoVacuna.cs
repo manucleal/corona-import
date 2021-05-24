@@ -8,12 +8,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dominio.EntidadesNegocio
 {
-    [Table("vacunas")]
-    public class Vacuna
+    public class TipoVacuna
     {
-        public int Id { get; set; }
-        [Required]
-        public string Nombre { get; set; }
-        public ICollection<Laboratorio> ListaLaboratorios { get; set; } = new List<Laboratorio>();
+        public string Id { get; set; }
     }
 }
