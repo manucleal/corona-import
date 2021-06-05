@@ -5,15 +5,12 @@ namespace AccesoDatos.Contexto
 {
     public class CoronaImportContext : DbContext
     {
-        public CoronaImportContext() : base("miConexion")
-        {
-            Database.SetInitializer<CoronaImportContext>(new CreateDatabaseIfNotExists<CoronaImportContext>());
-        }
+        public CoronaImportContext() : base("name=miConexion") { }
 
-        DbSet<Mutualista> Mutualistas { get; set; }
-        DbSet<Laboratorio> Laboratorios { get; set; }
-        DbSet<TipoVacuna> TipoVacunas { get; set; }
-        DbSet<Vacuna> Vacunas { get; set; }
-        DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Mutualista> Mutualistas { get; set; }
+        public DbSet<Laboratorio> Laboratorios { get; set; }
+        public DbSet<TipoVacuna> TipoVacunas { get; set; }
+        public DbSet<Vacuna> Vacunas { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
     }
 }

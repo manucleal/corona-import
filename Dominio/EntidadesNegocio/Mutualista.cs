@@ -11,6 +11,7 @@ namespace Dominio.EntidadesNegocio
     [Table("Mutualistas")]
     public class Mutualista
     {
+        [Key]
         public string Id { get; set; }
     }
 }

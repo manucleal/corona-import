@@ -11,7 +11,9 @@ namespace Dominio.EntidadesNegocio
     [Table("vacunas")]
     public class Vacuna
     {
+        [Key]
         public int Id { get; set; }
+
         [Required]
         public string Nombre { get; set; }
         public ICollection<Laboratorio> ListaLaboratorios { get; set; } = new List<Laboratorio>();
