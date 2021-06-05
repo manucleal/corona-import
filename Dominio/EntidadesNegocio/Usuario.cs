@@ -11,6 +11,10 @@ namespace Dominio.EntidadesNegocio
     [Table("Usuarios")]
     public class Usuario
     {
-        public string Id { get; set; }
+        [Key]
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+
+        public Usuario() { }
     }
 }

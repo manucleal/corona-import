@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Dominio.EntidadesNegocio;
+using AccesoDatos.Contexto;
 
 namespace AplicacionWeb.Controllers
 {
@@ -10,6 +12,17 @@ namespace AplicacionWeb.Controllers
     {
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public ActionResult Create()
+        {
+            Usuario usuario = new Usuario() { Id = 1, Nombre = "Emanuel" };
+            using (CoronaImportContext db = new CoronaImportContext())
+            {
+                db.Usuarios.Add(usuario);
+                db.SaveChanges();
+            }
             return View();
         }
 

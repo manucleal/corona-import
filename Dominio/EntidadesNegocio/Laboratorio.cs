@@ -11,6 +11,7 @@ namespace Dominio.EntidadesNegocio
     [Table("Laboratorios")]
     public class Laboratorio
     {
+        [Key]
         public int Id { get; set; }
     }
 }
