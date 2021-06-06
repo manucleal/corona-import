@@ -1,0 +1,9 @@
+1 | VV    | 45544061 | Sputnik V | 2 | 30 | 60 | 18 | 91 | 85 | 87 | 23 | 2 | 45000000 | 4 | Si | Irritaciones de piel, gripe, dolor de cabeza y fatiga | 15,00 | 02/05/2021 15:45:57 | NO
+2 | IV    | 45544061 | Sinopharm | 2 | 45 | 90 | 15 | 79 | 87 | 85 | 25 | 0 | 19800000 | 3 | Si | Fiebre, diarrea, dolor de cabeza | 20,00 | 02/05/2021 15:45:57 | NO
+3 | mRNA  | 1234567 | Moderna | 2 | 90 | 100 | 15 | 94 | 98 | 100 | 15 | -5 | 300000000 | 4 | Si | fiebre, escalofríos, cansancio y dolor de cabeza | 1,00 | 04/05/2021 20:58:19 | NO
+4 | IV    | 46902781 | Covaxin | 2 | 28 | 65 | 12 | 81 | 85 | 90 | 8 | 2 | 20400000 | 4 | Si | Fiebre, nausas | 17,00 | 02/05/2021 15:45:57 | NO
+5 | VV    | 46902781 | Janssen | 1 | 0 | 120 | 18 | 66 | 70 | 68 | 12 | 2 | 45900000 | 3 | Si | Fiebre, gripe severa, calambres | 23,00 | 02/05/2021 15:45:57 | NO
+6 | PB    | 45544061 | Novavax | 1 | 0 | 90 | 10 | 96 | 95 | 100 | 12 | 0 | 2909990 | 3 | NO | Jaqueca, fiebre | 26,00 | 02/05/2021 15:45:57 | NO
+7 | PB    | 45544061 | Oxford-Astrazeneca | 2 | 90 | 90 | 15 | 70 | 65 | 73 | 18 | 5 | 54000000 | 3 | NO | Trombosis, fiebre, gripe | -1,00 | 04/05/2021 21:00:36 | Si
+8 | mRNA  | 1234567 | Vacunita | 1 | 0 | 90 | 12 | 70 | 78 | 80 | 20 | 5 | 12300000 | 2 | NO | Diarrea, vomitos, dolor de espalda | 7,00 | 04/05/2021 20:57:39 | Si
+9 | IV    | 45544061 | pfizer | 2 | 28 | 90 | 18 | 89 | 88 | 87 | 30 | 2 | 9999999999 | 4 | Si | tos con pedos | 24,00 | 04/05/2021 20:44:29 | NO

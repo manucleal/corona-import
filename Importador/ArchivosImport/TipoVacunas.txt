@@ -1,0 +1,4 @@
+IV    | Virus inactivo
+mRNA  | ARN mensajero
+PB    | Basado en proteínas
+VV    | Vector viral
