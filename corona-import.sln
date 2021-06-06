@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccesoDatos", "AccesoDatos\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AplicacionWeb", "AplicacionWeb\AplicacionWeb.csproj", "{7356C658-9FBF-4111-95CB-B556E74D2997}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importador", "Importador\Importador.csproj", "{382797E2-1C27-4082-9AF5-8015CE82F206}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7356C658-9FBF-4111-95CB-B556E74D2997}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7356C658-9FBF-4111-95CB-B556E74D2997}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7356C658-9FBF-4111-95CB-B556E74D2997}.Release|Any CPU.Build.0 = Release|Any CPU
+		{382797E2-1C27-4082-9AF5-8015CE82F206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{382797E2-1C27-4082-9AF5-8015CE82F206}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{382797E2-1C27-4082-9AF5-8015CE82F206}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{382797E2-1C27-4082-9AF5-8015CE82F206}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

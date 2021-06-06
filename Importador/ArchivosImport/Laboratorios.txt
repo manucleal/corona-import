@@ -1,0 +1,9 @@
+1 | Moderna | USA | Si
+2 | BioNTech | DEU | Si
+3 | Pfizer | USA | Si
+4 | Sinovac | CHN | Si
+5 | Oxford | SWE | Si
+6 | Astrazeneca | GBR | Si
+7 | Laboratorio Ruso | RUS | Si
+8 | laboratorio Indio | IND | Si
+9 | Novavax | USA | Si
