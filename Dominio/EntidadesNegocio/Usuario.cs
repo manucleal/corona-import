@@ -15,7 +15,6 @@ namespace Dominio.EntidadesNegocio
         public string Documento { get; set; }
         public string Password { get; set; }
 
-
         public Usuario() { }
     }
 }

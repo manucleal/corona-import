@@ -5,40 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Dominio.EntidadesNegocio;
-using AccesoDatos.Contexto;
+using Repositorio;
 
 namespace Importador
 {
-    public static class ManejadorArchivo
+    public class ManejadorArchivo
     {
         private static string raiz = AppDomain.CurrentDomain.BaseDirectory + "..\\Importador\\ArchivosImport";
         private static string[] dias = new string[7] {"Lun", "Mar", "Mier", "Jue", "Vie", "Sab", "Dom"};
+        private static string delimitador = "|";
+        RepositorioUsuario repositorioUsuario = new RepositorioUsuario();
 
-        public static Usuario Leer(string documento)
-        {
-            StreamReader streamReader = null;
-
-            using (streamReader = new StreamReader(raiz + "\\Usuarios.txt"))
-            {
-                string linea = streamReader.ReadLine();
-                while (linea != null)
-                {
-                    Usuario unUsuario = ManejadorArchivo.ObtenerUsuarioDesdeString(linea, "|");
-                    if (unUsuario != null)
-                    {
-                        if (unUsuario.Documento.Equals(documento, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            return unUsuario;
-                        }
-                    }
-                    linea = streamReader.ReadLine();
-                }
-            }
-            return null;
-        }
-
-
-        public static List<Usuario> ObtenerUsuarios()
+        public List<Usuario> ObtenerUsuarios()
         {
             List<Usuario> retorno = new List<Usuario>();
             using (StreamReader streamReader = File.OpenText(raiz + "\\Usuarios.txt"))
@@ -46,9 +24,10 @@ namespace Importador
                 string linea = streamReader.ReadLine();
                 while ((linea != null))
                 {
-                    if (linea.IndexOf("|") > 0)
+                    if (linea.IndexOf(delimitador) > 0)
                     {
-                        retorno.Add(ObtenerUsuarioDesdeString(linea, "|"));
+                        retorno.Add(ObtenerUsuarioDesdeString(linea, delimitador));
+                        InsertarUsuario(ObtenerUsuarioDesdeString(linea, delimitador));
                     }
                     linea = streamReader.ReadLine();
                 }
@@ -67,19 +46,16 @@ namespace Importador
                     Password = GenerarPassword(datos[0])
                 };
             }
-            else
-                return null;
+            return null;
         }
 
-        private static bool InsertarUsuario(Usuario usuario)
-        {
-            //Usuario usuario = new Usuario() { Id = 1, Nombre = "Emanuel" };
-            //using (CoronaImportContext db = new CoronaImportContext())
-            //{
-            //    db.Usuarios.Add(usuario);
-            //    db.SaveChanges();
-            //}
-            return true;
+        private bool InsertarUsuario(Usuario usuario)
+        {            
+            if (usuario != null && repositorioUsuario.FindById(usuario.Documento) == null)
+            { 
+                return repositorioUsuario.Add(usuario);
+            }
+            return false;
         }
 
         private static string GenerarPassword(string documento)

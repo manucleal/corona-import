@@ -47,10 +47,9 @@
     <Compile Include="EntidadesNegocio\TipoVacuna.cs" />
     <Compile Include="EntidadesNegocio\Usuario.cs" />
     <Compile Include="EntidadesNegocio\Vacuna.cs" />
+    <Compile Include="InterfacesRepositorio\IRepositorioUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="InterfacesRepositorio\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
