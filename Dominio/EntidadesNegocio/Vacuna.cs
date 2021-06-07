@@ -72,7 +72,7 @@ namespace Dominio.EntidadesNegocio
         public string IdTipo { get; set; }
         public TipoVacuna TipoVacuna { get; set; }
 
-        public string[] Paises { get; set; }
+        //public string[] Paises { get; set; }
         //public int[] Laboratorios { get; set; }
         public ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
         //public ICollection<Pais> ListaPaises { get; set; } = new List<Pais>();
