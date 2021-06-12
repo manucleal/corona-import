@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dominio.EntidadesNegocio
 {
-    [Table("vacunas")]
+    [Table("Vacunas")]
     public class Vacuna
     {
         [Key]
@@ -67,17 +67,50 @@ namespace Dominio.EntidadesNegocio
         public bool Emergencia { get; set; }
         public decimal Precio { get; set; }
         public DateTime UltimaModificacion { get; set; }
-        public string IdUsuario { get; set; }
-
-        public string IdTipo { get; set; }
+        public Usuario Documento { get; set; }
         public TipoVacuna TipoVacuna { get; set; }
-
-        //public string[] Paises { get; set; }
-        //public int[] Laboratorios { get; set; }
-        public ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
-        //public ICollection<Pais> ListaPaises { get; set; } = new List<Pais>();
+        public string[] Paises { get; set; }
+        public virtual ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
         public bool Covax { get; set; }
 
         public Vacuna() { }
+
+        public bool ValidateTemperature(Vacuna unaVacuna)
+        {
+            if (unaVacuna == null) return false;
+            if (unaVacuna.MinTemp <= unaVacuna.MaxTemp) return true;
+            return false;
+        }
+
+        public decimal ValidatePrice(Vacuna unaVacuna)
+        {
+            if (unaVacuna == null || unaVacuna.Precio <= 0 || unaVacuna.Precio > 1000) return -1;
+            return unaVacuna.Precio;
+        }
+
+        public int ValidateLapsoDiasDosis(Vacuna unaVacuna)
+        {
+            if (unaVacuna == null || unaVacuna.LapsoDiasDosis <= 0 || unaVacuna.LapsoDiasDosis > 300) return 0;
+            return unaVacuna.LapsoDiasDosis;
+        }
+
+        public bool ValidateAge(Vacuna unaVacuna)
+        {
+            if (unaVacuna == null) return false;
+            if (unaVacuna.MinEdad <= unaVacuna.MaxEdad) return true;
+            return false;
+        }
+
+        public bool ValidateCantidadDosis(Vacuna unaVacuna)
+        {
+            if (unaVacuna != null && unaVacuna.CantidadDosis > 0 && unaVacuna.CantidadDosis <= 10) return true;
+            return false;
+        }
+
+        public bool ValidateProduccionAnual(Vacuna unaVacuna)
+        {
+            if (unaVacuna.ProduccionAnual > 0) return true;
+            return false;
+        }
     }
 }

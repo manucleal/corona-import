@@ -12,13 +12,25 @@ namespace Importador
     public class ManejadorArchivo
     {
         private static string raiz = AppDomain.CurrentDomain.BaseDirectory + "..\\Importador\\ArchivosImport";
-        private static string[] dias = new string[7] {"Lun", "Mar", "Mier", "Jue", "Vie", "Sab", "Dom"};
         private static string delimitador = "|";
-        RepositorioUsuario repositorioUsuario = new RepositorioUsuario();
+        private RepositorioUsuario repositorioUsuario;
+        private RepositorioLaboratorio repositorioLaboratorio;
+        private RepositorioTipoVacuna repositorioTipoVacuna;
 
-        public List<Usuario> ObtenerUsuarios()
+        private ManejadorArchivo() {
+            this.repositorioUsuario = new RepositorioUsuario();
+            this.repositorioLaboratorio = new RepositorioLaboratorio();
+            this.repositorioTipoVacuna = new RepositorioTipoVacuna();
+        }
+
+        public static void ImportarDatos()
         {
-            List<Usuario> retorno = new List<Usuario>();
+            ManejadorArchivo manejador = new ManejadorArchivo();
+            ObtenerDatos(manejador);
+        }
+
+        private static void ObtenerDatos(ManejadorArchivo manejador)
+        {
             using (StreamReader streamReader = File.OpenText(raiz + "\\Usuarios.txt"))
             {
                 string linea = streamReader.ReadLine();
@@ -26,13 +38,35 @@ namespace Importador
                 {
                     if (linea.IndexOf(delimitador) > 0)
                     {
-                        retorno.Add(ObtenerUsuarioDesdeString(linea, delimitador));
-                        InsertarUsuario(ObtenerUsuarioDesdeString(linea, delimitador));
+                        InsertarUsuario(ObtenerUsuarioDesdeString(linea, delimitador), manejador.repositorioUsuario);
                     }
                     linea = streamReader.ReadLine();
                 }
             }
-            return retorno;
+            using (StreamReader streamReader = File.OpenText(raiz + "\\TipoVacunas.txt"))
+            {
+                string linea = streamReader.ReadLine();
+                while ((linea != null))
+                {
+                    if (linea.IndexOf(delimitador) > 0)
+                    {
+                        InsertarTipoVacuna(ObtenerTipoVacunasDesdeString(linea, delimitador), manejador.repositorioTipoVacuna);
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
+            using (StreamReader streamReader = File.OpenText(raiz + "\\Laboratorios.txt"))
+            {
+                string linea = streamReader.ReadLine();
+                while ((linea != null))
+                {
+                    if (linea.IndexOf(delimitador) > 0)
+                    {
+                        InsertarLaboratorio(ObtenerLaboratoriosDesdeString(linea, delimitador), manejador.repositorioLaboratorio);
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
         }
 
         private static Usuario ObtenerUsuarioDesdeString(string linea, string delimitador)
@@ -43,13 +77,43 @@ namespace Importador
                 return new Usuario
                 {
                     Documento = datos[0],
-                    Password = GenerarPassword(datos[0])
+                    Password = Usuario.GenerarPassword(datos[0])
                 };
             }
             return null;
         }
 
-        private bool InsertarUsuario(Usuario usuario)
+        private static TipoVacuna ObtenerTipoVacunasDesdeString(string linea, string delimitador)
+        {
+            string[] datos = linea.Split(delimitador.ToCharArray());
+            if (datos.Length > 0)
+            {
+                return new TipoVacuna
+                {
+                    Id = datos[0],
+                    Descripcion = datos[1]
+                };
+            }
+            return null;
+        }
+
+        private static Laboratorio ObtenerLaboratoriosDesdeString(string linea, string delimitador)
+        {
+            string[] datos = linea.Split(delimitador.ToCharArray());
+            if (datos.Length > 0)
+            {
+                return new Laboratorio
+                {
+                    Id = int.Parse(datos[0].Trim()),
+                    Nombre = datos[1],
+                    PaisOrigen = datos[2],
+                    Experiencia = (datos[3].Trim() == "Si") ? true : false
+                };
+            }
+            return null;
+        }
+
+        private static bool InsertarUsuario(Usuario usuario, RepositorioUsuario repositorioUsuario)
         {            
             if (usuario != null && repositorioUsuario.FindById(usuario.Documento) == null)
             { 
@@ -58,9 +122,22 @@ namespace Importador
             return false;
         }
 
-        private static string GenerarPassword(string documento)
+        private static bool InsertarLaboratorio(Laboratorio laboratorio, RepositorioLaboratorio repositorioLaboratorio)
         {
-            return documento.Substring(0,4) + "-" + dias[(int)new DateTime().DayOfWeek - 1];
+            if (laboratorio != null && repositorioLaboratorio.FindById(laboratorio.Id) == null)
+            {
+                return repositorioLaboratorio.Add(laboratorio);
+            }
+            return false;
+        }
+
+        private static bool InsertarTipoVacuna(TipoVacuna tipoVacuna, RepositorioTipoVacuna repositorioTipoVacuna)
+        {
+            if (tipoVacuna != null && repositorioTipoVacuna.FindById(tipoVacuna.Id) == null)
+            {
+                return repositorioTipoVacuna.Add(tipoVacuna);
+            }
+            return false;
         }
     }
 }

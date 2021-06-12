@@ -17,6 +17,8 @@ namespace Dominio.EntidadesNegocio
         public string PaisOrigen { get; set; }
         public bool Experiencia { get; set; }
 
+        public virtual ICollection<Vacuna> Vacunas { get; set; } = new List<Vacuna>();
+
         public Laboratorio() { }
     }
 }

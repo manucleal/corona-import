@@ -52,7 +52,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="RepositorioUsuario.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="RepositorioLaboratorio.cs" />
+	<Compile Include="RepositorioTipoVacuna.cs" />
+    <Compile Include="RepositorioVacuna.cs" />
+	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AccesoDatos\AccesoDatos.csproj">

@@ -48,6 +48,9 @@
     <Compile Include="EntidadesNegocio\Usuario.cs" />
     <Compile Include="EntidadesNegocio\Vacuna.cs" />
     <Compile Include="InterfacesRepositorio\IRepositorioUsuario.cs" />
+	<Compile Include="InterfacesRepositorio\IRepositorioLaboratorio.cs" />
+    <Compile Include="InterfacesRepositorio\IRepositorioTipoVacuna.cs" />
+    <Compile Include="InterfacesRepositorio\IRepositorioVacuna.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

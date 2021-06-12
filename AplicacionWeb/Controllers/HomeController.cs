@@ -24,8 +24,7 @@ namespace AplicacionWeb.Controllers
             //    db.Usuarios.Add(usuario);
             //    db.SaveChanges();
             //}
-            ManejadorArchivo archivos = new ManejadorArchivo();
-            archivos.ObtenerUsuarios();
+            ManejadorArchivo.ImportarDatos();
             return View();
         }
 

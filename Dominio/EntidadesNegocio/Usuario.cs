@@ -16,5 +16,11 @@ namespace Dominio.EntidadesNegocio
         public string Password { get; set; }
 
         public Usuario() { }
+
+        public static string GenerarPassword(string documento)
+        {
+            string[] dias = new string[7] { "Lun", "Mar", "Mier", "Jue", "Vie", "Sab", "Dom" };
+            return documento.Substring(0, 4) + "-" + dias[(int)new DateTime().DayOfWeek - 1];
+        }
     }
 }
