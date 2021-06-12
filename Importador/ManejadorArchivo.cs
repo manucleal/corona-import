@@ -5,55 +5,68 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Dominio.EntidadesNegocio;
-using AccesoDatos.Contexto;
+using Repositorio;
 
 namespace Importador
 {
-    public static class ManejadorArchivo
+    public class ManejadorArchivo
     {
         private static string raiz = AppDomain.CurrentDomain.BaseDirectory + "..\\Importador\\ArchivosImport";
-        private static string[] dias = new string[7] {"Lun", "Mar", "Mier", "Jue", "Vie", "Sab", "Dom"};
+        private static string delimitador = "|";
+        private RepositorioUsuario repositorioUsuario;
+        private RepositorioLaboratorio repositorioLaboratorio;
+        private RepositorioTipoVacuna repositorioTipoVacuna;
 
-        public static Usuario Leer(string documento)
-        {
-            StreamReader streamReader = null;
-
-            using (streamReader = new StreamReader(raiz + "\\Usuarios.txt"))
-            {
-                string linea = streamReader.ReadLine();
-                while (linea != null)
-                {
-                    Usuario unUsuario = ManejadorArchivo.ObtenerUsuarioDesdeString(linea, "|");
-                    if (unUsuario != null)
-                    {
-                        if (unUsuario.Documento.Equals(documento, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            return unUsuario;
-                        }
-                    }
-                    linea = streamReader.ReadLine();
-                }
-            }
-            return null;
+        private ManejadorArchivo() {
+            this.repositorioUsuario = new RepositorioUsuario();
+            this.repositorioLaboratorio = new RepositorioLaboratorio();
+            this.repositorioTipoVacuna = new RepositorioTipoVacuna();
         }
 
-
-        public static List<Usuario> ObtenerUsuarios()
+        public static void ImportarDatos()
         {
-            List<Usuario> retorno = new List<Usuario>();
+            ManejadorArchivo manejador = new ManejadorArchivo();
+            ObtenerDatos(manejador);
+        }
+
+        private static void ObtenerDatos(ManejadorArchivo manejador)
+        {
             using (StreamReader streamReader = File.OpenText(raiz + "\\Usuarios.txt"))
             {
                 string linea = streamReader.ReadLine();
                 while ((linea != null))
                 {
-                    if (linea.IndexOf("|") > 0)
+                    if (linea.IndexOf(delimitador) > 0)
                     {
-                        retorno.Add(ObtenerUsuarioDesdeString(linea, "|"));
+                        InsertarUsuario(ObtenerUsuarioDesdeString(linea, delimitador), manejador.repositorioUsuario);
                     }
                     linea = streamReader.ReadLine();
                 }
             }
-            return retorno;
+            using (StreamReader streamReader = File.OpenText(raiz + "\\TipoVacunas.txt"))
+            {
+                string linea = streamReader.ReadLine();
+                while ((linea != null))
+                {
+                    if (linea.IndexOf(delimitador) > 0)
+                    {
+                        InsertarTipoVacuna(ObtenerTipoVacunasDesdeString(linea, delimitador), manejador.repositorioTipoVacuna);
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
+            using (StreamReader streamReader = File.OpenText(raiz + "\\Laboratorios.txt"))
+            {
+                string linea = streamReader.ReadLine();
+                while ((linea != null))
+                {
+                    if (linea.IndexOf(delimitador) > 0)
+                    {
+                        InsertarLaboratorio(ObtenerLaboratoriosDesdeString(linea, delimitador), manejador.repositorioLaboratorio);
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
         }
 
         private static Usuario ObtenerUsuarioDesdeString(string linea, string delimitador)
@@ -64,27 +77,67 @@ namespace Importador
                 return new Usuario
                 {
                     Documento = datos[0],
-                    Password = GenerarPassword(datos[0])
+                    Password = Usuario.GenerarPassword(datos[0])
                 };
             }
-            else
-                return null;
+            return null;
         }
 
-        private static bool InsertarUsuario(Usuario usuario)
+        private static TipoVacuna ObtenerTipoVacunasDesdeString(string linea, string delimitador)
         {
-            //Usuario usuario = new Usuario() { Id = 1, Nombre = "Emanuel" };
-            //using (CoronaImportContext db = new CoronaImportContext())
-            //{
-            //    db.Usuarios.Add(usuario);
-            //    db.SaveChanges();
-            //}
-            return true;
+            string[] datos = linea.Split(delimitador.ToCharArray());
+            if (datos.Length > 0)
+            {
+                return new TipoVacuna
+                {
+                    Id = datos[0],
+                    Descripcion = datos[1]
+                };
+            }
+            return null;
         }
 
-        private static string GenerarPassword(string documento)
+        private static Laboratorio ObtenerLaboratoriosDesdeString(string linea, string delimitador)
         {
-            return documento.Substring(0,4) + "-" + dias[(int)new DateTime().DayOfWeek - 1];
+            string[] datos = linea.Split(delimitador.ToCharArray());
+            if (datos.Length > 0)
+            {
+                return new Laboratorio
+                {
+                    Id = int.Parse(datos[0].Trim()),
+                    Nombre = datos[1],
+                    PaisOrigen = datos[2],
+                    Experiencia = (datos[3].Trim() == "Si") ? true : false
+                };
+            }
+            return null;
+        }
+
+        private static bool InsertarUsuario(Usuario usuario, RepositorioUsuario repositorioUsuario)
+        {            
+            if (usuario != null && repositorioUsuario.FindById(usuario.Documento) == null)
+            { 
+                return repositorioUsuario.Add(usuario);
+            }
+            return false;
+        }
+
+        private static bool InsertarLaboratorio(Laboratorio laboratorio, RepositorioLaboratorio repositorioLaboratorio)
+        {
+            if (laboratorio != null && repositorioLaboratorio.FindById(laboratorio.Id) == null)
+            {
+                return repositorioLaboratorio.Add(laboratorio);
+            }
+            return false;
+        }
+
+        private static bool InsertarTipoVacuna(TipoVacuna tipoVacuna, RepositorioTipoVacuna repositorioTipoVacuna)
+        {
+            if (tipoVacuna != null && repositorioTipoVacuna.FindById(tipoVacuna.Id) == null)
+            {
+                return repositorioTipoVacuna.Add(tipoVacuna);
+            }
+            return false;
         }
     }
 }

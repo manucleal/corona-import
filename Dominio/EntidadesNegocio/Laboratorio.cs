@@ -13,5 +13,12 @@ namespace Dominio.EntidadesNegocio
     {
         [Key]
         public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string PaisOrigen { get; set; }
+        public bool Experiencia { get; set; }
+
+        public virtual ICollection<Vacuna> Vacunas { get; set; } = new List<Vacuna>();
+
+        public Laboratorio() { }
     }
 }

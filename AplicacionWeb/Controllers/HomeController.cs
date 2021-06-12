@@ -18,13 +18,13 @@ namespace AplicacionWeb.Controllers
 
         public ActionResult Create()
         {
-            //Usuario usuario = new Usuario() { Id = 1, Nombre = "Emanuel" };
+            //Usuario usuario = new Usuario() { Documento = "46902781", Password = "Emanuel" };
             //using (CoronaImportContext db = new CoronaImportContext())
             //{
             //    db.Usuarios.Add(usuario);
             //    db.SaveChanges();
             //}
-            ManejadorArchivo.ObtenerUsuarios();
+            ManejadorArchivo.ImportarDatos();
             return View();
         }
 
