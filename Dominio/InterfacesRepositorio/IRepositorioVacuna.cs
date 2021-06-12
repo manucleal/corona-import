@@ -7,8 +7,6 @@ namespace Dominio.InterfacesRepositorio
     {
         bool Add(Vacuna unaVacuna);
 
-        bool Update(Vacuna unaVacuna);
-
         Vacuna FindById(int idVacuna);
 
         IEnumerable<Vacuna> FindAll();
