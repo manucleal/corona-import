@@ -1,8 +1,9 @@
 ﻿using System.Web.Mvc;
 using Dominio.EntidadesNegocio;
 using Repositorio;
+using AplicacionWeb.Models;
 
-namespace WebApplication.Controllers
+namespace AplicacionWeb.Controllers
 {
     public class UsuarioController : Controller
     {
@@ -16,9 +17,9 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResetPassword(Usuario unUsuario)
+        public ActionResult ResetPassword(ViewModelUsuario unUsuario)
         {
-            if (unUsuario.VerificoPass(unUsuario.Password))
+            if (Usuario.VerificoPass(unUsuario.Password))
             {
                 RepositorioUsuario repoUsuario = new RepositorioUsuario();
                 Usuario usuario = repoUsuario.FindById(unUsuario.Documento);
@@ -59,7 +60,7 @@ namespace WebApplication.Controllers
         { 
             if (ModelState.IsValid)
             {
-                if (unUsuario.VerificoPass(unUsuario.Password))
+                if (Usuario.VerificoPass(unUsuario.Password))
                 {
                     RepositorioUsuario repoUsuario = new RepositorioUsuario();
                     Usuario usuario = repoUsuario.Login(unUsuario);

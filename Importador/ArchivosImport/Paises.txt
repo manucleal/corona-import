@@ -1,0 +1,12 @@
+DEU | Alemania
+ARG | Argentina
+BRA | Brasil
+CHN | China
+USA | Estados Unidos
+IND | India
+ISR | Israel
+MEX | México
+GBR | Reino Unido
+RUS | Rusia
+SWE | Suecia
+URY | Uruguay

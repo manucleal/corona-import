@@ -18,7 +18,7 @@ namespace Dominio.EntidadesNegocio
 
         public Usuario() { }
       
-        public bool VerificoPass(string password)
+        public static bool VerificoPass(string password)
         {
             int contMay = 0;
             int contMin = 0;
