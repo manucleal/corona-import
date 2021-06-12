@@ -13,9 +13,36 @@ namespace Dominio.EntidadesNegocio
     {
         [Key]
         public string Documento { get; set; }
+        public string Nombre { get; set; }
         public string Password { get; set; }
 
         public Usuario() { }
+      
+        public static bool VerificoPass(string password)
+        {
+            int contMay = 0;
+            int contMin = 0;
+            int contDig = 0;
+            if (password.Length >= 6)
+            {
+                for (int i = 0; i < password.Length; i++)
+                {
+                    if (char.IsUpper(password[i]))
+                    {
+                        contMay++;
+                    }
+                    if (char.IsLower(password[i]))
+                    {
+                        contMin++;
+                    }
+                    if (char.IsNumber(password[i]))
+                    {
+                        contDig++;
+                    }
+                }
+            }
+            return (contMay > 0 && contMin > 0 && contDig > 0);
+        }
 
         public static string GenerarPassword(string documento)
         {

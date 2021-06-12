@@ -1,43 +1,57 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title - CoronApp</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Nombre de aplicación", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Acerca de", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                </ul>
-            </div>
+    <aside>
+        <div class="contentLogo">
+            <img class="logo" src="~/Content/img/logo.jpeg" alt="Logo CoronApp">
         </div>
+        <nav>
+            <ul>
+                @if ((string)Session["documento"] != null)
+                {
+                    <li><a href="/Vacuna/IndexAuth">Lista Vacuna</a></li>
+                    <li><a href="/Vacuna/Alta">Crear Vacuna</a></li>
+                    <li id="ExportAlert"><a href="/Usuario/GenerarArchivos">Exportar Archivos</a></li>
+                }
+            </ul>
+        </nav>
+    </aside>
+    <div class="contentHeader">
+        <header>
+            <h1>@ViewBag.H1</h1>
+            <div id="iconPersona">
+                @if (Session["documento"] != null)
+                {
+                    <span>@Session["nombre"]</span>
+                    <a href="/Usuario/Salir"><img src="~/Content/img/iconPersona.png" alt="icono de persona"></a>
+                }
+                else
+                {
+                    <a href="/Usuario/Login"><span>Ingresar </span></a>
+                }
+            </div>
+        </header>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
-        </footer>
-    </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    @RenderBody()
+    <footer>
+        <div class="left">
+            <span> Sitio CoronApp </span>
+        </div>
+        <div class="circulo">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </footer>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/dinamicFuncitons.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>*
 </body>
 </html>
