@@ -15,9 +15,8 @@ namespace Dominio.EntidadesNegocio
         public string Documento { get; set; }
         public string Password { get; set; }
 
-
         public Usuario() { }
-
+      
         public bool VerificoPass(string password)
         {
             int contMay = 0;
@@ -44,5 +43,10 @@ namespace Dominio.EntidadesNegocio
             return (contMay > 0 && contMin > 0 && contDig > 0);
         }
 
+        public static string GenerarPassword(string documento)
+        {
+            string[] dias = new string[7] { "Lun", "Mar", "Mier", "Jue", "Vie", "Sab", "Dom" };
+            return documento.Substring(0, 4) + "-" + dias[(int)new DateTime().DayOfWeek - 1];
+        }
     }
 }
