@@ -131,6 +131,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -173,10 +174,12 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Create.cshtml" />
     <Content Include="Views\Usuario\Login.cshtml" />
+    <Content Include="Views\Usuario\ResetPassword.cshtml" />
+    <Content Include="Views\Vacuna\Index.cshtml" />
+    <Content Include="Views\Vacuna\IndexAuth.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -203,6 +206,10 @@
     <ProjectReference Include="..\Importador\Importador.csproj">
       <Project>{382797e2-1c27-4082-9af5-8015ce82f206}</Project>
       <Name>Importador</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Repositorio\Repositorio.csproj">
+      <Project>{c8d3a30b-e966-4806-af36-307dfeb2bb9d}</Project>
+      <Name>Repositorio</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

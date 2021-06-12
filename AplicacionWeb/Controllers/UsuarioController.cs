@@ -1,49 +1,50 @@
 ﻿using System.Web.Mvc;
 using Dominio.EntidadesNegocio;
-//using Repositorios;
+using Repositorio;
 
 namespace WebApplication.Controllers
 {
     public class UsuarioController : Controller
     {
-        public ActionResult Registro()
+        public ActionResult ResetPassword()
         {
-            if ((string)Session["documento"] != null && Session["nombre"] != null) {
+            if ((string)Session["documento"] != null && Session["nombre"] != null)
+            {
                 return RedirectToAction("IndexAuth", "Vacuna");
             }
-            return View("Registro");
+            return View("ResetPassword");
         }
 
-        //[HttpPost]
-        //public ActionResult Registro(Usuario unUsuario)
-        //{
-        //    if (unUsuario.VerificoPass(unUsuario.Password))
-        //    {
-        //        RepositorioUsuario repoUsuario = new RepositorioUsuario();
-        //        Usuario usuario = repoUsuario.FindById(unUsuario.Documento);
+        [HttpPost]
+        public ActionResult ResetPassword(Usuario unUsuario)
+        {
+            if (unUsuario.VerificoPass(unUsuario.Password))
+            {
+                RepositorioUsuario repoUsuario = new RepositorioUsuario();
+                Usuario usuario = repoUsuario.FindById(unUsuario.Documento);
 
-        //        if (usuario.Documento != null)
-        //        {
-        //            ModelState.AddModelError("documento", "El documento ya está registrado");
-        //        }
-        //        else if (repoUsuario.Add(unUsuario))
-        //        {
-        //            Session["documento"] = unUsuario.Documento;
-        //            Session["nombre"] = usuario.Nombre;
-        //            return RedirectToAction("IndexAuth", "Vacuna");
-        //        }
-        //        else
-        //        {
-        //            View("Registro");
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ModelState.AddModelError("password", "Contraseña débil");
-        //    }
+                if (usuario.Documento != null)
+                {
+                    ModelState.AddModelError("documento", "El documento ya está registrado");
+                }
+                else if (repoUsuario.Add(unUsuario))
+                {
+                    Session["documento"] = unUsuario.Documento;
+                    Session["nombre"] = usuario.Nombre;
+                    return RedirectToAction("IndexAuth", "Vacuna");
+                }
+                else
+                {
+                    View("ResetPassword");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("password", "Contraseña débil");
+            }
 
-        //    return View("Registro");
-        //}
+            return View("Login");
+        }
 
         public ActionResult Login()
         {
@@ -88,16 +89,6 @@ namespace WebApplication.Controllers
             Session["documento"] = null;
             Session["nombre"] = null;
             return RedirectToAction("Index", "Vacuna");
-        }
-
-        public ActionResult GenerarArchivos()
-        {
-            if ((string)Session["documento"] != null && Session["nombre"] != null)
-            {
-                AccesoArchivo.GenerarArchivos();
-                return RedirectToAction("IndexAuth", "Vacuna");
-            }
-            return View("Login");
         }
     }
 }

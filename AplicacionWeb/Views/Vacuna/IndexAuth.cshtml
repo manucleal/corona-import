@@ -1,0 +1,78 @@
+﻿@*@model IEnumerable<WebApplication.ReferenciaServicioVacunas.DtoVacunas>*@
+@{
+    ViewBag.H1 = "Listar Vacuna";
+    ViewBag.Title = "Listar Vacuna";
+}
+<!DOCTYPE html>
+<html lang="es">
+<body>
+    <main>
+        <form method="post" action="/Vacuna/IndexAuth" autocomplete="on">
+
+            <select name="TipoFiltro" id="selectFilter">
+                <option value="">Seleccione el filtro </option>
+                <option value="PorNombre">Nombre</option>
+                <option value="PorFaseAprob">Fase de aprobación</option>
+                <option value="PorPaisLab">País de laboratorio</option>
+                <option value="PorTipoVac">Tipo de Vacuna</option>
+                <option value="PorTopeInferior">Tope inferior de precio</option>
+                <option value="PorTopeSuperior">Tope superior de precio</option>
+                <option value="PorNombreLab">Nombre Laboratorio</option>
+            </select>
+
+            <input type="text" id="filtroText" name="filtroText" />
+            @*<input type="number" id="filtroNumber" onkeypress="return justNumbers(event);" min="1" pattern="^[1-9]" name="filtroNumber" />*@
+            <input type="text" id="filtroNumber" name="filtroNumber" />
+
+            <input type="submit" id="login" value="Buscar">
+        </form>
+
+        <small>Dashboard / <em>Lista Vacunas <p style="color:red;">@ViewBag.mensaje</p></em></small>
+        <div id="tableEmpleados">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</>
+                        <th>Tipo</th>
+                        <th>Laboratorios</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (ViewBag.Vacunas != null)
+                    {
+                        @*foreach (WebApplication.ReferenciaServicioVacunas.DtoVacunas item in ViewBag.Vacunas)
+                        {
+                            <tr>
+                                <th>@item.Nombre</th>
+                                <th>@item.TipoVacuna.Descripcion</th>
+
+                                @if (item.ListaLaboratorios.Length > 0)
+                                {
+                                    <th>
+                                        @foreach (var lab in item.ListaLaboratorios)
+                                        {
+                                            @lab.Nombre<br>
+                                        }
+                                    </th>
+                                }
+                                else
+                                {
+                                    <th>N/a</th>
+                                }
+                                <th>$ @item.Precio</th>
+                                <th><a href="/Vacuna/Modificar?id=@item.Id">Modificar</a></th>
+                            </tr>
+                        }*@
+                    }
+                    else
+                    {
+                        <tr><th colspan="15">No hay datos disponible</th></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>
