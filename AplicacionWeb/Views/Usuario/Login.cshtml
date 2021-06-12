@@ -1,0 +1,65 @@
+﻿@model Dominio.EntidadesNegocio.Usuario
+
+@{
+    ViewBag.Title = "Login";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - CoronApp</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="contenedorLogin">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <form method="post" autocomplete="off">
+                <div id="cajaLogin">
+                    <img src="~/Content/img/logo.jpeg" alt="Logo CoronApp" />
+
+                    <div class="form-group">
+                        <input class="form-control inputRegistroLogin" type="text" name="documento" placeholder="Documento">
+                        <div class="has-error">
+                            <span className="text-danger text-small d-block mb-2">
+                                @Html.ValidationMessageFor(model => model.Documento, "", new { @class = "help-block" })
+                                @Html.HiddenFor(model => model.Documento)
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input class="form-control inputRegistroLogin" type="password" name="password" placeholder="Contraseña">
+                        <div class="has-error">
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "help-block" })
+                            @Html.HiddenFor(model => model.Documento)
+                        </div>
+                    </div>
+                    <input type="submit" id="login" value="Login">
+
+                    <div className="register-link m-t-15 text-center">
+                        <p>No tienes una cuenta ? <a href="/Usuario/Registro">Regístrate aquí</a></p>
+                    </div>
+                </div>
+
+            </form>
+        }
+
+        <footer>
+            <div class="left">
+                <span> Sitio CoronApp </span>
+            </div>
+            <div class="circulo">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,24 +1,744 @@
-﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+﻿@charset "utf-8";
+
+*{
+    margin: 0;
+    padding: 0;
+    color:#090909;
+    font-family: 'Montserrat', sans-serif;
 }
 
-/* Set padding to keep content from hitting the edges */
-.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+ul{
+    list-style-type: none;
+
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+ol{
+    list-style-position: inside;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
+a {
+    text-decoration: none;
+}
+
+h3{
+    font-weight: 300;
+    margin-top: 2%;
+}
+
+h4{
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/*inicio login */
+#contenedorLogin{
+    background-color: rgb(215,215,215);
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+
+#contenedorLogin form{
+    background-color: rgb(215,215,215);
+    padding: 5%;
+    margin: 0 auto;
+}
+
+#cajaLogin{
+    background-color: rgb(240, 240, 240);
+    width:30%;
+    margin: 0 auto 10% auto;
+    text-align: center;
+    padding: 2% 5% 5% 5%;
+}
+
+#contenedorLogin ::placeholder{
+    color: grey;
+    letter-spacing: 2px;
+}
+
+.inputRegistroLogin {
+    background: rgb(215,215,215);
+    border: none;
+    font-size: 14px;
+    width: 80%;
+    line-height: 15px;
+    margin-bottom: 5%;
+    box-sizing: border-box;
+    padding: 2%;
+}
+
+#contenedorLogin input#login{
+    background:rgb(190,190,190);
+    border: none;
+    font-size: 14px;
+    width: 35%;
+    line-height: 15px;
+    margin-bottom: 5%;
+    box-sizing: border-box;
+    padding: 2%;
+}
+
+#contenedorLogin input[value]{
+    color: white;
+    letter-spacing: 2px;
+}
+
+#contenedorLogin img{
+    background-color: rgb(240, 240, 240);
+    width: 80%;
+    margin: 0 30px 10px;
+}
+/* fin login */
+
+/* inputs form */
+
+.ajustarAnchoInput {
+    width: 25%;
+}
+/* inputs form */
+
+/*Main*/
+
+main{
+    width: 86%;
+    margin:3% 0 0 13%;
+    overflow: hidden;
+    position: relative;
+}
+
+main small{
+    width: 100%;
+    color: #ccc;
+    font-size: 18px;
+    display: inline-block;
+    margin: 2% 0;
+}
+
+
+/*table lista empleados*/
+
+table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 2%;
+}
+
+/*pinta la primera fila*/
+thead th {
+    background-color: rgb(190,190,190);
+    font-size: 12px;
+    padding: 3px 5px 3px 5px;
+}
+/*estilo de input search*/
+thead :nth-child(5){
+    position: relative;
+}
+thead :nth-child(5) input{
+    background-color: rgb(215,215,215);  
+    border-radius: 5px;
+    width: 80%;
+    border: none;
+    padding: 3% 3% 3% 10%;
+}
+thead :nth-child(5) img{
+    width: 1.3rem;
+    position: absolute;
+    top: 32%;
+    left: 12%;
+}
+
+
+/*pinta fila pares a excepto la primera*/
+tr:nth-child(2n){
+    background-color: rgb(190,190,190);
+}
+
+/*estilos tercer columna*/
+/*tr :nth-child(4){
+    text-align: left;
+}*/
+
+/*tr :nth-child(3){
+    text-align: left;
+}*/
+
+
+td img{
+    margin: 4% 0 4% 0;
+}
+
+#tableEmpleados span{
+    display: inline-block;
+    float: right;
+    padding: 1% 3% 3% 0;
+    letter-spacing: 1px;
+}
+
+#tableEmpleados input[value]{
+    color: white;
+    margin-left: 1%;
+}
+
+/* Fin table lista empleados*/
+
+/*Ultimos Ingresos*/
+
+#ranking, #noticiaDia, #ultimosIngresos{
+    border:1px solid;
+}
+
+#ultimosIngresos{
+    overflow: hidden;
+    float: left;
+    width: 40%;
+    padding: 2%;
+    box-sizing: border-box;
+}
+
+.ingresos input {
+    background-color: black;
+    border-radius: 5px;
+    padding: 1% 4% 1% 4%;
+    margin: 2% 1% 0 0;
+    border: none;
+}
+
+#ultimosIngresos span{
+    display: block;
+    margin-bottom: 5%;
+}
+
+#ultimosIngresos input[value],#botonesIngreso input[value]{
+    color: white;
+}
+
+#botonesIngreso{
+    display: inline-block;    
+    width: 100%;
+    margin-top: 4%;
+    text-align: left;
+}
+
+#botonesIngreso :nth-child(2){
+    background-color: black;
+}
+
+#botonesIngreso input{
+    border-radius: 5px;
+    background-color: grey;
+    padding: 1% 4% 1% 4%;
+    margin: 2% 1% 0 0;
+    border: none;
+}
+
+.ingresos{
+    background-color: rgb(215,215,215);
+    text-align: center;
+    padding: 3%;
+    margin: 2%;
+    float: left;
+    width: 46%;
+    box-sizing: border-box;
+}
+/*Fin Ultimos Ingresos*/
+
+
+
+/* Ranking */
+
+#ranking ol li{
+    margin-top: 2%;
+    margin-bottom: 2%;
+}    
+#ranking{
+    width: 50%;
+    float: right;
+    margin-bottom: 3%;
+    padding: 2%;
+    margin-right: 2%;
+    text-align: left;
+}
+
+#ranking a{
+    text-align: right;
+}    
+
+
+#ranking img{
+    vertical-align: middle;
+    margin-right: 7%;
+    margin-left: 7%;
+}
+/* Fin Ranking */
+
+/* Noticia del Día */
+#noticiaDia{
+    min-height: 15.4em;
+    width: 50%;
+    float: right;
+    padding: 2%;
+    margin-right: 2%;
+}
+
+#noticiaDia :nth-child(2){
+    background-color: grey;
+    text-align: center;
+    padding: 5%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}   
+/* Fin Noticia del Día */
+
+/*Fin Main*/
+
+
+/*Menu Lateral --> listado*/
+
+aside{
+    background-color: rgb(215,215,215);
+    width: 11%;
+    min-width: 10%;
+    height: 100%;
+    position:fixed;
+    text-align: center;
+    bottom: 0;
+}
+
+aside nav{
+    margin-top: 15%;
+    width: 100%;
+}
+
+aside nav ul li a{
+    text-align: center;
+    display: block;
+    padding: 5% 0 5% 0%;
+    box-sizing: border-box;
+}
+
+aside nav ul li a:hover{
+    background-color: grey;
+}
+
+aside nav ul li a.itemActivo{
+    background-color: grey;
+}
+
+.contentLogo{
+    background-color:grey;
+}
+
+table input{
+    background-color: grey;
+    border-radius: 5px;
+    padding: 1% 4% 1% 4%;
+    margin: 2% 1% 0 0;
+    border: none;
+}
+
+table input:nth-child(1){   
+    background-color: black;
+}
+
+/*Fin Menu Lateral --> listado*/
+
+/*Header --> listado*/
+.contentHeader {
+    float: right;
+    width: 86%;
+    overflow: hidden;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+.contentHeader header{
+    width: 100%;
+    padding: 0.6% 1.5% 1.5% 2%;
+    box-sizing: border-box;
+    border-bottom: 1px solid;
+}
+
+.contentHeader header h1{
+    display: inline-block;
+    width: 60%;
+    font-size: 150%;
+    padding-top: 1%;
+}
+
+#iconPersona{
+    width:15%;
+    float: right;
+    display: inline;
+    text-align: right;
+}
+
+#iconPersona img{
+    vertical-align: middle;
+}
+
+/*Fin Header --> listado*/
+
+/* Main --> Crear Empleado */
+
+.FormEmpleados{
+    overflow: hidden;
+    border: 1px solid #ddd;
+    padding: 3%;
+}
+.infoPersonal{
+    float: left;
+    width: 48%;
+}
+
+input[type=date]{
+    border-radius: 5px;
+}
+
+.infoPersonal input,.infoPersonal select {
+    display: block;
+    width: 100%;
+    background:rgb(215,215,215);
+    border: none;
+    font-size: 14px;
+    margin-bottom: 3%;
+    box-sizing: border-box;
+    padding: 2%;
+}
+.infoPersonal textarea{
+    display: block;
+    background: rgb(215,215,215);
+    min-height: 129px;
+}
+.formInfo{
+    float: left;
+    width: 48%;
+    margin-left: 4%;
+}
+.formInfo fieldset{
+    width: 100%;
+    border:0;
+    padding: 2% 2%;
+}
+.formInfo fieldset legend{
+    float: left;
+    display: block;
+    width: 39%;
+}
+.formInfo fieldset label{
+    color: #ccc;
+    margin-left: 1%;
+    margin-right: 2%;
+}
+.divFooter{
+    float: left;
+    width: 100%;
+    padding: 3% 0;
+}
+.divFooter span{
+    color: gray
+}
+.divFooter input {
+    background:rgb(190,190,190);
+    border: none;
+    font-size: 14px;
+    width: 15%;
+    line-height: 10px;
+    box-sizing: border-box;
+    padding: 1%;
+    float: right;
+    color: #fff;
+    letter-spacing: 0.3rem;
+}
+
+.divFooter input#limpiar{
+    background: none;
+    color: gray;
+}
+
+
+/*Fin Main --> Crear Empleado*/
+
+.logo{
+    margin-top: 3%;
+    height: 50px;
+    text-align: center; 
+}
+
+figcaption { 
+    display: block;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 3% 0 3% 0;
+}
+
+#contacto, #proyectos, #clientes, #servicios{
+    text-align: center;
+}
+
+#clientes{
+    background-color: rgb(190,190,190);
+}
+
+#clientes img{
+    padding-top: 3%;
+    margin-right: 1%;
+    height:80px; 
+    width:160px;
+}
+
+#servicios p{
+    margin-top:3%;
+}
+
+#servicios img{
+    height:80px; 
+    width:80px;
+}
+
+/*Servicios -> Index*/
+#servicios article{
+    display: table-cell;
+}
+
+#proyectos article, #servicios article {
+    padding: 3%;
+}
+
+#proyectos article p, #servicios article p{
+    text-align: justify;
+    margin-top: 4%;
+    font-size: 12px;
+}
+
+/*Fin Servicios -> Index*/
+section{
+    padding: 3%;
+}
+
+/* encabezado --> index*/
+
+#encabezado{
+    background-color: grey;
+    margin: 0 auto;
+    overflow: hidden;
+    padding-top: 25px; 
+}
+
+#encabezado nav ul li a:hover{
+    background-color: rgb(215,215,215);
+    border-radius: 5px;
+}
+
+
+#inicio {
+    background-color: grey;
+    padding: 10% 0;
+}
+
+#inicio h1{
+    width: 50%;
+    margin: 0 auto;
+    display: inline-block;
+    font-weight: 300;
+    font-size: 25px;
+}
+
+#encabezado header {
+    width: 30%;
+    margin-left: 2%;
+    float: left;
+}
+
+#encabezado nav{
+    width: 50%;
+    margin-left: 10%;
+    padding-top: 1.8%;
+    float: left;
+}
+
+/* ponerlos uno al lado del otro, ancho determinado*/
+#encabezado nav ul li{
+    display: inline-block;
+    width: 20%;
+    padding-right: 2%;
+}
+
+#encabezado nav ul li a, #encabezado nav ul li a:link{
+    color: black;
+    font-size: 20px;
+    text-align: right;
+    padding: 12px;
+}
+
+/* Fin encabezado --> index*/
+
+/* Proyectos --> index*/
+
+#proyectos{
+    background-color: rgb(190,190,190);
+}
+
+#proyectos ul li{
+    border-right: 1px solid #aeaeae;
+    display: inline-block;
+    text-align: center;
+    padding: 0 3%;
+    margin-top: 3%;
+}
+
+#proyectos ul li a{
+    color: #aeaeae;
+}
+
+#proyectos ul li:last-child{
+    border-right: none;
+}
+
+#proyectos figure{
+    display: inline-block;
+    margin-right: 3%;
+    width: 100%;
+}
+
+#proyectos p{
+    text-align: justify;
+    font-size: 12px;
+}
+
+
+.imgProyecto {
+    width: 100%;
+    overflow: hidden;
+/*    padding-bottom: 3%; 
+    margin-top: 3%;*/
+}
+
+.imgProyecto article{
+    display: inline-block;
+/*    margin-right: 3%;*/
+    width: 18%;
+}
+
+.imgProyecto img {
+    width: 100%;
+    height: 30%;
+}
+
+/* Fin Proyectos --> index*/
+
+/*contacto --> index*/
+
+section:nth-of-type(1) {
+    text-align: center;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+
+.centrar{
+    width:50%;
+    margin: 3% auto 2% auto;
+}
+
+input#nombre, input#email, input#enviar{
+    background:#efefef;
+    border: none;
+    font-size: 14px;
+    width: 49%;
+    padding: 2%;
+    margin-bottom: 2%;
+    box-sizing: border-box;
+}
+
+input#enviar{
+    background-color: grey;
+    text-transform: uppercase;
+    color:white;
+    margin-top: 3%;
+    width: 30%;
+}
+
+input#email{
+    margin-left: 1%;
+}
+
 textarea {
-    max-width: 280px;
+    background: #efefef;
+    border: none;
+    font-size: 14px;
+    width: 100%;
+    padding: 2%;
+    box-sizing: border-box;
+}
+
+/* Fin Contacto --> index*/
+
+/* Footer --> index*/
+
+footer {
+    color: black;
+    width: 96%;
+    overflow: hidden;
+    padding: 1% 3%;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+} 
+
+footer#footerIndex{
+    color: blue;
+    width: 94%;
+    overflow: hidden;
+    padding: 1% 3%;
+    position: static;
+    bottom: 0;
+}
+
+.circulo span{
+    height: 30px;
+    width: 30px;
+    background: grey;
+    display: inline-block;
+    border-radius: 50%   
+}
+
+.circulo{
+    float: right;
+}
+
+.left{
+    float: left;
+    margin-top: 1%;
+}
+
+/* Fin Footer --> index*/
+
+/* Footer dashboard y listado */
+
+#footerListado, #footerDashboard {
+    color: black;
+    width: 94%;
+    overflow: hidden;
+    padding: 1% 3%;
+    position: relative;
+    right: 0;
+    bottom: 0;
+} 
+
+/*  Fin Footer dashboard y listado */
+.efectos {
+    display: flex;
+    /*background-color: yellowgreen;*/
+    /*width: 21%;*/
+    text-align: center;
+    padding: 3px 5px 3px 5px;
+}
+
+#thEfectos {
+    text-align: left;
+    padding-left: 4%;
 }
