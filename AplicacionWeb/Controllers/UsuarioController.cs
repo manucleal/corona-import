@@ -17,34 +17,38 @@ namespace AplicacionWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResetPassword(ViewModelUsuario unUsuario)
+        public ActionResult ResetPassword(ViewModelUsuario viewModelUsuario)
         {
-            if (Usuario.VerificoPass(unUsuario.Password))
+            RepositorioUsuario repoUsuario = new RepositorioUsuario();
+            Usuario usuario = repoUsuario.FindById(viewModelUsuario.Documento);
+            if (usuario != null)
             {
-                RepositorioUsuario repoUsuario = new RepositorioUsuario();
-                Usuario usuario = repoUsuario.FindById(unUsuario.Documento);
-
-                if (usuario.Documento != null)
+                if (viewModelUsuario.Password != viewModelUsuario.ConfirmPassword)
                 {
-                    ModelState.AddModelError("documento", "El documento ya está registrado");
+                    ModelState.AddModelError("ConfirmPassword", "Las contraseñas no coinciden");
+                    return View("ResetPassword");
                 }
-                else if (repoUsuario.Add(unUsuario))
+                if (!Usuario.VerificoPass(viewModelUsuario.Password))
                 {
-                    Session["documento"] = unUsuario.Documento;
-                    Session["nombre"] = usuario.Nombre;
-                    return RedirectToAction("IndexAuth", "Vacuna");
+                    ModelState.AddModelError("Password", "La contraseña es débil");
+                    return View("ResetPassword");
+                }
+
+                if (repoUsuario.CambiarPassword(viewModelUsuario.Documento, viewModelUsuario.Password))
+                {
+                    return RedirectToAction("Login", "Usuario");
                 }
                 else
                 {
-                    View("ResetPassword");
+                    return View("ResetPassword");
                 }
             }
             else
             {
-                ModelState.AddModelError("password", "Contraseña débil");
+                ModelState.AddModelError("Documento", "El usuario no existe");
+                return View("ResetPassword");
             }
 
-            return View("Login");
         }
 
         public ActionResult Login()
@@ -69,6 +73,11 @@ namespace AplicacionWeb.Controllers
                     {
                         Session["documento"] = usuario.Documento;
                         Session["nombre"] = usuario.Nombre;
+                        //preguntar si es la primera vez que se loguea, si es asi lo mando a resetPass, sino sigo con el flujo normal
+                        if (usuario.CantidadLogin < 2)
+                        {
+                            return RedirectToAction("ResetPassword","Usuario");
+                        }
                         return RedirectToAction("IndexAuth", "Vacuna");
                     }
                     else
