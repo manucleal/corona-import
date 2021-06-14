@@ -50,7 +50,40 @@ namespace Repositorio
 
         public Usuario Login(Usuario unUsuario)
         {
-            throw new NotImplementedException();
+            Usuario usuariobd = this.FindById(unUsuario.Documento);
+            if (usuariobd != null && (usuariobd.Password == Usuario.EncodePasswordToBase64(unUsuario.Password) || usuariobd.Password == unUsuario.Password))
+            {
+                Usuario user = ContadorLogin(usuariobd);
+                if (user.CantidadLogin > 1 && usuariobd.Password == unUsuario.Password)
+                {
+                    return new Usuario();
+                }
+                return user;
+            }
+            return new Usuario();
+        }
+
+        public Usuario ContadorLogin(Usuario usuario)
+        {
+            using (CoronaImportContext db = new CoronaImportContext())
+            {
+                var user = db.Usuarios.Where(u => u.Documento == usuario.Documento).FirstOrDefault();
+                user.CantidadLogin += 1;
+                db.SaveChanges();
+                return user;
+
+            }
+        }
+
+        public bool CambiarPassword(string documento,string password)
+        {
+            using (CoronaImportContext db = new CoronaImportContext())
+            {
+                var user = db.Usuarios.Where(u => u.Documento == documento).FirstOrDefault();
+                user.Password = Usuario.EncodePasswordToBase64(password);
+                db.SaveChanges();
+                return true;
+            }
         }
     }
 }

@@ -11,5 +11,9 @@ namespace Dominio.InterfacesRepositorio
         Usuario FindById(string documento);
 
         Usuario Login(Usuario unUsuario);
+
+        Usuario ContadorLogin(Usuario usuario);
+
+        bool CambiarPassword(string documento, string password);
     }
 }

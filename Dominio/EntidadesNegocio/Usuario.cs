@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,9 +16,17 @@ namespace Dominio.EntidadesNegocio
         public string Documento { get; set; }
         public string Nombre { get; set; }
         public string Password { get; set; }
+        public int CantidadLogin { get; set; } = 0;
 
         public Usuario() { }
-      
+
+        public static string EncodePasswordToBase64(string password)
+        {
+            byte[] bytes = Encoding.Unicode.GetBytes(password);
+            byte[] inArray = HashAlgorithm.Create("SHA1").ComputeHash(bytes);
+            return Convert.ToBase64String(inArray);
+        }
+
         public static bool VerificoPass(string password)
         {
             int contMay = 0;
