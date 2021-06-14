@@ -19,32 +19,27 @@ namespace AplicacionWeb.Controllers
         [HttpPost]
         public ActionResult ResetPassword(ViewModelUsuario unUsuario)
         {
-            if (Usuario.VerificoPass(unUsuario.Password))
-            {
-                RepositorioUsuario repoUsuario = new RepositorioUsuario();
-                Usuario usuario = repoUsuario.FindById(unUsuario.Documento);
+            RepositorioUsuario repoUsuario = new RepositorioUsuario();
+            Usuario usuario = repoUsuario.FindById(unUsuario.Documento);
 
-                if (usuario.Documento != null)
-                {
-                    ModelState.AddModelError("documento", "El documento ya está registrado");
-                }
-                else if (repoUsuario.Add(unUsuario))
-                {
-                    Session["documento"] = unUsuario.Documento;
-                    Session["nombre"] = usuario.Nombre;
-                    return RedirectToAction("IndexAuth", "Vacuna");
-                }
-                else
-                {
-                    View("ResetPassword");
-                }
+            if (unUsuario.Password != unUsuario.ConfirmPassword)
+            {
+                ModelState.AddModelError("Password", "Las contraseñas no coinciden");
+                return View("ResetPassword");
+            }
+            if (!Usuario.VerificoPass(unUsuario.Password))
+            {
+                ModelState.AddModelError("Password", "La contraseña es débil");
+                return View("ResetPassword");
+            }
+            if (repoUsuario.CambiarPassword(unUsuario.Documento, unUsuario.Password))
+            {
+                return RedirectToAction("Login", "Usuario");
             }
             else
             {
-                ModelState.AddModelError("password", "Contraseña débil");
+                return View("ResetPassword");
             }
-
-            return View("Login");
         }
 
         public ActionResult Login()
@@ -69,6 +64,11 @@ namespace AplicacionWeb.Controllers
                     {
                         Session["documento"] = usuario.Documento;
                         Session["nombre"] = usuario.Nombre;
+                        //preguntar si es la primera vez que se loguea, si es asi lo mando a resetPass, sino sigo con el flujo normal
+                        if (usuario.CantidadLogin < 2)
+                        {
+                            return RedirectToAction("ResetPassword","Usuario");
+                        }
                         return RedirectToAction("IndexAuth", "Vacuna");
                     }
                     else
