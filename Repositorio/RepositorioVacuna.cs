@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using Dominio.EntidadesNegocio;
+using AccesoDatos.Contexto;
 using Dominio.InterfacesRepositorio;
 
 namespace Repositorio
@@ -9,70 +11,69 @@ namespace Repositorio
     public class RepositorioVacuna
     {
         public bool Add(Vacuna unaVacuna)
-        {
-            //if (!unaVacuna.ValidateTemperature(unaVacuna) || !unaVacuna.ValidateAge(unaVacuna) || !unaVacuna.ValidateCantidadDosis(unaVacuna) || !unaVacuna.ValidateProduccionAnual(unaVacuna)) return false;
-
+        {            
             try
             {
-                //    Conexion handler = new Conexion();
-                //    SqlConnection con = new Conexion().CrearConexion();
+                if (!unaVacuna.ValidateTemperature(unaVacuna) || !unaVacuna.ValidateAge(unaVacuna) || !unaVacuna.ValidateCantidadDosis(unaVacuna) || !unaVacuna.ValidateProduccionAnual(unaVacuna)) return false;
+                unaVacuna.Precio = Vacuna.ValidatePrice(unaVacuna);
+                unaVacuna.LapsoDiasDosis = Vacuna.ValidateLapsoDiasDosis(unaVacuna);
+                using (var context = new CoronaImportContext())
+                {
+                    using (var dbContextTransaction = context.Database.BeginTransaction())
+                    {
+                        context.Vacunas.Add(unaVacuna);
+                        context.SaveChanges();
 
-                //    SqlCommand cmd = new SqlCommand("INSERT INTO Vacunas output INSERTED.ID VALUES (@IdTipo,@IdUsuario,@Nombre,@CantidadDosis," +
-                //        "@LapsoDiasDosis,@MaxEdad,@MinEdad,@EficaciaPrev,@EficaciaHosp,@EficaciaCti,@MaxTemp,@MinTemp," + 
-                //        "@ProduccionAnual,@FaseClinicaAprob,@Emergencia,@EfectosAdversos,@Precio,@UltimaModificacion,@Covax)", con);
+                        dbContextTransaction.Commit();
+                    }
+                }
 
-                //    cmd.Parameters.AddWithValue("@IdTipo", unaVacuna.IdTipo);
-                //    cmd.Parameters.AddWithValue("@IdUsuario", unaVacuna.IdUsuario);
-                //    cmd.Parameters.AddWithValue("@Nombre", unaVacuna.Nombre);
-                //    cmd.Parameters.AddWithValue("@CantidadDosis", unaVacuna.CantidadDosis);
-                //    cmd.Parameters.AddWithValue("@LapsoDiasDosis", unaVacuna.ValidateLapsoDiasDosis(unaVacuna));
-                //    cmd.Parameters.AddWithValue("@MaxEdad", unaVacuna.MaxEdad);
-                //    cmd.Parameters.AddWithValue("@MinEdad", unaVacuna.MinEdad);
-                //    cmd.Parameters.AddWithValue("@EficaciaPrev", unaVacuna.EficaciaPrev);
-                //    cmd.Parameters.AddWithValue("@EficaciaHosp", unaVacuna.EficaciaHosp);
-                //    cmd.Parameters.AddWithValue("@EficaciaCti", unaVacuna.EficaciaCti);
-                //    cmd.Parameters.AddWithValue("@MaxTemp", unaVacuna.MaxTemp);
-                //    cmd.Parameters.AddWithValue("@MinTemp", unaVacuna.MinTemp);
-                //    cmd.Parameters.AddWithValue("@ProduccionAnual", unaVacuna.ProduccionAnual);
-                //    cmd.Parameters.AddWithValue("@FaseClinicaAprob", unaVacuna.FaseClinicaAprob);
-                //    cmd.Parameters.AddWithValue("@Emergencia", unaVacuna.Emergencia);
-                //    cmd.Parameters.AddWithValue("@EfectosAdversos", unaVacuna.EfectosAdversos);
-                //    cmd.Parameters.AddWithValue("@Precio", unaVacuna.ValidatePrice(unaVacuna));
-                //    cmd.Parameters.AddWithValue("@UltimaModificacion", DateTime.Now);
-                //    cmd.Parameters.AddWithValue("@Covax", unaVacuna.Covax);
+                return true;
 
-                //    if (handler.AbrirConexion(con))
-                //    {
-                //        int modified = (int)cmd.ExecuteScalar();
+                //int modified = (int)cmd.ExecuteScalar();
 
-                //        SqlCommand cmd2 = new SqlCommand("INSERT INTO VacunaLaboratorios VALUES (@IdVacuna,@IdLaboratorio)", con);
-                //        foreach (int lab in unaVacuna.Laboratorios)
-                //        {
-                //            cmd2.Parameters.Clear();
-                //            cmd2.Parameters.AddWithValue("@IdVacuna", (int)modified);
-                //            cmd2.Parameters.AddWithValue("@IdLaboratorio", (int)lab);
-                //            cmd2.ExecuteNonQuery();
-                //        }
+                //SqlCommand cmd2 = new SqlCommand("INSERT INTO VacunaLaboratorios VALUES (@IdVacuna,@IdLaboratorio)", con);
+                //foreach (int lab in unaVacuna.Laboratorios)
+                //{
+                //    cmd2.Parameters.Clear();
+                //    cmd2.Parameters.AddWithValue("@IdVacuna", (int)modified);
+                //    cmd2.Parameters.AddWithValue("@IdLaboratorio", (int)lab);
+                //    cmd2.ExecuteNonQuery();
+                //}
 
-                //        SqlCommand cmd3 = new SqlCommand("INSERT INTO StatusVacuna VALUES (@IdVac,@CodPais)", con);
-                //        foreach (string pais in unaVacuna.Paises)
-                //        {
-                //            cmd3.Parameters.Clear();
-                //            cmd3.Parameters.AddWithValue("@IdVac", (int)modified);
-                //            cmd3.Parameters.AddWithValue("@CodPais", (string)pais);
-                //            cmd3.ExecuteNonQuery();
-                //        }
-
-                //        handler.CerrarConexion(con);
-                //        return true;
-                //    }
-
-                return false;
+                //SqlCommand cmd3 = new SqlCommand("INSERT INTO StatusVacuna VALUES (@IdVac,@CodPais)", con);
+                //foreach (string pais in unaVacuna.Paises)
+                //{
+                //    cmd3.Parameters.Clear();
+                //    cmd3.Parameters.AddWithValue("@IdVac", (int)modified);
+                //    cmd3.Parameters.AddWithValue("@CodPais", (string)pais);
+                //    cmd3.ExecuteNonQuery();
+                //}
+                //return true;
             }
             catch (Exception e)
             {
                 System.Diagnostics.Debug.Assert(false, "Error al ingresar Vacuna" + e.Message);
                 return false;
+            }
+        }
+
+        public Vacuna FindById(int idVacuna)
+        {
+            try
+            {
+                using (CoronaImportContext dataBase = new CoronaImportContext())
+                {
+                    var resultado = dataBase.Vacunas
+                        .Where(v => v.Id == idVacuna).FirstOrDefault();
+
+                    return resultado;
+                }
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.Assert(false, "Error al buscar vacuna" + e.Message);
+                return null;
             }
         }
 
@@ -531,51 +532,6 @@ namespace Repositorio
         //    catch (Exception e)
         //    {
         //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por tope inferior de precio" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-        //}
-
-        //public Vacuna FindById(int idVacuna)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("SELECT * FROM Vacunas WHERE Id = @Id", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@Id", idVacuna);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        Vacuna vacuna = null;
-
-        //        while (dataReader.Read())
-        //        {
-        //            int id = (int)dataReader["Id"];
-        //            string idTipo = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = id,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                IdTipo = idTipo,
-        //                FaseClinicaAprob = (int)dataReader["FaseClinicaAprob"],
-        //                Precio = (decimal)dataReader["Precio"]
-        //            };
-        //            vacuna = unaVacuna;
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(id, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacuna;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al buscar vacuna" + e.Message);
         //        return null;
         //    }
         //    finally

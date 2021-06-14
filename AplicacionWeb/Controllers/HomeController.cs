@@ -18,7 +18,7 @@ namespace AplicacionWeb.Controllers
 
         public ActionResult Create()
         {
-            //ViewModelUsuario usuario = new ViewModelUsuario() { Documento = "46902781", Password = "Emanuel" };
+            //Usuario usuario = new Usuario() { Documento = "46902781", Nombre = "Emanuel", Password = "Emanuel" };
             //using (CoronaImportContext db = new CoronaImportContext())
             //{
             //    db.Usuarios.Add(usuario);
