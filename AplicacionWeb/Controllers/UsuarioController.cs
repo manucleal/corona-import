@@ -17,29 +17,38 @@ namespace AplicacionWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResetPassword(ViewModelUsuario unUsuario)
+        public ActionResult ResetPassword(ViewModelUsuario viewModelUsuario)
         {
             RepositorioUsuario repoUsuario = new RepositorioUsuario();
-            Usuario usuario = repoUsuario.FindById(unUsuario.Documento);
+            Usuario usuario = repoUsuario.FindById(viewModelUsuario.Documento);
+            if (usuario != null)
+            {
+                if (viewModelUsuario.Password != viewModelUsuario.ConfirmPassword)
+                {
+                    ModelState.AddModelError("ConfirmPassword", "Las contraseñas no coinciden");
+                    return View("ResetPassword");
+                }
+                if (!Usuario.VerificoPass(viewModelUsuario.Password))
+                {
+                    ModelState.AddModelError("Password", "La contraseña es débil");
+                    return View("ResetPassword");
+                }
 
-            if (unUsuario.Password != unUsuario.ConfirmPassword)
-            {
-                ModelState.AddModelError("Password", "Las contraseñas no coinciden");
-                return View("ResetPassword");
-            }
-            if (!Usuario.VerificoPass(unUsuario.Password))
-            {
-                ModelState.AddModelError("Password", "La contraseña es débil");
-                return View("ResetPassword");
-            }
-            if (repoUsuario.CambiarPassword(unUsuario.Documento, unUsuario.Password))
-            {
-                return RedirectToAction("Login", "Usuario");
+                if (repoUsuario.CambiarPassword(viewModelUsuario.Documento, viewModelUsuario.Password))
+                {
+                    return RedirectToAction("Login", "Usuario");
+                }
+                else
+                {
+                    return View("ResetPassword");
+                }
             }
             else
             {
+                ModelState.AddModelError("Documento", "El usuario no existe");
                 return View("ResetPassword");
             }
+
         }
 
         public ActionResult Login()
