@@ -22,34 +22,16 @@ namespace Repositorio
                     using (var dbContextTransaction = context.Database.BeginTransaction())
                     {
                         context.Vacunas.Add(unaVacuna);
+                        foreach (Laboratorio laboratorio in unaVacuna.Laboratorios)
+                        {
+                            unaVacuna.Laboratorios.Add(laboratorio);
+                        }
                         context.SaveChanges();
 
                         dbContextTransaction.Commit();
                     }
                 }
-
                 return true;
-
-                //int modified = (int)cmd.ExecuteScalar();
-
-                //SqlCommand cmd2 = new SqlCommand("INSERT INTO VacunaLaboratorios VALUES (@IdVacuna,@IdLaboratorio)", con);
-                //foreach (int lab in unaVacuna.Laboratorios)
-                //{
-                //    cmd2.Parameters.Clear();
-                //    cmd2.Parameters.AddWithValue("@IdVacuna", (int)modified);
-                //    cmd2.Parameters.AddWithValue("@IdLaboratorio", (int)lab);
-                //    cmd2.ExecuteNonQuery();
-                //}
-
-                //SqlCommand cmd3 = new SqlCommand("INSERT INTO StatusVacuna VALUES (@IdVac,@CodPais)", con);
-                //foreach (string pais in unaVacuna.Paises)
-                //{
-                //    cmd3.Parameters.Clear();
-                //    cmd3.Parameters.AddWithValue("@IdVac", (int)modified);
-                //    cmd3.Parameters.AddWithValue("@CodPais", (string)pais);
-                //    cmd3.ExecuteNonQuery();
-                //}
-                //return true;
             }
             catch (Exception e)
             {

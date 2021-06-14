@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace APIWeb.Controllers
 {
-    [RoutePrefix("api/vacunas/")]
+    [RoutePrefix("api/vacunas")]
     public class VacunaController : ApiController
     {
         [HttpGet]
@@ -32,21 +32,21 @@ namespace APIWeb.Controllers
         }
 
         [HttpGet]
-        [Route("tipo/{tipo:string}")]
+        [Route("tipo/{tipo}")]
         public IHttpActionResult GetVacunasPorTipo(string tipo)
         {
             return Ok();
         }
 
         [HttpGet]
-        [Route("laboratorio/{laboratorio:string}")]
+        [Route("laboratorio/{laboratorio}")]
         public IHttpActionResult GetVacunasPorLaboratorio(string laboratorio)
         {
             return Ok();
         }
 
         [HttpGet]
-        [Route("pais/{pais:string}")]
+        [Route("pais/{pais}")]
         public IHttpActionResult GetVacunasPorPais(string pais)
         {
             return Ok();
