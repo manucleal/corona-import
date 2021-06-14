@@ -67,7 +67,7 @@ namespace Dominio.EntidadesNegocio
         public bool Emergencia { get; set; }
         public decimal Precio { get; set; }
         public DateTime UltimaModificacion { get; set; }
-        public Usuario Documento { get; set; }
+        public string Documento { get; set; }
         public TipoVacuna TipoVacuna { get; set; }
         public string[] Paises { get; set; }
         public virtual ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
@@ -82,13 +82,13 @@ namespace Dominio.EntidadesNegocio
             return false;
         }
 
-        public decimal ValidatePrice(Vacuna unaVacuna)
+        public static decimal ValidatePrice(Vacuna unaVacuna)
         {
             if (unaVacuna == null || unaVacuna.Precio <= 0 || unaVacuna.Precio > 1000) return -1;
             return unaVacuna.Precio;
         }
 
-        public int ValidateLapsoDiasDosis(Vacuna unaVacuna)
+        public static int ValidateLapsoDiasDosis(Vacuna unaVacuna)
         {
             if (unaVacuna == null || unaVacuna.LapsoDiasDosis <= 0 || unaVacuna.LapsoDiasDosis > 300) return 0;
             return unaVacuna.LapsoDiasDosis;

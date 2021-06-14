@@ -49,5 +49,17 @@ namespace Dominio.EntidadesNegocio
             string[] dias = new string[7] { "Lun", "Mar", "Mier", "Jue", "Vie", "Sab", "Dom" };
             return documento.Substring(0, 4) + "-" + dias[(int)new DateTime().DayOfWeek - 1];
         }
+
+        public static DateTime GenerarDateTime(string datos)
+        {
+            if (datos != null )
+            {
+                string[] fechaHora = datos.Split(' ');
+                string[] fecha = fechaHora[1].Split('/');
+                string[] hora = fechaHora[2].Split(':');
+                return new DateTime(int.Parse(fecha[2]), int.Parse(fecha[1]), int.Parse(fecha[0]), int.Parse(hora[0]), int.Parse(hora[1]), int.Parse(hora[2]));
+            }
+            return new DateTime();
+        }
     }
 }
