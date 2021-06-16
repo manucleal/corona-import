@@ -22,10 +22,6 @@ namespace Repositorio
                     using (var dbContextTransaction = context.Database.BeginTransaction())
                     {
                         context.Vacunas.Add(unaVacuna);
-                        foreach (Laboratorio laboratorio in unaVacuna.Laboratorios)
-                        {
-                            unaVacuna.Laboratorios.Add(laboratorio);
-                        }
                         context.SaveChanges();
 
                         dbContextTransaction.Commit();

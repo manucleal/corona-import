@@ -12,6 +12,7 @@ namespace Dominio.EntidadesNegocio
     public class Laboratorio
     {
         [Key]
+        [Column(Order = 1)]
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string PaisOrigen { get; set; }

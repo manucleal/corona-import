@@ -9,8 +9,11 @@ namespace Dominio.EntidadesNegocio
     public class Vacuna
     {
         [Key]
+        [Column(Order = 1)]
         public int Id { get; set; }
 
+        [Key]
+        [Column(Order = 2)]
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; }
 
