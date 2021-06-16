@@ -1,0 +1,80 @@
+﻿@model AplicacionWeb.Models.ViewModelMutualista
+
+@{
+    ViewBag.H1 = "Registrar Mutualista";
+    ViewBag.Title = "Registrar Mutualista";
+}
+
+<main>
+    <small>Dashboard / <em>Registrar Mutualista <p style="color:red;">@ViewBag.mensaje</p></em></small>
+    <div class="FormEmpleados">
+        <form method="post" action="/Usuario/RegistrarVacuna" autocomplete="on">
+            <div class="infoPersonal">
+
+                <input type="number" name="numeroRegistro" placeholder="Número Registro (*)" max="6" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.Id, "", new { @class = "help-block" })
+                @Html.HiddenFor(model => model.Id)
+                    </span>
+                </div>
+
+                <input type="text" name="nombre" placeholder="Nombre (*)" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "help-block" })
+                @Html.HiddenFor(model => model.Nombre)
+                    </span>
+                </div>
+
+                <input type="number" name="telefono" placeholder="Telefono (*)" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "help-block" })
+                @Html.HiddenFor(model => model.Telefono)
+                    </span>
+                </div>
+
+                <input type="text" name="nombreContacto" placeholder="Nombre Contacto (*)" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.NombreContacto, "", new { @class = "help-block" })
+                @Html.HiddenFor(model => model.NombreContacto)
+                    </span>
+                </div>
+
+                <input type="number" name="topeComprasMens" placeholder="Tope compras mensuales (*)" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.TopeComprasMens, "", new { @class = "help-block" })
+                @Html.HiddenFor(model => model.TopeComprasMens)
+                    </span>
+                </div>
+
+                <input type="number" name="cantAfiliados" placeholder="Cantidad Afiliados (*)" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.CantAfiliados, "", new { @class = "help-block" })
+        @Html.HiddenFor(model => model.CantAfiliados)
+                    </span>
+                </div>
+
+                <input type="number" name="topeGastoVacunaPorAfi" placeholder="Tope gasto en vacunas por afiliado (*)" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.TopeGastoVacunaPorAfi, "", new { @class = "help-block" })
+                @Html.HiddenFor(model => model.TopeGastoVacunaPorAfi)
+                    </span>
+                </div>
+
+                <div class="divFooter">
+                    <span>Campos Obligatorios (*)</span>
+                    <input type="submit" class="botones" value="Crear">
+                    <input type="reset" id="limpiar" value="Limpiar">
+                </div>
+
+            </div>
+        </form>
+    </div>
+</main>
+

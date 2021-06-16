@@ -11,9 +11,9 @@ namespace AplicacionWeb.Controllers
         {
             if ((string)Session["documento"] != null && Session["nombre"] != null)
             {
-                return RedirectToAction("IndexAuth", "Vacuna");
+                return View();
             }
-            return View("ResetPassword");
+            return RedirectToAction( "Login", "Usuario");
         }
 
         [HttpPost]
@@ -99,6 +99,24 @@ namespace AplicacionWeb.Controllers
             Session["documento"] = null;
             Session["nombre"] = null;
             return RedirectToAction("Index", "Vacuna");
+        }
+
+        public ActionResult RegistroMutualista()
+        {
+            if ((string)Session["documento"] != null && (string)Session["nombre"] != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Vacuna");
+            
+        }
+
+        [HttpPost]
+        public ActionResult RegistroMutualista(ViewModelMutualista viewModelMutualista)
+        {
+
+
+            return View();
         }
     }
 }
