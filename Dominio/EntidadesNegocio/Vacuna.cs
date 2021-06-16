@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -82,18 +79,6 @@ namespace Dominio.EntidadesNegocio
             return false;
         }
 
-        public static decimal ValidatePrice(Vacuna unaVacuna)
-        {
-            if (unaVacuna == null || unaVacuna.Precio <= 0 || unaVacuna.Precio > 1000) return -1;
-            return unaVacuna.Precio;
-        }
-
-        public static int ValidateLapsoDiasDosis(Vacuna unaVacuna)
-        {
-            if (unaVacuna == null || unaVacuna.LapsoDiasDosis <= 0 || unaVacuna.LapsoDiasDosis > 300) return 0;
-            return unaVacuna.LapsoDiasDosis;
-        }
-
         public bool ValidateAge(Vacuna unaVacuna)
         {
             if (unaVacuna == null) return false;
@@ -111,6 +96,18 @@ namespace Dominio.EntidadesNegocio
         {
             if (unaVacuna.ProduccionAnual > 0) return true;
             return false;
+        }
+
+        public static decimal ValidatePrice(Vacuna unaVacuna)
+        {
+            if (unaVacuna == null || unaVacuna.Precio <= 0 || unaVacuna.Precio > 1000) return -1;
+            return unaVacuna.Precio;
+        }
+
+        public static int ValidateLapsoDiasDosis(Vacuna unaVacuna)
+        {
+            if (unaVacuna == null || unaVacuna.LapsoDiasDosis <= 0 || unaVacuna.LapsoDiasDosis > 300) return 0;
+            return unaVacuna.LapsoDiasDosis;
         }
     }
 }
