@@ -11,8 +11,8 @@ namespace Importador
 {
     public class ManejadorArchivo
     {
-        private static string raiz = AppDomain.CurrentDomain.BaseDirectory + "..\\Importador\\ArchivosImport";
-        private static string delimitador = "|";
+        private static readonly string raiz = AppDomain.CurrentDomain.BaseDirectory + "..\\Importador\\ArchivosImport";
+        private static readonly string delimitador = "|";
         private RepositorioUsuario repositorioUsuario;
         private RepositorioLaboratorio repositorioLaboratorio;
         private RepositorioTipoVacuna repositorioTipoVacuna;

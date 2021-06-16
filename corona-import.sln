@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Importador", "Importador\Im
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositorio", "Repositorio\Repositorio.csproj", "{C8D3A30B-E966-4806-AF36-307DFEB2BB9D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIWeb", "APIWeb\APIWeb.csproj", "{B41073B0-0310-4BF3-A995-A43570517C97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C8D3A30B-E966-4806-AF36-307DFEB2BB9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8D3A30B-E966-4806-AF36-307DFEB2BB9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8D3A30B-E966-4806-AF36-307DFEB2BB9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B41073B0-0310-4BF3-A995-A43570517C97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B41073B0-0310-4BF3-A995-A43570517C97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B41073B0-0310-4BF3-A995-A43570517C97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B41073B0-0310-4BF3-A995-A43570517C97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
