@@ -2,10 +2,11 @@
 using System.Linq;
 using AccesoDatos.Contexto;
 using Dominio.EntidadesNegocio;
+using Dominio.InterfacesRepositorio;
 
 namespace AccesoDatos.Repositorios
 {
-    class RepositorioMutualista
+    public class RepositorioMutualista : IRepositorioMutualista
     {
         public bool Add(Mutualista unaMutualista)
         {

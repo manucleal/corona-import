@@ -2,6 +2,7 @@
 using Dominio.EntidadesNegocio;
 using Repositorio;
 using AplicacionWeb.Models;
+using AccesoDatos.Repositorios;
 
 namespace AplicacionWeb.Controllers
 {
@@ -11,9 +12,9 @@ namespace AplicacionWeb.Controllers
         {
             if ((string)Session["documento"] != null && Session["nombre"] != null)
             {
-                return RedirectToAction("IndexAuth", "Vacuna");
+                return View();
             }
-            return View("ResetPassword");
+            return RedirectToAction( "Login", "Usuario");
         }
 
         [HttpPost]
@@ -36,7 +37,7 @@ namespace AplicacionWeb.Controllers
 
                 if (repoUsuario.CambiarPassword(viewModelUsuario.Documento, viewModelUsuario.Password))
                 {
-                    return RedirectToAction("Login", "Usuario");
+                    return View("Login");
                 }
                 else
                 {
@@ -54,20 +55,20 @@ namespace AplicacionWeb.Controllers
         public ActionResult Login()
         {
             if ((string)Session["documento"] != null && (string)Session["nombre"] != null){
-                return RedirectToAction("IndexAuth", "Vacuna");
+                return RedirectToAction("Login", "Usuario");
             }
             return View();
         }
 
         [HttpPost]
-        public ActionResult Login(Usuario unUsuario)
+        public ActionResult Login(ViewModelUsuario viewModelUsuario)
         { 
             if (ModelState.IsValid)
             {
-                if (Usuario.VerificoPass(unUsuario.Password))
+                if (Usuario.VerificoPass(viewModelUsuario.Password))
                 {
                     RepositorioUsuario repoUsuario = new RepositorioUsuario();
-                    Usuario usuario = repoUsuario.Login(unUsuario);
+                    Usuario usuario = repoUsuario.Login(ViewModelUsuario.MapearAUsuario(viewModelUsuario));
 
                     if (usuario.Documento != null)
                     {
@@ -99,6 +100,39 @@ namespace AplicacionWeb.Controllers
             Session["documento"] = null;
             Session["nombre"] = null;
             return RedirectToAction("Index", "Vacuna");
+        }
+
+        public ActionResult RegistroMutualista()
+        {
+            if ((string)Session["documento"] != null && (string)Session["nombre"] != null)
+            {
+                return View();
+            }
+            return RedirectToAction("Index", "Vacuna");
+            
+        }
+
+        [HttpPost]
+        public ActionResult RegistroMutualista(ViewModelMutualista viewModelMutualista)
+        {
+            if (ModelState.IsValid)
+            {
+                RepositorioMutualista repoMutualista = new RepositorioMutualista();
+                Mutualista mutualista = repoMutualista.FindById(viewModelMutualista.Id);
+
+                if (mutualista != null)
+                {
+                    ModelState.AddModelError("Id", "Ya existe la mutualista");
+                    return View("RegistroMutualista");
+                }
+                if(repoMutualista.FindByName(viewModelMutualista.Nombre) != null)
+                {
+                    ModelState.AddModelError("Nombre", "El nombre de la mutualista debe ser único");
+                    return View("RegistroMutualista");
+                }
+                repoMutualista.Add(ViewModelMutualista.MapearAMutualista(viewModelMutualista));
+            }
+            return View();
         }
     }
 }
