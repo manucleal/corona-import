@@ -177,6 +177,7 @@
     <Content Include="Views\Usuario\ResetPassword.cshtml" />
     <Content Include="Views\Vacuna\Index.cshtml" />
     <Content Include="Views\Vacuna\IndexAuth.cshtml" />
+    <Content Include="Views\Home\Importador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

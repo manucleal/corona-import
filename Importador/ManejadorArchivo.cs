@@ -105,8 +105,8 @@ namespace Importador
             {
                 return new TipoVacuna
                 {
-                    Id = datos[0],
-                    Descripcion = datos[1]
+                    Id = datos[0].Trim(),
+                    Descripcion = datos[1].Trim()
                 };
             }
             return null;
@@ -133,14 +133,12 @@ namespace Importador
             string[] datos = linea.Split(delimitador.ToCharArray());
             if (datos.Length > 0)
             {
-                //TODO: obtener array de paises del archivo statusVacuna segun el id de la vacuna 
-                //TODO: obtener nombre de tipo de vacuna para crear el objeto TipoVacuna completo 
-
+                //TODO: obtener array de paises del archivo statusVacuna segun el id de la vacuna             
                 string IdLaboratorio = datos[0].Trim();
                 return new Vacuna
                 {
                     Id = int.Parse(datos[0].Trim()),
-                    TipoVacuna = BuscarYObtenerTipoVacuna(datos[1]),
+                    Tipo = BuscarYObtenerTipoVacuna(datos[1].Trim()),
                     Documento = datos[2].Trim(),
                     Nombre = datos[3].Trim(),
                     CantidadDosis = int.Parse(datos[4].Trim()),

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Dominio.EntidadesNegocio
 {
+    [Table("TipoVacunas")]
     public class TipoVacuna
     {
         public string Id { get; set; }
