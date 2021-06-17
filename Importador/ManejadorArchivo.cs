@@ -81,6 +81,18 @@ namespace Importador
                     linea = streamReader.ReadLine();
                 }
             }
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "StatusVacuna.txt")))
+            {
+                string linea = streamReader.ReadLine();
+                while ((linea != null))
+                {
+                    if (linea.IndexOf(delimitador) > 0)
+                    {
+                        InsertarVacuna(ObtenerVacunaDesdeString(linea, delimitador), manejador.repositorioVacuna);
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
         }
 
         private static Usuario ObtenerUsuarioDesdeString(string linea, string delimitador)
