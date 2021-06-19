@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Web.Mvc;
-//using Repositorios;
 using Dominio.EntidadesNegocio;
-//using WebApplication.ReferenciaServicioVacunas;
 using System.Collections.Generic;
 using System.Linq;
+using AccesoDatos.Repositorios;
+using Repositorio;
+using AplicacionWeb.Models;
 
 namespace WebApplication.Controllers
 {
@@ -80,6 +81,25 @@ namespace WebApplication.Controllers
             //ViewBag.Laboratorios = repoLaboratorio.FindAll();            
             //ViewBag.TipoVacunas = repoTipoVacuna.FindAll();            
             //ViewBag.Paises = repoPais.FindAll();
+        }
+
+        //TODO: poner enlace en cada vacuna que me lleve a este get
+        [HttpGet]
+        public ActionResult CompraVacuna()
+        {
+            RepositorioMutualista repoMutualista = new RepositorioMutualista();
+            RepositorioVacuna repoVacuna = new RepositorioVacuna();
+
+            if ((string)Session["documento"] != null && Session["nombre"] != null)
+            {
+                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById(1)) ;
+                if (viewModelVacuna != null)
+                {
+                    ViewBag.Mutualistas = repoMutualista.FindAll();
+                    return View(viewModelVacuna);
+                }
+            }
+            return RedirectToAction("Login", "Usuario");
         }
     }
 }

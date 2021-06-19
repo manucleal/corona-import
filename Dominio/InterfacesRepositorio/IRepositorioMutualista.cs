@@ -14,5 +14,7 @@ namespace Dominio.InterfacesRepositorio
         Mutualista FindById(int id);
 
         Mutualista FindByName(string nombre);
+
+        IEnumerable<Mutualista> FindAll();
     }
 }
