@@ -51,11 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RepositorioUsuario.cs" />
-	<Compile Include="RepositorioLaboratorio.cs" />
-	<Compile Include="RepositorioTipoVacuna.cs" />
-    <Compile Include="RepositorioVacuna.cs" />
     <Compile Include="RepositorioMutualista.cs" />
+    <Compile Include="RepositorioUsuario.cs" />
+    <Compile Include="RepositorioLaboratorio.cs" />
+    <Compile Include="RepositorioTipoVacuna.cs" />
+    <Compile Include="RepositorioVacuna.cs" />
 	<Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

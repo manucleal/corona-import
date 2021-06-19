@@ -5,6 +5,7 @@ using System.Linq;
 using Dominio.EntidadesNegocio;
 using AccesoDatos.Contexto;
 using Dominio.InterfacesRepositorio;
+using System.Data.Entity;
 
 namespace Repositorio
 {
@@ -22,12 +23,17 @@ namespace Repositorio
                     using (var dbContextTransaction = context.Database.BeginTransaction())
                     {
                         context.Vacunas.Add(unaVacuna);
-                        foreach (Laboratorio laboratorio in unaVacuna.Laboratorios)
+                        if (unaVacuna.Tipo != null) {
+                            context.Entry(unaVacuna.Tipo).State = EntityState.Unchanged;                            
+                        }
+                        if (unaVacuna.Laboratorios != null)
                         {
-                            unaVacuna.Laboratorios.Add(laboratorio);
+                            foreach (Laboratorio lab in unaVacuna.Laboratorios)
+                            {
+                                context.Entry(lab).State = EntityState.Unchanged;
+                            }
                         }
                         context.SaveChanges();
-
                         dbContextTransaction.Commit();
                     }
                 }

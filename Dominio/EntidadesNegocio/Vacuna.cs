@@ -9,8 +9,11 @@ namespace Dominio.EntidadesNegocio
     public class Vacuna
     {
         [Key]
+        [Column(Order = 1)]
         public int Id { get; set; }
 
+        [Key]
+        [Column(Order = 2)]
         [Required(ErrorMessage = "El nombre es obligatorio")]
         public string Nombre { get; set; }
 
@@ -65,7 +68,7 @@ namespace Dominio.EntidadesNegocio
         public decimal Precio { get; set; }
         public DateTime UltimaModificacion { get; set; }
         public string Documento { get; set; }
-        public TipoVacuna TipoVacuna { get; set; }
+        public TipoVacuna Tipo { get; set; }
         public string[] Paises { get; set; }
         public virtual ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
         public bool Covax { get; set; }

@@ -54,10 +54,6 @@
     <Compile Include="Contexto\CoronaImportContext.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositorios\RepositorioLaboratorio.cs" />
-    <Compile Include="Repositorios\RepositorioMutualista.cs" />
-    <Compile Include="Repositorios\RepositorioUsuario.cs" />
-    <Compile Include="Repositorios\RepositorioVacuna.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dominio\Dominio.csproj">

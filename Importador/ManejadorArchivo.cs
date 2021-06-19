@@ -32,8 +32,8 @@ namespace Importador
         }
 
         private static void ObtenerDatos(ManejadorArchivo manejador)
-        {
-            using (StreamReader streamReader = File.OpenText(raiz + "\\Usuarios.txt"))
+        {            
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "Usuarios.txt")))
             {
                 string linea = streamReader.ReadLine();
                 while ((linea != null))
@@ -45,7 +45,7 @@ namespace Importador
                     linea = streamReader.ReadLine();
                 }
             }
-            using (StreamReader streamReader = File.OpenText(raiz + "\\TipoVacunas.txt"))
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "TipoVacunas.txt")))
             {
                 string linea = streamReader.ReadLine();
                 while ((linea != null))
@@ -57,7 +57,7 @@ namespace Importador
                     linea = streamReader.ReadLine();
                 }
             }
-            using (StreamReader streamReader = File.OpenText(raiz + "\\Laboratorios.txt"))
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "Laboratorios.txt")))
             {
                 string linea = streamReader.ReadLine();
                 while ((linea != null))
@@ -69,7 +69,19 @@ namespace Importador
                     linea = streamReader.ReadLine();
                 }
             }
-            using (StreamReader streamReader = File.OpenText(raiz + "\\Vacunas.txt"))
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "Vacunas.txt")))
+            {
+                string linea = streamReader.ReadLine();
+                while ((linea != null))
+                {
+                    if (linea.IndexOf(delimitador) > 0)
+                    {
+                        InsertarVacuna(ObtenerVacunaDesdeString(linea, delimitador), manejador.repositorioVacuna);
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "StatusVacuna.txt")))
             {
                 string linea = streamReader.ReadLine();
                 while ((linea != null))
@@ -105,8 +117,8 @@ namespace Importador
             {
                 return new TipoVacuna
                 {
-                    Id = datos[0],
-                    Descripcion = datos[1]
+                    Id = datos[0].Trim(),
+                    Descripcion = datos[1].Trim()
                 };
             }
             return null;
@@ -133,15 +145,12 @@ namespace Importador
             string[] datos = linea.Split(delimitador.ToCharArray());
             if (datos.Length > 0)
             {
-                //TODO: obtener array de paises del archivo statusVacuna segun el id de la vacuna 
-                //TODO: obtener nombre de tipo de vacuna para crear el objeto TipoVacuna completo 
-                //"{id} | {idTipoVac} | {idUsuario} | {nombre} | {cantDosis} | {lapsoDiasDosis} | {maxEdad} | " +
-                //$"{minEdad} | {eficaciaPrev} | {eficaciaHosp} | {eficaciaCti} | {maxTemp} | {minTemp} | {produccionAnual}" +
-                //$" | {faseClinicaAprob} | {emergencia} | {efectosAdversos} | {precio} | {ultimaModificacion} | {covax}"
+                //TODO: obtener array de paises del archivo statusVacuna segun el id de la vacuna             
+                string IdLaboratorio = datos[0].Trim();
                 return new Vacuna
                 {
                     Id = int.Parse(datos[0].Trim()),
-                    TipoVacuna = new TipoVacuna { Id = datos[1], Descripcion = "obtener este dato desde TipoVacuna.txt" },
+                    Tipo = BuscarYObtenerTipoVacuna(datos[1].Trim()),
                     Documento = datos[2].Trim(),
                     Nombre = datos[3].Trim(),
                     CantidadDosis = int.Parse(datos[4].Trim()),
@@ -159,7 +168,8 @@ namespace Importador
                     EfectosAdversos = datos[16],
                     Precio = decimal.Parse(datos[17].Trim()),
                     UltimaModificacion = Usuario.GenerarDateTime(datos[18]),
-                    Covax = (datos[19].Trim().ToUpper() == "SI") ? true : false
+                    Covax = (datos[19].Trim().ToUpper() == "SI") ? true : false,
+                    Laboratorios = BuscarYObtenerLaboratoriosVacuna(IdLaboratorio)
                 };
             }
             return null;
@@ -200,6 +210,65 @@ namespace Importador
                 return aux;
             }
             return false;
+        }
+
+        private static TipoVacuna BuscarYObtenerTipoVacuna(string clave)
+        {
+            StreamReader streamReader = null;
+            using (streamReader = new StreamReader(Path.Combine(raiz, "TipoVacunas.txt")))
+            {
+                string linea = streamReader.ReadLine();
+                while (linea != null)
+                {
+                    TipoVacuna tipoVacuna = ObtenerTipoVacunasDesdeString(linea, delimitador);
+                    if (tipoVacuna != null)
+                    {
+                        if (tipoVacuna.Id.Equals(clave, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            return tipoVacuna;
+                        }
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
+            return null;
+        }
+
+        private static ICollection<Laboratorio> BuscarYObtenerLaboratoriosVacuna(string claveVacuna)
+        {
+            ICollection<Laboratorio> laboratorios = new List<Laboratorio>();
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "VacunaLaboratorios.txt")))
+            {
+                string linea = streamReader.ReadLine();
+                while (linea != null)
+                {
+                    string[] vacunaLaboratorios = linea.Split(delimitador.ToCharArray());
+                    string IdVacuna = vacunaLaboratorios[0].Trim();
+
+                    if (IdVacuna.Equals(claveVacuna, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        string IdLaboratorio = vacunaLaboratorios[1].Trim();
+                        using (StreamReader streamReaderLab = File.OpenText(Path.Combine(raiz, "Laboratorios.txt")))
+                        {
+                            string lineaLab = streamReaderLab.ReadLine();
+                            while (lineaLab != null)
+                            {
+                                if (lineaLab.IndexOf(delimitador) > 0)
+                                {
+                                    Laboratorio laboratorio = ObtenerLaboratoriosDesdeString(lineaLab, delimitador);
+                                    if(laboratorio.Id == int.Parse(IdLaboratorio))
+                                    {
+                                        laboratorios.Add(laboratorio);
+                                    }                                    
+                                }
+                                lineaLab = streamReaderLab.ReadLine();
+                            }
+                        }                        
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
+            return laboratorios;
         }
     }
 }

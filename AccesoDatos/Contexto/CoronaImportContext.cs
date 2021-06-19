@@ -1,5 +1,6 @@
 ﻿using Dominio.EntidadesNegocio;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace AccesoDatos.Contexto
 {
@@ -12,5 +13,15 @@ namespace AccesoDatos.Contexto
         public DbSet<TipoVacuna> TipoVacunas { get; set; }
         public DbSet<Vacuna> Vacunas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
+            //modelBuilder.Entity<TipoVacuna>().ToTable("TipoVacuna");
+
+            //modelBuilder.Entity<TipoVacuna>().ToTable("TipoVacuna");
+        }
     }
 }

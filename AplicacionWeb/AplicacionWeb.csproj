@@ -179,6 +179,7 @@
     <Content Include="Views\Usuario\RegistroMutualista.cshtml" />
     <Content Include="Views\Vacuna\Index.cshtml" />
     <Content Include="Views\Vacuna\IndexAuth.cshtml" />
+    <Content Include="Views\Home\Importador.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
