@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Repositorio;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,9 +11,13 @@ namespace APIWeb.Controllers
     [RoutePrefix("api/vacunas")]
     public class VacunaController : ApiController
     {
+        private RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
+
         [HttpGet]
-        [Route("")]
-        public IEnumerable<string> Get()
+        [Route("filters")]
+//        public IEnumerable<string> Get([FromUri]int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
+
+        public IEnumerable<string> Get([FromUri]int faseClinicaAprob, [FromUri]int PrecioMin, [FromUri]int PrecioMax, [FromUri]string tipo, [FromUri]string laboratorio, [FromUri]string paisAceptada)
         {
             return new string[] { "value1", "value2" };
         }

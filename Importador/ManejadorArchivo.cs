@@ -81,18 +81,6 @@ namespace Importador
                     linea = streamReader.ReadLine();
                 }
             }
-            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "StatusVacuna.txt")))
-            {
-                string linea = streamReader.ReadLine();
-                while ((linea != null))
-                {
-                    if (linea.IndexOf(delimitador) > 0)
-                    {
-                        InsertarVacuna(ObtenerVacunaDesdeString(linea, delimitador), manejador.repositorioVacuna);
-                    }
-                    linea = streamReader.ReadLine();
-                }
-            }
         }
 
         private static Usuario ObtenerUsuarioDesdeString(string linea, string delimitador)
@@ -144,32 +132,33 @@ namespace Importador
         {
             string[] datos = linea.Split(delimitador.ToCharArray());
             if (datos.Length > 0)
-            {
-                //TODO: obtener array de paises del archivo statusVacuna segun el id de la vacuna             
+            {          
                 string IdLaboratorio = datos[0].Trim();
+                string IdVacuna = datos[0].Trim();
                 return new Vacuna
                 {
-                    Id = int.Parse(datos[0].Trim()),
+                    Id = int.Parse(IdVacuna),
                     Tipo = BuscarYObtenerTipoVacuna(datos[1].Trim()),
                     Documento = datos[2].Trim(),
                     Nombre = datos[3].Trim(),
                     CantidadDosis = int.Parse(datos[4].Trim()),
                     LapsoDiasDosis = int.Parse(datos[5].Trim()),
                     MaxEdad = int.Parse(datos[6].Trim()),
-                    MinEdad = int.Parse(datos[7].Trim()),                    
+                    MinEdad = int.Parse(datos[7].Trim()),
                     EficaciaPrev = int.Parse(datos[8].Trim()),
                     EficaciaHosp = int.Parse(datos[9].Trim()),
                     EficaciaCti = int.Parse(datos[10].Trim()),
                     MaxTemp = int.Parse(datos[11].Trim()),
-                    MinTemp = int.Parse(datos[12].Trim()),                    
+                    MinTemp = int.Parse(datos[12].Trim()),
                     ProduccionAnual = long.Parse(datos[13].Trim()),
-                    FaseClinicaAprob = int.Parse(datos[14].Trim()),                   
+                    FaseClinicaAprob = int.Parse(datos[14].Trim()),
                     Emergencia = (datos[15].Trim().ToUpper() == "SI") ? true : false,
                     EfectosAdversos = datos[16],
                     Precio = decimal.Parse(datos[17].Trim()),
                     UltimaModificacion = Usuario.GenerarDateTime(datos[18]),
                     Covax = (datos[19].Trim().ToUpper() == "SI") ? true : false,
-                    Laboratorios = BuscarYObtenerLaboratoriosVacuna(IdLaboratorio)
+                    Laboratorios = BuscarYObtenerLaboratoriosVacuna(IdLaboratorio),
+                    Paises = BuscarYObtenerPaisesVacuna(IdVacuna)
                 };
             }
             return null;
@@ -269,6 +258,45 @@ namespace Importador
                 }
             }
             return laboratorios;
+        }
+
+        private static string BuscarYObtenerPaisesVacuna(string claveVacuna)
+        {
+            ICollection<string> paises = new List<string>();
+            using (StreamReader streamReader = File.OpenText(Path.Combine(raiz, "StatusVacuna.txt")))
+            {
+                string linea = streamReader.ReadLine();
+                while (linea != null)
+                {
+                    string[] paisesVacuna = linea.Split(delimitador.ToCharArray());
+                    string IdVacuna = paisesVacuna[0].Trim();
+
+                    if (IdVacuna.Equals(claveVacuna, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        string IdPais = paisesVacuna[1].Trim();
+                        using (StreamReader streamReaderPais = File.OpenText(Path.Combine(raiz, "Paises.txt")))
+                        {
+                            string lineaPais = streamReaderPais.ReadLine();
+                            while (lineaPais != null)
+                            {
+                                if (lineaPais.IndexOf(delimitador) > 0)
+                                {
+                                    string[] datos = lineaPais.Split(delimitador.ToCharArray());
+                                    string codigoPais = datos[0].Trim();
+                                    string nombrePais = datos[1].Trim();
+                                    if (codigoPais.Equals(IdPais, StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        paises.Add(nombrePais);
+                                    }
+                                }
+                                lineaPais = streamReaderPais.ReadLine();
+                            }
+                        }
+                    }
+                    linea = streamReader.ReadLine();
+                }
+            }
+            return String.Join(",", paises.ToArray());
         }
     }
 }
