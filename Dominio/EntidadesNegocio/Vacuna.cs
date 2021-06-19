@@ -69,7 +69,7 @@ namespace Dominio.EntidadesNegocio
         public DateTime UltimaModificacion { get; set; }
         public string Documento { get; set; }
         public TipoVacuna Tipo { get; set; }
-        public string[] Paises { get; set; }
+        public string Paises { get; set; }
         public virtual ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
         public bool Covax { get; set; }
 

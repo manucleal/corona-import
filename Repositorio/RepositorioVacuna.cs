@@ -65,62 +65,25 @@ namespace Repositorio
             }
         }
 
-        public IEnumerable<Vacuna> FindAll()
+        public IEnumerable<Vacuna> FindAllByFilters(int ?faseClinicaAprob, int? PrecioMin, int? PrecioMax, string tipo, string laboratorio, string paisAceptada)
         {
-            //Conexion manejadorConexion = new Conexion();
-            //SqlConnection con = manejadorConexion.CrearConexion();
-
             try
             {
-                //SqlCommand cmd = new SqlCommand("SELECT * FROM Vacunas", con);
-                //manejadorConexion.AbrirConexion(con);
-                //SqlDataReader dataReader = cmd.ExecuteReader();
-                
-                List<Vacuna> vacunas = new List<Vacuna>();
+                using (CoronaImportContext dataBase = new CoronaImportContext())
+                {
+                    var resultado = dataBase.Vacunas
+                        .Where(v => 
+                            (v.Tipo.Descripcion == tipo || v.Tipo.Descripcion == null ) 
+                            && (v.Paises.Contains(paisAceptada) || v.Paises == null)
+                        );
 
-                //while (dataReader.Read())
-                //{
-                //    int idVacuna = (int)dataReader["Id"];
-                //    string idTipo = (string)dataReader["IdTipo"];
-                //    Vacuna unaVacuna = new Vacuna()
-                //    {
-                //        Id = idVacuna,
-                //        Nombre = (string)dataReader["Nombre"],
-                //        IdTipo = idTipo,
-                //        CantidadDosis = (int)dataReader["CantidadDosis"],
-                //        LapsoDiasDosis = (int)dataReader["LapsoDiasDosis"],
-                //        MaxEdad = (int)dataReader["MaxEdad"],
-                //        MinEdad = (int)dataReader["MinEdad"],
-                //        EficaciaPrev = (int)dataReader["EficaciaPrev"],
-                //        EficaciaHosp = (int)dataReader["EficaciaHosp"],
-                //        EficaciaCti = (int)dataReader["EficaciaCti"],
-                //        MaxTemp = (int)dataReader["MaxTemp"],
-                //        MinTemp = (int)dataReader["MinTemp"],
-                //        ProduccionAnual = (long)dataReader["ProduccionAnual"],
-                //        FaseClinicaAprob = (int)dataReader["FaseClinicaAprob"],
-                //        Emergencia = (bool)dataReader["Emergencia"],
-                //        EfectosAdversos = (string)dataReader["EfectosAdversos"],
-                //        Precio = (decimal)dataReader["Precio"],
-                //        IdUsuario = (string)dataReader["IdUsuario"]
-                //    };
-
-                //    vacunas.Add(unaVacuna);
-                //    unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-                //    unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-                //    unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-                //}
-                //dataReader.Close();
-
-                return vacunas;
+                    return resultado;
+                }
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.Assert(false, "Error al listar Vacuna" + e.Message);
+                System.Diagnostics.Debug.Assert(false, "Error al filtrat Vacunas" + e.Message);
                 return null;
-            }
-            finally
-            {
-                //manejadorConexion.CerrarConexion(con);
             }
         }
 
