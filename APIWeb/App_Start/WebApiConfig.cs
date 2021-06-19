@@ -10,7 +10,8 @@ namespace APIWeb
         public static void Register(HttpConfiguration config)
         {
             // Configuración y servicios de API web
-
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None;
             // Rutas de API web
             config.MapHttpAttributeRoutes();
 
