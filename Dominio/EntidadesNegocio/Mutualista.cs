@@ -12,14 +12,26 @@ namespace Dominio.EntidadesNegocio
     public class Mutualista
     {
         [Key]
-        [Range(1, 999999, ErrorMessage = "El valor {0} debe estar entre {1} y {2}.")]
+        [Range(1, 999999)]
         public int Id { get; set; }
+
+        [Required]
         public string Nombre { get; set; } //TODO: agregar unique
+
+        [Required]
         public string Telefono { get; set; }
+
+        [Required]
         public string NombreContacto { get; set; }
+
+        [Required]
         public int TopeComprasMensuales { get; set; }
+
+        [Required]
         public int CantidadAfiliados { get; set; }
-        public string MontoMaxVacunasPorAfiliado { get; set; }        
+
+        [Required]
+        public int MontoMaxVacunasPorAfiliado { get; set; }        
         
         public Mutualista() { }
     }
