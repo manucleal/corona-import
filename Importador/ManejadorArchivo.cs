@@ -120,7 +120,7 @@ namespace Importador
                 return new Laboratorio
                 {
                     Id = int.Parse(datos[0].Trim()),
-                    Nombre = datos[1],
+                    Nombre = datos[1].Trim(),
                     PaisOrigen = datos[2],
                     Experiencia = (datos[3].Trim() == "Si") ? true : false
                 };

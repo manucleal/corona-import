@@ -75,14 +75,21 @@ namespace Repositorio
             {
                 using (CoronaImportContext dataBase = new CoronaImportContext())
                 {
-                    var resultado = dataBase.Vacunas.Select(v => new Models.VacunaFilterDTO {
+                    dataBase.Configuration.LazyLoadingEnabled = false;
+                    dataBase.Configuration.ProxyCreationEnabled = false;
+
+                    var resultado = dataBase.Vacunas
+                        .Include(v => v.Laboratorios)
+                        .Include(v => v.Tipo).ToList()
+                    .Select(v => new Models.VacunaFilterDTO {
                         Nombre = v.Nombre,
                         Tipo = v.Tipo.Descripcion,
                         Precio = v.Precio,
                         FaseClinicaDeAprobacion = v.FaseClinicaAprob,
                         Paises = v.Paises,
-                        Laboratorios =  v.Laboratorios
-                    }).Include(v => v.Laboratorios);
+                        Labs = String.Join(",", v.Laboratorios.Select(l => l.Nombre).ToList())
+                    });
+
                     //si flag any llega en true entro aca sino sigo flujo con todos los ifs
                     if (faseClinicaAprob != -1 && PrecioMin != -1 && PrecioMax != -1 && tipo != "" && paisAceptada != "")
                     {
@@ -103,16 +110,15 @@ namespace Repositorio
                     }
                     if (tipo != "")
                     {
-                        resultado = resultado.Where(v => v.Tipo == tipo);
+                        resultado = resultado.Where(v => v.Tipo.ToUpper() == tipo.ToUpper());
                     }
                     if (paisAceptada != "")
                     {
-                        resultado = resultado.Where(v => v.Paises.Contains(paisAceptada));
+                        resultado = resultado.Where(v => v.Paises.ToUpper().Contains(paisAceptada.ToUpper()));
                     }
                     if (laboratorio != "")
                     {
-                        //resultado = resultado.Where(v => v.Laboratorios.(lab => lab.Nombre == laboratorio)));
-                        //resultado = resultado.Where(v => v.Laboratorios.Any(lab => lab.Nombre == laboratorio));
+                        resultado = resultado.Where(v => v.Labs.ToUpper().Contains(laboratorio.ToUpper()));
                     }
 
                     return resultado.ToList();
@@ -123,56 +129,6 @@ namespace Repositorio
                 System.Diagnostics.Debug.Assert(false, "Error al filtrat Vacunas" + exp.Message);
                 return null;
             }
-        }
-
-        private ICollection<Laboratorio> AddLabsToVacunas(int idVacuna, SqlConnection con)
-        {
-            SqlCommand query = new SqlCommand("SELECT * FROM Laboratorios l " +
-                                  "WHERE l.Id IN (SELECT IdLaboratorio FROM VacunaLaboratorios vl " +
-                                  "WHERE IdVacuna=@IdVacuna)", con);
-            query.Parameters.AddWithValue("@IdVacuna", idVacuna);
-            SqlDataReader labs = query.ExecuteReader();
-            ICollection<Laboratorio> ListaLaboratorios = new List<Laboratorio>();
-            while (labs.Read())
-            {
-                Laboratorio lab = new Laboratorio()
-                {
-                    Id = (int)labs["Id"],
-                    Nombre = (string)labs["Nombre"],
-                    PaisOrigen = (string)labs["PaisOrigen"],
-                    Experiencia = (bool)labs["Experiencia"]
-                };
-
-                ListaLaboratorios.Add(lab);
-            }
-
-            labs.Close();
-
-            return ListaLaboratorios;
-        }
-
-        private TipoVacuna AddTipoVacunaToVacunas(string idTipo, SqlConnection con)
-        {
-            SqlCommand query = new SqlCommand("SELECT * FROM TipoVacunas " +                                  
-                                  "WHERE Id LIKE @idTipo", con);
-            query.Parameters.AddWithValue("@idTipo", '%' + idTipo + '%');
-
-            SqlDataReader reader = query.ExecuteReader();
-            TipoVacuna tipoVacuna = null;
-            while (reader.Read())
-            {
-                TipoVacuna unaVacuna = new TipoVacuna()
-                {
-                    Id = (string)reader["Id"],
-                    Descripcion = (string)reader["Descripcion"]
-                };
-
-                tipoVacuna = unaVacuna;
-            }
-
-            reader.Close();
-
-            return tipoVacuna;
         }
     }
 }

@@ -5,11 +5,25 @@ using Dominio.EntidadesNegocio;
 //using WebApplication.ReferenciaServicioVacunas;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace WebApplication.Controllers
 {
     public class VacunaController : Controller
     {
+        HttpClient cliente = new HttpClient();
+        HttpResponseMessage response = new HttpResponseMessage();
+        Uri vacunaUri = null;
+
+        public VacunaController()
+        {
+            cliente.BaseAddress = new Uri("http://localhost:49340");
+            vacunaUri = new Uri("http://localhost:49340/api/vacunas");
+            cliente.DefaultRequestHeaders.Accept.Clear();
+            cliente.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+        }
 
         [HttpGet]
         public ActionResult Index()
@@ -29,6 +43,23 @@ namespace WebApplication.Controllers
                 return RedirectToAction("Index", "Vacuna");
             }
 
+            //response = cliente.GetAsync(vacunaUri).Result;
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var vacunas = response.Content.ReadAsAsync<IEnumerable<Models.>>().Result;
+            //    if (vacunas != null && vacunas.Count() > 0)
+            //        return View("IndexAuth", vacunas.ToList());
+            //    else
+            //    {
+            //        TempData["ResultadoOperacion"] = "No hay vacunas disponibles";
+            //        return View("IndexAuth", new List<ProductoModel>());
+            //    }
+            //}
+            //else
+            //{
+            //    TempData["ResultadoOperacion"] = "Error desconocido";
+            //    return View("IndexAuth");
+            //}
             //IEnumerable<DtoVacunas> vacunas = serviciosVacunas.GetTodasLasVacunas();
             //ViewBag.Vacunas = vacunas;
             return View();

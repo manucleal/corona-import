@@ -13,7 +13,9 @@ namespace Repositorio.Models
         public string Tipo { get; set; }
         public decimal Precio { get; set; }        
         public int FaseClinicaDeAprobacion { get; set; }
-        public ICollection<Laboratorio> Laboratorios { get; set; }
+        //public ICollection<Laboratorio> Labs { get; set; } = new List<Laboratorio>();
+        //public ICollection<string> Labs { get; set; } = new List<string>();
+        public string Labs { get; set; }
         public string Paises { get; set; }
 
         public VacunaFilterDTO() { }
