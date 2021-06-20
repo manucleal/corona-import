@@ -102,6 +102,7 @@ namespace Repositorio
                         .Include(v => v.Laboratorios)
                         .Include(v => v.Tipo).ToList()
                     .Select(v => new Models.VacunaFilterDTO {
+                        Id = v.Id,
                         Nombre = v.Nombre,
                         Tipo = v.Tipo.Descripcion,
                         Precio = v.Precio,
