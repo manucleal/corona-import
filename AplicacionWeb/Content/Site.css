@@ -394,7 +394,7 @@ table input:nth-child(1){
     width: 48%;
 }
 
-input[type=date]{
+input[type=date] {
     border-radius: 5px;
 }
 

@@ -13,6 +13,7 @@ namespace AccesoDatos.Contexto
         public DbSet<TipoVacuna> TipoVacunas { get; set; }
         public DbSet<Vacuna> Vacunas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<CompraVacuna> CompraVacunas { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

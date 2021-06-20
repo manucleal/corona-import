@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
-//using Repositorios;
 using Dominio.EntidadesNegocio;
-//using WebApplication.ReferenciaServicioVacunas;
 using System.Collections.Generic;
 using System.Linq;
+using AccesoDatos.Repositorios;
+using Repositorio;
+using AplicacionWeb.Models;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
@@ -59,7 +60,8 @@ namespace WebApplication.Controllers
             //{
             //    TempData["ResultadoOperacion"] = "Error desconocido";
             //    return View("IndexAuth");
-            //}
+            //}
+
             //IEnumerable<DtoVacunas> vacunas = serviciosVacunas.GetTodasLasVacunas();
             //ViewBag.Vacunas = vacunas;
             return View();
@@ -105,12 +107,52 @@ namespace WebApplication.Controllers
 
             return View("IndexAuth");
         }
+        
+        //TODO: poner enlace en cada vacuna que me lleve a este get
+        [HttpGet]
+        public ActionResult CompraVacuna()
+        {
+            RepositorioMutualista repoMutualista = new RepositorioMutualista();
+            RepositorioVacuna repoVacuna = new RepositorioVacuna();
 
-        public void cargarFiltros()
-        {            
-            //ViewBag.Laboratorios = repoLaboratorio.FindAll();            
-            //ViewBag.TipoVacunas = repoTipoVacuna.FindAll();            
-            //ViewBag.Paises = repoPais.FindAll();
+            if ((string)Session["documento"] != null && Session["nombre"] != null)
+            {
+                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById(2));
+                if (viewModelVacuna != null)
+                {
+                    ViewBag.Mutualistas = repoMutualista.FindAll();
+                    return View("CompraVacuna", viewModelVacuna);
+                }
+            }
+            return RedirectToAction("Login", "Usuario");
+        }
+
+        [HttpPost]
+        public ActionResult CompraVacuna(int? Mutualista, ViewModelVacuna viewModelVacuna)
+        {
+            RepositorioMutualista repoMutualista = new RepositorioMutualista();
+            RepositorioVacuna repoVacuna = new RepositorioVacuna();
+            Mutualista mutualista = repoMutualista.FindById((int)Mutualista);
+            Vacuna vacuna = repoVacuna.FindById(viewModelVacuna.Id);
+
+            if (mutualista != null && vacuna != null)
+            {
+                CompraVacuna compra = new CompraVacuna
+                {
+                    CantidadDosis = viewModelVacuna.CantidadDosis,
+                    Monto = viewModelVacuna.CantidadDosis * viewModelVacuna.Precio,
+                    PrecioUnitario = viewModelVacuna.Precio,
+                    Mutualista = mutualista,
+                    Vacuna = vacuna
+                };
+                repoVacuna.AddCompra(compra);
+            }
+            else
+            {
+                return RedirectToAction("IndexAuth","Vacuna");
+            }
+
+            return RedirectToAction("IndexAuth", "Vacuna");
         }
     }
 }
