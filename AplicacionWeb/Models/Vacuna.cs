@@ -71,8 +71,8 @@ namespace AplicacionWeb.Models
         public DateTime UltimaModificacion { get; set; }
         public string Documento { get; set; }
         public TipoVacuna Tipo { get; set; }
-        public string[] Paises { get; set; }
-        //public virtual ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
+        public string Paises { get; set; }
+        public ICollection<Laboratorio> Laboratorios { get; set; } = new List<Laboratorio>();
         public bool Covax { get; set; }
 
         public static ViewModelVacuna MapearAViewModelVacuna(Vacuna vacuna)
@@ -98,10 +98,11 @@ namespace AplicacionWeb.Models
                 Precio = vacuna.Precio,
                 UltimaModificacion = vacuna.UltimaModificacion,
                 Documento = vacuna.Documento,
-                //Tipo = vacuna.Tipo,
-                //Paises = vacuna.Paises,
-                //Laboratorios = vacuna.Laboratorios,
+                Tipo = vacuna.Tipo,
+                Paises = vacuna.Paises,
+                Laboratorios = vacuna.Laboratorios,
                 Covax = vacuna.Covax,
+                EfectosAdversos = vacuna.EfectosAdversos
             };
         }
     }

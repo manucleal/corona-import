@@ -46,14 +46,33 @@ namespace Repositorio
             }
         }
 
+        public IEnumerable<CompraVacuna> FindAll(int id)
+        {
+            try
+            {
+                using (CoronaImportContext db = new CoronaImportContext())
+                {
+                    var resultado = db.CompraVacunas
+                        .Where(c => c.Mutualista.Id == id);
+                    return resultado.ToList(); 
+                }
+            }
+            catch (Exception ex) { return null; }
+        }
+
         public Vacuna FindById(int idVacuna)
         {
             try
             {
                 using (CoronaImportContext dataBase = new CoronaImportContext())
                 {
+                    dataBase.Configuration.LazyLoadingEnabled = false;
+                    dataBase.Configuration.ProxyCreationEnabled = false;
                     var resultado = dataBase.Vacunas
-                        .Where(v => v.Id == idVacuna).FirstOrDefault();
+                        .Where(v => v.Id == idVacuna)
+                        .Include(v => v.Laboratorios)
+                        .Include(v => v.Tipo)
+                        .FirstOrDefault();
 
                     return resultado;
                 }

@@ -37,7 +37,7 @@ namespace AplicacionWeb.Controllers
 
                 if (repoUsuario.CambiarPassword(viewModelUsuario.Documento, viewModelUsuario.Password))
                 {
-                    return View("Login");
+                    return RedirectToAction("Login", "Usuario");
                 }
                 else
                 {
@@ -55,7 +55,7 @@ namespace AplicacionWeb.Controllers
         public ActionResult Login()
         {
             if ((string)Session["documento"] != null && (string)Session["nombre"] != null){
-                return RedirectToAction("Login", "Usuario");
+                return RedirectToAction("IndexAuth", "Vacuna");
             }
             return View();
         }

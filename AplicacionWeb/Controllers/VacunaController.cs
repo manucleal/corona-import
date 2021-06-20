@@ -92,7 +92,7 @@ namespace WebApplication.Controllers
 
             if ((string)Session["documento"] != null && Session["nombre"] != null)
             {
-                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById(1)) ;
+                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById(2)) ;
                 if (viewModelVacuna != null)
                 {
                     ViewBag.Mutualistas = repoMutualista.FindAll();
@@ -100,6 +100,13 @@ namespace WebApplication.Controllers
                 }
             }
             return RedirectToAction("Login", "Usuario");
+        }
+
+        //hacer post CompraVacuna para capturar idMutualista y cantVacunas
+        [HttpPost]
+        public ActionResult CompraVacuna(int? IdVac, int? Mutualista, ViewModelVacuna vacuna)
+        {
+            return View();
         }
     }
 }
