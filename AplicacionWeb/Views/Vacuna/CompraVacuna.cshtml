@@ -1,0 +1,109 @@
+﻿@model AplicacionWeb.Models.ViewModelVacuna
+@{
+    ViewBag.H1 = "Comprar Vacuna";
+    ViewBag.Title = "Comprar Vacuna";
+}
+
+<main>
+    <small>Dashboard / <em>Comprar Vacuna <p style="color:red;">@ViewBag.mensaje</p></em></small>
+    <div class="FormEmpleados">
+        <form method="post" action="/Vacuna/CompraVacuna" autocomplete="on">
+            <div class="infoPersonal">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Cant. dosis</th>
+                            <th>Lapso<br>días<br>entre<br> dosis</th>
+                            <th>Edad max</th>
+                            <th>Edad min</th>
+                            <th>Eficacia prev.</th>
+                            <th>Eficacia hosp.</th>
+                            <th>Eficacia CTI</th>
+                            <th>Temp. max</th>
+                            <th>Temp. min</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>@Model.Nombre</th>
+                            <th>@Model.Tipo.Descripcion</th>
+                            <th>@Model.CantidadDosis</th>
+                            <th>@Model.LapsoDiasDosis</th>
+                            <th>@Model.MaxEdad</th>
+                            <th>@Model.MinEdad</th>
+                            <th>@Model.EficaciaPrev %</th>
+                            <th>@Model.EficaciaHosp %</th>
+                            <th>@Model.EficaciaCti %</th>
+                            <th>@Model.MaxTemp °C</th>
+                            <th>@Model.MinTemp °C</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producción anual</th>
+                            <th>Fase<br>clínica<br>de aprob.</th>
+                            <th>Emerg.</th>
+                            <th>Covax</th>
+                            <th>Labs</th>
+                            <th>Precio</th>
+                            <th>Paises</th>
+                            <th id="thEfectos">Efect.<br>Adversos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>@Model.ProduccionAnual</th>
+                            <th>@Model.FaseClinicaAprob</th>
+                            <th>@(Model.Emergencia ? "Si" : "No")</th>
+                            <th>@(Model.Covax ? "Si" : "No")</th>
+
+                            @if (@Model.Laboratorios.Count > 0)
+                            {
+                                <th>
+                                    @foreach (var lab in Model.Laboratorios)
+                                    {
+                                        @lab.Nombre<br>
+                                    }
+                                </th>
+                            }
+                            else
+                            {
+                                <th>N/a</th>
+                            }
+                            <th>$ @Model.Precio</th>
+                            <th>@Model.Paises</th>
+                            <th class="efectos"><span>@Model.EfectosAdversos</span> </th>
+                        </tr>
+                    </tbody>
+                </table>
+                <select name="Mutualista" required>
+                    <option value="">Seleccione Mutualista (*)</option>
+                    @foreach (Dominio.EntidadesNegocio.Mutualista item in ViewBag.Mutualistas)
+                    {
+                        <option value="@item.Id">@item.Nombre</option>
+                    }
+                </select>
+
+                <input type="number" name="cantidadDosis" placeholder="Cantidad de dosis (*)" required />
+                <div class="has-error">
+                    <span className="text-danger text-small d-block mb-2">
+                        @Html.ValidationMessageFor(model => model.CantidadDosis, "", new { @class = "help-block" })
+                        @Html.HiddenFor(model => model.CantidadDosis)
+                    </span>
+                </div>
+                <input type="hidden" value="@Model.Id" name="Id">
+                <input type="hidden" value="@Model.Precio" name="Precio">
+            </div>
+            <div class="divFooter">
+                <span>Campos Obligatorios (*)</span>
+                <input type="submit" class="botones" value="Comprar">
+                <input type="reset" id="limpiar" value="Limpiar">
+            </div>
+        </form>
+    </div>
+</main>
+

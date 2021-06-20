@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntidadesNegocio\CompraVacuna.cs" />
     <Compile Include="EntidadesNegocio\Laboratorio.cs" />
     <Compile Include="EntidadesNegocio\Mutualista.cs" />
     <Compile Include="EntidadesNegocio\TipoVacuna.cs" />

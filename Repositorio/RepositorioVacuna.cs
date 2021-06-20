@@ -6,6 +6,7 @@ using Dominio.EntidadesNegocio;
 using AccesoDatos.Contexto;
 using Dominio.InterfacesRepositorio;
 using System.Data.Entity;
+using AccesoDatos.Repositorios;
 
 namespace Repositorio
 {
@@ -46,14 +47,33 @@ namespace Repositorio
             }
         }
 
+        public IEnumerable<CompraVacuna> FindAll(int id)
+        {
+            try
+            {
+                using (CoronaImportContext db = new CoronaImportContext())
+                {
+                    var resultado = db.CompraVacunas
+                        .Where(c => c.Mutualista.Id == id);
+                    return resultado.ToList(); 
+                }
+            }
+            catch (Exception ex) { return null; }
+        }
+
         public Vacuna FindById(int idVacuna)
         {
             try
             {
                 using (CoronaImportContext dataBase = new CoronaImportContext())
                 {
+                    dataBase.Configuration.LazyLoadingEnabled = false;
+                    dataBase.Configuration.ProxyCreationEnabled = false;
                     var resultado = dataBase.Vacunas
-                        .Where(v => v.Id == idVacuna).FirstOrDefault();
+                        .Where(v => v.Id == idVacuna)
+                        .Include(v => v.Laboratorios)
+                        .Include(v => v.Tipo)
+                        .FirstOrDefault();
 
                     return resultado;
                 }
@@ -136,6 +156,42 @@ namespace Repositorio
 
             return tipoVacuna;
         }
+
+        public bool AddCompra(CompraVacuna compra)
+        {
+            try
+            {
+                using (CoronaImportContext dataBase = new CoronaImportContext())
+                {
+                    dataBase.Configuration.LazyLoadingEnabled = false;
+                    dataBase.Configuration.ProxyCreationEnabled = false;
+
+                    if (compra.Mutualista != null)
+                    {
+                        dataBase.Entry(compra.Mutualista).State = EntityState.Unchanged;
+                    }
+                    if (compra.Vacuna != null)
+                    {
+                        dataBase.Entry(compra.Vacuna).State = EntityState.Unchanged;
+                        dataBase.Entry(compra.Vacuna.Tipo).State = EntityState.Unchanged;
+                        foreach (Laboratorio lab in compra.Vacuna.Laboratorios)
+                        {
+                            dataBase.Entry(lab).State = EntityState.Unchanged;
+                        }
+                    }
+                    compra.Fecha = DateTime.Now;
+                    dataBase.CompraVacunas.Add(compra);
+                    dataBase.SaveChanges();
+                }
+                return true;
+            } catch (Exception exp)
+            {
+                System.Diagnostics.Debug.Assert(false, "Error al guardar una compra" + exp.Message);
+                return false;
+            }
+        }
+
+
 
         //private ICollection<Pais> AddPaisToVacunas(int idVacuna, SqlConnection con)
         //{

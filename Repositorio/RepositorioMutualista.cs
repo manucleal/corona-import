@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AccesoDatos.Contexto;
 using Dominio.EntidadesNegocio;
@@ -62,6 +63,19 @@ namespace AccesoDatos.Repositorios
                 System.Diagnostics.Debug.Assert(false, "Error al obtener Mutualista por nombre" + exp.Message);
                 return null;
             }
+        }
+
+        public IEnumerable<Mutualista> FindAll()
+        {
+            try
+            {
+                using (CoronaImportContext db = new CoronaImportContext())
+                {
+                     var resultado = db.Mutualistas.ToList();
+                    return resultado;
+                }
+            }
+            catch (Exception ex) { return null; }
         }
     }
 }
