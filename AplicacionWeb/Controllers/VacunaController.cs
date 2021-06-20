@@ -106,6 +106,20 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult CompraVacuna(int? IdVac, int? Mutualista, ViewModelVacuna vacuna)
         {
+            RepositorioMutualista repoMutualista = new RepositorioMutualista();
+            RepositorioVacuna repoVacuna = new RepositorioVacuna();
+
+            CompraVacuna compra = new CompraVacuna
+            {
+                CantidadDosis = vacuna.CantidadDosis, 
+                //Fecha = , //getdate
+                Monto = vacuna.CantidadDosis * vacuna.Precio,
+                PrecioUnitario = vacuna.Precio,
+                Mutualista = repoMutualista.FindById((int)Mutualista),
+                Vacuna = repoVacuna.FindById((int)IdVac)
+            };
+
+            repoVacuna.AddCompra()
             return View();
         }
     }

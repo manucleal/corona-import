@@ -13,8 +13,8 @@ namespace Dominio.EntidadesNegocio
         public Vacuna Vacuna { get; set; }
         public int CantidadDosis { get; set; }
         public DateTime Fecha { get; set; }
-        public int Monto { get; set; } 
-        public int PrecioUnitario { get; set; }
+        public decimal Monto { get; set; } 
+        public decimal PrecioUnitario { get; set; }
 
         public CompraVacuna() { }
     }

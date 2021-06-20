@@ -6,6 +6,7 @@ using Dominio.EntidadesNegocio;
 using AccesoDatos.Contexto;
 using Dominio.InterfacesRepositorio;
 using System.Data.Entity;
+using AccesoDatos.Repositorios;
 
 namespace Repositorio
 {
@@ -155,6 +156,26 @@ namespace Repositorio
 
             return tipoVacuna;
         }
+
+        public bool AddCompra(Compra compra)
+        {
+            using (CoronaImportContext dataBase = new CoronaImportContext())
+            {
+                dataBase.CompraVacunas.Add(compra);
+                if (compra.Mutualista != null)
+                {
+                    dataBase.Entry(compra.Mutualista).State = EntityState.Unchanged;
+                }
+                if (compra.Vacuna != null)
+                {
+                    dataBase.Entry(compra.Vacuna).State = EntityState.Unchanged;
+                }
+                dataBase.SaveChanges();
+            }
+            return true;
+        }
+
+
 
         //private ICollection<Pais> AddPaisToVacunas(int idVacuna, SqlConnection con)
         //{
