@@ -157,22 +157,38 @@ namespace Repositorio
             return tipoVacuna;
         }
 
-        public bool AddCompra(Compra compra)
+        public bool AddCompra(CompraVacuna compra)
         {
-            using (CoronaImportContext dataBase = new CoronaImportContext())
+            try
             {
-                dataBase.CompraVacunas.Add(compra);
-                if (compra.Mutualista != null)
+                using (CoronaImportContext dataBase = new CoronaImportContext())
                 {
-                    dataBase.Entry(compra.Mutualista).State = EntityState.Unchanged;
+                    dataBase.Configuration.LazyLoadingEnabled = false;
+                    dataBase.Configuration.ProxyCreationEnabled = false;
+
+                    if (compra.Mutualista != null)
+                    {
+                        dataBase.Entry(compra.Mutualista).State = EntityState.Unchanged;
+                    }
+                    if (compra.Vacuna != null)
+                    {
+                        dataBase.Entry(compra.Vacuna).State = EntityState.Unchanged;
+                        dataBase.Entry(compra.Vacuna.Tipo).State = EntityState.Unchanged;
+                        foreach (Laboratorio lab in compra.Vacuna.Laboratorios)
+                        {
+                            dataBase.Entry(lab).State = EntityState.Unchanged;
+                        }
+                    }
+                    compra.Fecha = DateTime.Now;
+                    dataBase.CompraVacunas.Add(compra);
+                    dataBase.SaveChanges();
                 }
-                if (compra.Vacuna != null)
-                {
-                    dataBase.Entry(compra.Vacuna).State = EntityState.Unchanged;
-                }
-                dataBase.SaveChanges();
+                return true;
+            } catch (Exception exp)
+            {
+                System.Diagnostics.Debug.Assert(false, "Error al guardar una compra" + exp.Message);
+                return false;
             }
-            return true;
         }
 
 

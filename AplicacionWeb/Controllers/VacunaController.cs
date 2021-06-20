@@ -92,35 +92,42 @@ namespace WebApplication.Controllers
 
             if ((string)Session["documento"] != null && Session["nombre"] != null)
             {
-                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById(2)) ;
+                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById(2));
                 if (viewModelVacuna != null)
                 {
                     ViewBag.Mutualistas = repoMutualista.FindAll();
-                    return View(viewModelVacuna);
+                    return View("CompraVacuna", viewModelVacuna);
                 }
             }
             return RedirectToAction("Login", "Usuario");
         }
 
-        //hacer post CompraVacuna para capturar idMutualista y cantVacunas
         [HttpPost]
-        public ActionResult CompraVacuna(int? IdVac, int? Mutualista, ViewModelVacuna vacuna)
+        public ActionResult CompraVacuna(int? Mutualista, ViewModelVacuna viewModelVacuna)
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
             RepositorioVacuna repoVacuna = new RepositorioVacuna();
+            Mutualista mutualista = repoMutualista.FindById((int)Mutualista);
+            Vacuna vacuna = repoVacuna.FindById(viewModelVacuna.Id);
 
-            CompraVacuna compra = new CompraVacuna
+            if (mutualista != null && vacuna != null)
             {
-                CantidadDosis = vacuna.CantidadDosis, 
-                //Fecha = , //getdate
-                Monto = vacuna.CantidadDosis * vacuna.Precio,
-                PrecioUnitario = vacuna.Precio,
-                Mutualista = repoMutualista.FindById((int)Mutualista),
-                Vacuna = repoVacuna.FindById((int)IdVac)
-            };
+                CompraVacuna compra = new CompraVacuna
+                {
+                    CantidadDosis = viewModelVacuna.CantidadDosis,
+                    Monto = viewModelVacuna.CantidadDosis * viewModelVacuna.Precio,
+                    PrecioUnitario = viewModelVacuna.Precio,
+                    Mutualista = mutualista,
+                    Vacuna = vacuna
+                };
+                repoVacuna.AddCompra(compra);
+            }
+            else
+            {
+                return RedirectToAction("IndexAuth","Vacuna");
+            }
 
-            repoVacuna.AddCompra()
-            return View();
+            return RedirectToAction("IndexAuth", "Vacuna");
         }
     }
 }
