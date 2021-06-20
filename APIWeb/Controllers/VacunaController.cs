@@ -15,11 +15,26 @@ namespace APIWeb.Controllers
 
         [HttpGet]
         [Route("filters")]
-//        public IEnumerable<string> Get([FromUri]int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
 
-        public IEnumerable<string> Get([FromUri]int faseClinicaAprob, [FromUri]int PrecioMin, [FromUri]int PrecioMax, [FromUri]string tipo, [FromUri]string laboratorio, [FromUri]string paisAceptada)
+        public IHttpActionResult Get([FromUri]int faseClinicaAprob = -1, [FromUri]int precioMin = -1, [FromUri]int precioMax = -1, [FromUri]string tipo = "", [FromUri]string laboratorio = "", [FromUri]string paisAceptada = "")
         {
-            return new string[] { "value1", "value2" };
+            //return new string[] {
+            //    "faseClinicaAprob", faseClinicaAprob.ToString(),
+            //    "PrecioMin", precioMin.ToString(),
+            //    "PrecioMax", precioMax.ToString(),
+            //    "tipo", tipo.ToString(),
+            //    "laboratorio", laboratorio.ToString(),
+            //    "paisAceptada", paisAceptada.ToString(),
+            //};
+            try
+            {            
+                var vacunas = repositorioVacuna.FindAllByFilters(faseClinicaAprob, precioMin, precioMax, tipo, laboratorio, paisAceptada);
+                return Ok(vacunas);
+            }
+            catch (Exception exp)
+            {                
+                return null;
+            }
         }
 
         [HttpGet]

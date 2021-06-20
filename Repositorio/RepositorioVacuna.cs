@@ -65,24 +65,62 @@ namespace Repositorio
             }
         }
 
-        public IEnumerable<Vacuna> FindAllByFilters(int ?faseClinicaAprob, int? PrecioMin, int? PrecioMax, string tipo, string laboratorio, string paisAceptada)
+        public IEnumerable<Models.VacunaFilterDTO> FindAllByFilters(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
         {
+
+            //Se podrán buscar por criterios combinados(más de un criterio simultáneamente) y en este caso se
+            //deberá seleccionar si es una búsqueda que debe cumplir con todos los criterios seleccionados o con
+            //cualquiera de ellos. Si no se especifica ningún filtro se desplegarán todas las vacunas
             try
             {
                 using (CoronaImportContext dataBase = new CoronaImportContext())
                 {
-                    var resultado = dataBase.Vacunas
-                        .Where(v => 
-                            (v.Tipo.Descripcion == tipo || v.Tipo.Descripcion == null ) 
-                            && (v.Paises.Contains(paisAceptada) || v.Paises == null)
-                        );
+                    var resultado = dataBase.Vacunas.Select(v => new Models.VacunaFilterDTO {
+                        Nombre = v.Nombre,
+                        Tipo = v.Tipo.Descripcion,
+                        Precio = v.Precio,
+                        FaseClinicaDeAprobacion = v.FaseClinicaAprob,
+                        Paises = v.Paises,
+                        Laboratorios =  v.Laboratorios
+                    }).Include(v => v.Laboratorios);
+                    //si flag any llega en true entro aca sino sigo flujo con todos los ifs
+                    if (faseClinicaAprob != -1 && PrecioMin != -1 && PrecioMax != -1 && tipo != "" && paisAceptada != "")
+                    {
 
-                    return resultado;
+                    }
+
+                    if (faseClinicaAprob != -1)
+                    {
+                        resultado = resultado.Where(v => v.FaseClinicaDeAprobacion == faseClinicaAprob);
+                    }
+                    if (PrecioMin != -1)
+                    {
+                        resultado = resultado.Where(v => v.Precio >= PrecioMin);
+                    }
+                    if (PrecioMax != -1)
+                    {
+                        resultado = resultado.Where(v => v.Precio <= PrecioMax);
+                    }
+                    if (tipo != "")
+                    {
+                        resultado = resultado.Where(v => v.Tipo == tipo);
+                    }
+                    if (paisAceptada != "")
+                    {
+                        resultado = resultado.Where(v => v.Paises.Contains(paisAceptada));
+                    }
+                    if (laboratorio != "")
+                    {
+                        //resultado = resultado.Where(v => v.Laboratorios.(lab => lab.Nombre == laboratorio)));
+                        //resultado = resultado.Where(v => v.Laboratorios.Any(lab => lab.Nombre == laboratorio));
+                    }
+
+                    return resultado.ToList();
                 }
             }
-            catch (Exception e)
+            catch (Exception exp)
             {
-                System.Diagnostics.Debug.Assert(false, "Error al filtrat Vacunas" + e.Message);
+                System.Diagnostics.Debug.Assert(false, "Error al filtrat Vacunas" + exp.Message);
                 return null;
             }
         }
@@ -136,394 +174,5 @@ namespace Repositorio
 
             return tipoVacuna;
         }
-
-        //private ICollection<Pais> AddPaisToVacunas(int idVacuna, SqlConnection con)
-        //{
-        //    SqlCommand query = new SqlCommand("SELECT * FROM Paises p WHERE p.CodPais IN(" +
-        //                                      "SELECT s.CodPais FROM StatusVacuna s " +
-        //                                      "WHERE s.IdVac=@idVacuna)", con);
-        //    query.Parameters.AddWithValue("@idVacuna", idVacuna);
-
-        //    SqlDataReader reader = query.ExecuteReader();
-        //    ICollection<Pais> ListaPaises = new List<Pais>();
-
-        //    while (reader.Read())
-        //    {
-        //        Pais unPais = new Pais()
-        //        {
-        //            CodPais = (string)reader["CodPais"],
-        //            Nombre = (string)reader["Nombre"]
-        //        };
-
-        //        ListaPaises.Add(unPais);
-        //    }
-
-        //    reader.Close();
-
-        //    return ListaPaises;
-        //}
-
-        //public IEnumerable<Vacuna> FindAllByName(string nombre)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("Select * from Vacunas where Nombre = @Nombre", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@Nombre", nombre);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        List<Vacuna> vacunas = new List<Vacuna>();
-
-        //        while (dataReader.Read())
-        //        {
-        //            int idVacuna = (int)dataReader["Id"];
-        //            string idTipo = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = idVacuna,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                IdTipo = idTipo,
-        //                Precio = (decimal)dataReader["Precio"],
-
-        //            };
-        //            vacunas.Add(unaVacuna);
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacunas;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por nombre" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-        //}
-
-        //public IEnumerable<Vacuna> FindAllByApprovalPhase(int FaseClinicaAprob)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("Select * from Vacunas where FaseClinicaAprob = @FaseClinicaAprob", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@FaseClinicaAprob", FaseClinicaAprob);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        List<Vacuna> vacunas = new List<Vacuna>();
-
-        //        while (dataReader.Read())
-        //        {
-        //            int idVacuna = (int)dataReader["Id"];
-        //            string idTipo = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = idVacuna,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                IdTipo = idTipo,
-        //                Precio = (decimal)dataReader["Precio"],
-
-        //            };
-        //            vacunas.Add(unaVacuna);
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacunas;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por fase clinica aprobacion" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-        //}
-
-        //public IEnumerable<Vacuna> FindAllByCountry(string pais)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("SELECT * FROM Vacunas " +
-        //                                           "WHERE Id IN (SELECT IdVacuna " +
-        //                                                        "FROM VacunaLaboratorios " +
-        //                                                        "WHERE IdLaboratorio IN (SELECT l.Id " +
-        //                                                                                "FROM Laboratorios l, Paises p " +
-        //                                                                                "WHERE l.PaisOrigen = p.CodPais AND (p.Nombre = @Pais OR p.CodPais = @Pais)))", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@Pais", pais);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        List<Vacuna> vacunas = new List<Vacuna>();
-
-        //        while (dataReader.Read())
-        //        {
-        //            int idVacuna = (int)dataReader["Id"];
-        //            string idTipo = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = idVacuna,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                IdTipo = idTipo,
-        //                Precio = (decimal)dataReader["Precio"],
-
-        //            };
-        //            vacunas.Add(unaVacuna);
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacunas;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por país de origen del laboratorio" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-
-        //}
-
-        //public IEnumerable<Vacuna> FindAllByTypeVac(string idTipo)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("SELECT * FROM Vacunas " +
-        //                                          "WHERE IdTipo = (SELECT Id FROM TipoVacunas WHERE Descripcion=@idTipo)", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@idTipo", idTipo);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        List<Vacuna> vacunas = new List<Vacuna>();
-
-        //        while (dataReader.Read())
-        //        {
-        //            int idVacuna = (int)dataReader["Id"];
-        //            string idTipoDB = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = idVacuna,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                Precio = (decimal)dataReader["Precio"],
-
-        //            };
-        //            vacunas.Add(unaVacuna);
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipoDB, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacunas;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por identificador de tipo de vacuna" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-
-        //}
-
-        //public IEnumerable<Vacuna> FindAllByLabName(string nombreLab)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("SELECT * FROM Vacunas " +
-        //                                          "WHERE Id IN (SELECT IdVacuna " +
-        //                                                        "FROM VacunaLaboratorios " +
-        //                                                        "WHERE IdLaboratorio IN (SELECT Id " +
-        //                                                                                "FROM Laboratorios " +
-        //                                                                                "WHERE Nombre like @Nombre))", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@Nombre", nombreLab + "%");
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        List<Vacuna> vacunas = new List<Vacuna>();
-
-        //        while (dataReader.Read())
-        //        {
-        //            int idVacuna = (int)dataReader["Id"];
-        //            string idTipo = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = idVacuna,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                IdTipo = idTipo,
-        //                Precio = (decimal)dataReader["Precio"],
-
-        //            };
-        //            vacunas.Add(unaVacuna);
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacunas;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por nombre de laboratorio" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-        //}
-
-        //public IEnumerable<Vacuna> FindAllByMaxPrice(decimal precioMax)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("Select * from Vacunas where Precio <= @Precio", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@Precio", precioMax);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        List<Vacuna> vacunas = new List<Vacuna>();
-
-        //        while (dataReader.Read())
-        //        {
-        //            int idVacuna = (int)dataReader["Id"];
-        //            string idTipo = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = idVacuna,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                IdTipo = idTipo,
-        //                Precio = (decimal)dataReader["Precio"],
-
-        //            };
-        //            vacunas.Add(unaVacuna);
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacunas;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por tope superior de precio" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-
-        //}
-
-        //public IEnumerable<Vacuna> FindAllByMinPrice(decimal precioMin)
-        //{
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("Select * from vacunas where Precio >= @Precio", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@Precio", precioMin);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-
-        //        List<Vacuna> vacunas = new List<Vacuna>();
-
-        //        while (dataReader.Read())
-        //        {
-        //            int idVacuna = (int)dataReader["Id"];
-        //            string idTipo = (string)dataReader["IdTipo"];
-        //            Vacuna unaVacuna = new Vacuna()
-        //            {
-        //                Id = idVacuna,
-        //                Nombre = (string)dataReader["Nombre"],
-        //                IdTipo = idTipo,
-        //                Precio = (decimal)dataReader["Precio"],
-
-        //            };
-        //            vacunas.Add(unaVacuna);
-        //            unaVacuna.ListaLaboratorios = AddLabsToVacunas(idVacuna, con);
-        //            unaVacuna.TipoVacuna = AddTipoVacunaToVacunas(idTipo, con);
-        //            unaVacuna.ListaPaises = AddPaisToVacunas(idVacuna, con);
-        //        }
-        //        return vacunas;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al listar vacunas por tope inferior de precio" + e.Message);
-        //        return null;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-        //}
-
-        //public bool Update(Vacuna unaVacuna)
-        //{
-        //    if (unaVacuna == null) return false;
-
-        //    Conexion manejadorConexion = new Conexion();
-        //    SqlConnection con = manejadorConexion.CrearConexion();
-
-        //    try
-        //    {
-        //        SqlCommand query = new SqlCommand("UPDATE Vacunas SET FaseClinicaAprob=@FaseClinicaAprob, " +
-        //                                                                "Precio=@Precio, " +
-        //                                                                "IdUsuario=@IdUsuario, " +
-        //                                                                "UltimaModificacion=@UltimaModificacion " +
-        //                                                                "WHERE Id=@Id", con);
-        //        manejadorConexion.AbrirConexion(con);
-
-        //        query.Parameters.AddWithValue("@Id", unaVacuna.Id);
-        //        query.Parameters.AddWithValue("@IdUsuario", unaVacuna.IdUsuario);
-        //        query.Parameters.AddWithValue("@FaseClinicaAprob", unaVacuna.FaseClinicaAprob);
-        //        query.Parameters.AddWithValue("@Precio", unaVacuna.ValidatePrice(unaVacuna));
-        //        query.Parameters.AddWithValue("@UltimaModificacion", DateTime.Now);
-        //        SqlDataReader dataReader = query.ExecuteReader();
-        //        return true;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        System.Diagnostics.Debug.Assert(false, "Error al editar una vacuna" + e.Message);
-        //        return false;
-        //    }
-        //    finally
-        //    {
-        //        manejadorConexion.CerrarConexion(con);
-        //    }
-        //}
     }
 }
