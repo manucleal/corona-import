@@ -1,4 +1,4 @@
-﻿@*@model IEnumerable<WebApplication.ReferenciaServicioVacunas.DtoVacunas>*@
+﻿@model IEnumerable<AplicacionWeb.Models.ViewModelVacunaAPI>
 @{
     ViewBag.H1 = "Listar Vacuna";
     ViewBag.Title = "Listar Vacuna";
@@ -34,37 +34,22 @@
                     <tr>
                         <th>Nombre</>
                         <th>Tipo</th>
-                        <th>Laboratorios</th>
                         <th>Precio</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (ViewBag.Vacunas != null)
+                    @if (Model.Count() > 0)
                     {
-                        @*foreach (WebApplication.ReferenciaServicioVacunas.DtoVacunas item in ViewBag.Vacunas)
+                        foreach (AplicacionWeb.Models.ViewModelVacunaAPI item in Model)
                         {
                             <tr>
                                 <th>@item.Nombre</th>
-                                <th>@item.TipoVacuna.Descripcion</th>
-
-                                @if (item.ListaLaboratorios.Length > 0)
-                                {
-                                    <th>
-                                        @foreach (var lab in item.ListaLaboratorios)
-                                        {
-                                            @lab.Nombre<br>
-                                        }
-                                    </th>
-                                }
-                                else
-                                {
-                                    <th>N/a</th>
-                                }
+                                <th>@item.Tipo</th>
                                 <th>$ @item.Precio</th>
-                                <th><a href="/Vacuna/Modificar?id=@item.Id">Modificar</a></th>
+                                <th><a href="/Vacuna/Comprar?id=@item.Id">Comprar</a></th>
                             </tr>
-                        }*@
+                        }
                     }
                     else
                     {

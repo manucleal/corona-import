@@ -137,6 +137,7 @@
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Models\Mutualista.cs" />
     <Compile Include="Models\Vacuna.cs" />
+    <Compile Include="Models\ViewModelVacunaAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +182,7 @@
     <Content Include="Views\Vacuna\Index.cshtml" />
     <Content Include="Views\Vacuna\IndexAuth.cshtml" />
     <Content Include="Views\Home\Importador.cshtml" />
-    <Content Include="Views\Vacuna\CompraVacuna.cshtml" />
+    <Content Include="Views\Vacuna\Comprar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

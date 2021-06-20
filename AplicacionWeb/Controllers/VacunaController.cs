@@ -1,16 +1,29 @@
-﻿using System;
+using System;
 using System.Web.Mvc;
 using Dominio.EntidadesNegocio;
-using System.Collections.Generic;
-using System.Linq;
 using AccesoDatos.Repositorios;
 using Repositorio;
 using AplicacionWeb.Models;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Collections.Generic;
 
 namespace WebApplication.Controllers
 {
     public class VacunaController : Controller
     {
+        HttpClient cliente = new HttpClient();
+        HttpResponseMessage response = new HttpResponseMessage();
+        Uri vacunaUri = null;
+
+        public VacunaController()
+        {
+            cliente.BaseAddress = new Uri("http://localhost:49340");
+            vacunaUri = new Uri("http://localhost:49340/api/vacunas");
+            cliente.DefaultRequestHeaders.Accept.Clear();
+            cliente.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
+        }
 
         [HttpGet]
         public ActionResult Index()
@@ -30,9 +43,58 @@ namespace WebApplication.Controllers
                 return RedirectToAction("Index", "Vacuna");
             }
 
-            //IEnumerable<DtoVacunas> vacunas = serviciosVacunas.GetTodasLasVacunas();
+            IEnumerable<ViewModelVacunaAPI> vacunasAPI = null;
+
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri("http://localhost:49340/api/");
+                //HTTP GET
+                var responseTask = client.GetAsync("vacunas/filters");
+                responseTask.Wait();
+
+                var result = responseTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<ViewModelVacunaAPI>>();
+                    readTask.Wait();
+
+                    vacunasAPI = readTask.Result;
+                }
+                else //web api sent error response 
+                {
+                    //log response status here..
+
+                    vacunasAPI = System.Linq.Enumerable.Empty<ViewModelVacunaAPI>();
+
+                    ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
+                }
+            }
+            return View(vacunasAPI);
+            //response = cliente.GetAsync(vacunaUri).Result;
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var vacunasAPI = response.Content.ReadAsAsync<IEnumerable<ViewModelVacuna>>().Result;
+            //    if (vacunasAPI != null)
+            //    {
+            //        //return View("IndexAuth", vacunasAPI.ToList());
+            //    }
+            //    else
+            //    {
+            //        TempData["ResultadoOperacion"] = "No hay vacunas disponibles";
+            //        //return View("IndexAuth", new List<ProductoModel>());
+            //    }
+            //}
+            //else
+            //{
+            //    TempData["ResultadoOperacion"] = "Error desconocido";
+            //    return View("IndexAuth");
+            //}
+
             //ViewBag.Vacunas = vacunas;
-            return View();
+            //return View();
         }
 
         [HttpPost]
@@ -76,34 +138,26 @@ namespace WebApplication.Controllers
             return View("IndexAuth");
         }
 
-        public void cargarFiltros()
-        {            
-            //ViewBag.Laboratorios = repoLaboratorio.FindAll();            
-            //ViewBag.TipoVacunas = repoTipoVacuna.FindAll();            
-            //ViewBag.Paises = repoPais.FindAll();
-        }
-
-        //TODO: poner enlace en cada vacuna que me lleve a este get
         [HttpGet]
-        public ActionResult CompraVacuna()
+        public ActionResult Comprar(int? id)
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
             RepositorioVacuna repoVacuna = new RepositorioVacuna();
 
             if ((string)Session["documento"] != null && Session["nombre"] != null)
             {
-                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById(2));
+                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById((int)id));
                 if (viewModelVacuna != null)
                 {
                     ViewBag.Mutualistas = repoMutualista.FindAll();
-                    return View("CompraVacuna", viewModelVacuna);
+                    return View("Comprar", viewModelVacuna);
                 }
             }
             return RedirectToAction("Login", "Usuario");
         }
 
         [HttpPost]
-        public ActionResult CompraVacuna(int? Mutualista, ViewModelVacuna viewModelVacuna)
+        public ActionResult Comprar(int? Mutualista, ViewModelVacuna viewModelVacuna)
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
             RepositorioVacuna repoVacuna = new RepositorioVacuna();
