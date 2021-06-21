@@ -163,7 +163,8 @@ namespace Repositorio
 
                     if (compra.Mutualista != null)
                     {
-                        dataBase.Entry(compra.Mutualista).State = EntityState.Unchanged;
+                        compra.Mutualista.TopeComprasMensuales -= 1;
+                        dataBase.Entry(compra.Mutualista).State = EntityState.Modified;
                     }
                     if (compra.Vacuna != null)
                     {

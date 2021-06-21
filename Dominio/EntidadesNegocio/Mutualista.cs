@@ -34,5 +34,6 @@ namespace Dominio.EntidadesNegocio
         public int MontoMaxVacunasPorAfiliado { get; set; }        
         
         public Mutualista() { }
+        
     }
 }
