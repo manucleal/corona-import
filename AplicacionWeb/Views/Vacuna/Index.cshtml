@@ -1,76 +1,64 @@
-﻿@*@model IEnumerable<WebApplication.ReferenciaServicioVacunas.DtoVacunas>*@
+﻿@model AplicacionWeb.Models.ViewModelImportador
 @{
-    ViewBag.H1 = "Listar Vacuna";
-    ViewBag.Title = "Listar Vacuna";
+    ViewBag.H1 = "Lista de datos importados";
+    ViewBag.Title = "Lista de datos importados";
 }
 <!DOCTYPE html>
 <html lang="es">
 <body>
     <main>
-        <small>Dashboard / <em>Lista Vacunas <p style="color:red;">@ViewBag.mensaje</p></em></small>
+        <small>Usuarios / <em> importados </em></small>
+        <div id="tableEmpleados">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Contraseña</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Usuarios.Count() > 0)
+                    {
+                        foreach (var item in Model.Usuarios)
+                        {
+                            <tr>
+                                <th>@item.Nombre</th>
+                                <th>@item.Documento</th>
+                                <th>@item.Password</th>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><th colspan="15">No hay datos disponible</th></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <small>Vacunas / <em> importadas </em></small>
         <div id="tableEmpleados">
             <table>
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Tipo</th>
-                        <th>Cant. dosis</th>
-                        <th>Lapso<br>días<br>entre<br> dosis</th>
-                        <th>Edad max</th>
-                        <th>Edad min</th>
-                        <th>Eficacia prev.</th>
-                        <th>Eficacia hosp.</th>
-                        <th>Eficacia CTI</th>
-                        <th>Temp. max</th>
-                        <th>Temp. min</th>
-                        <th>Producción anual</th>
-                        <th>Fase<br>clínica<br>de aprob.</th>
-                        <th>Emerg.</th>
-                        <th>Covax</th>
-                        <th>Labs</th>
                         <th>Precio</th>
-                        <th id="thEfectos">Efect.<br>Adversos</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (ViewBag.Vacunas != null)
+                    @if (Model.Vacunas.Count() > 0)
                     {
-                        @*foreach (WebApplication.ReferenciaServicioVacunas.DtoVacunas item in ViewBag.Vacunas)
+                        foreach (var item in Model.Vacunas)
                         {
                             <tr>
                                 <th>@item.Nombre</th>
-                                <th>@item.TipoVacuna.Descripcion</th>
-                                <th>@item.CantidadDosis</th>
-                                <th>@item.LapsoDiasDosis</th>
-                                <th>@item.MaxEdad</th>
-                                <th>@item.MinEdad</th>
-                                <th>@item.EficaciaPrev %</th>
-                                <th>@item.EficaciaHosp %</th>
-                                <th>@item.EficaciaCti %</th>
-                                <th>@item.MaxTemp °C</th>
-                                <th>@item.MinTemp °C</th>
-                                <th>@item.ProduccionAnual</th>
-                                <th>@item.FaseClinicaAprob</th>
-                                <th>@(item.Emergencia ? "Si" : "No")</th>
-                                <th>@(item.Covax ? "Si" : "No")</th>
-
-                                @if (item.ListaLaboratorios.Length > 0)
-                                {
-                                    <th>
-                                        @foreach (var lab in item.ListaLaboratorios)
-                                        {
-                                            @lab.Nombre<br>
-                                        }
-                                    </th>
-                                }
-                                else
-                                {
-                                    <th>N/a</th>
-                                }
-                                <th>$ @item.Precio</th>
-                                <th class="efectos"><span>@item.EfectosAdversos</span> </th>
+                                <th>@item.Tipo.Descripcion</th>
+                                <th>@item.Precio</th>
+                                <th><a href="/Vacuna/Detalle?id=@item.Id">Ver detalle</a></th>
                             </tr>
-                        }*@
+                        }
                     }
                     else
                     {

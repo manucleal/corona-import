@@ -11,10 +11,18 @@ namespace AplicacionWeb.Controllers
     {
         public ActionResult Create()
         {
-            Usuario usuario = new Usuario() { Documento = "46902781", Nombre = "Emanuel", Password = "Emanuel" };
+            Mutualista mutualista = new Mutualista() {
+                Id = 1,
+                Nombre = "Blue Cross",
+                Telefono = "234567",
+                NombreContacto = "Seguro cheto",
+                CantidadAfiliados = 1000,
+                MontoMaxVacunasPorAfiliado = 50,
+                TopeComprasMensuales = 1200
+            };
             using (CoronaImportContext db = new CoronaImportContext())
             {
-                db.Usuarios.Add(usuario);
+                db.Mutualistas.Add(mutualista);
                 db.SaveChanges();
             }
             return View();
@@ -23,7 +31,7 @@ namespace AplicacionWeb.Controllers
         public ActionResult Importador()
         {
             ManejadorArchivo.ImportarDatos();
-            return View();
+            return RedirectToAction("Index","Vacuna");
         }
     }
 }
