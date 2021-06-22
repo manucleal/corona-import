@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Web.Mvc;
 using Dominio.EntidadesNegocio;
 using AccesoDatos.Repositorios;
@@ -13,6 +14,8 @@ namespace WebApplication.Controllers
     public class VacunaController : Controller
     {
         RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
+        RepositorioTipoVacuna repositorioTipoVacuna = new RepositorioTipoVacuna();
+        RepositorioLaboratorio repositorioLaboratorio = new RepositorioLaboratorio();
         HttpClient cliente = new HttpClient();
         HttpResponseMessage response = new HttpResponseMessage();
         Uri vacunaUri = null;
@@ -51,8 +54,9 @@ namespace WebApplication.Controllers
                 Session["nombre"] = null;
                 return RedirectToAction("Index", "Vacuna");
             }
-
-            IEnumerable<ViewModelVacunaAPI> vacunasAPI = null;
+            ViewModelVacunaAPI model = new ViewModelVacunaAPI();
+            ViewBag.Laboratorios = repositorioLaboratorio.FindAll();
+            ViewBag.TiposVacuna = repositorioTipoVacuna.FindAll();
 
             using (var client = new HttpClient())
             {
@@ -67,21 +71,21 @@ namespace WebApplication.Controllers
                 var result = responseTask.Result;
                 if (result.IsSuccessStatusCode)
                 {
-                    var readTask = result.Content.ReadAsAsync<IList<ViewModelVacunaAPI>>();
+                    var readTask = result.Content.ReadAsAsync<IList<VacunasAPI>>();
                     readTask.Wait();
 
-                    vacunasAPI = readTask.Result;
+                    model.Vacunas = readTask.Result;
                 }
                 else //web api sent error response 
                 {
                     //log response status here..
 
-                    vacunasAPI = System.Linq.Enumerable.Empty<ViewModelVacunaAPI>();
+                    model.Vacunas = Enumerable.Empty<VacunasAPI>();
 
                     ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
                 }
             }
-            return View(vacunasAPI);
+            return View(model);
             //response = cliente.GetAsync(vacunaUri).Result;
             //if (response.IsSuccessStatusCode)
             //{
@@ -101,49 +105,12 @@ namespace WebApplication.Controllers
             //    TempData["ResultadoOperacion"] = "Error desconocido";
             //    return View("IndexAuth");
             //}
-
-            //ViewBag.Vacunas = vacunas;
             //return View();
         }
 
         [HttpPost]
-        public ActionResult IndexAuth(string tipoFiltro, string filtroText = "", int filtroNumber = 0)
+        public ActionResult IndexAuth(ViewModelVacunaAPI viewModelVacunaAPI)
         {
-            if (tipoFiltro != null && (filtroText != "" || filtroNumber >= 0))
-            {
-                //switch (tipoFiltro)
-                //{
-                //    case "PorNombre":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorNombre(filtroText);
-                //        break;
-                //    case "PorFaseAprob":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorFaseAprob(filtroNumber);
-                //        break;
-                //    case "PorPaisLab":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorPaisLab(filtroText);
-                //        break;
-                //    case "PorTipoVac":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorTipoVac(filtroText);
-                //        break;
-                //    case "PorTopeInferior":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorTopeInferior(filtroNumber);
-                //        break;
-                //    case "PorTopeSuperior":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorTopeSuperior(filtroNumber);
-                //        break;
-                //    case "PorNombreLab":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorNombreLab(filtroText);
-                //        break;
-                //    default:
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunas();
-                //        break;
-                //}
-            }
-            else
-            {
-                //ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunas();
-            }
-
             return View("IndexAuth");
         }
 

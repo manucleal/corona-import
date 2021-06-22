@@ -5,81 +5,81 @@
 }
 
 <main>
-    <small>Dashboard / <em>Comprar Vacuna <p style="color:red;">@ViewBag.mensaje</p></em></small>
+    <small><em>Comprar Vacuna</em></small>
     <div class="FormEmpleados">
         <form method="post" action="/Vacuna/Comprar" autocomplete="on">
-            <div class="infoPersonal">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Cant. dosis</th>
-                            <th>Lapso<br>días<br>entre<br> dosis</th>
-                            <th>Edad max</th>
-                            <th>Edad min</th>
-                            <th>Eficacia prev.</th>
-                            <th>Eficacia hosp.</th>
-                            <th>Eficacia CTI</th>
-                            <th>Temp. max</th>
-                            <th>Temp. min</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>@Model.Nombre</th>
-                            <th>@Model.Tipo.Descripcion</th>
-                            <th>@Model.CantidadDosis</th>
-                            <th>@Model.LapsoDiasDosis</th>
-                            <th>@Model.MaxEdad</th>
-                            <th>@Model.MinEdad</th>
-                            <th>@Model.EficaciaPrev %</th>
-                            <th>@Model.EficaciaHosp %</th>
-                            <th>@Model.EficaciaCti %</th>
-                            <th>@Model.MaxTemp °C</th>
-                            <th>@Model.MinTemp °C</th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Producción anual</th>
-                            <th>Fase<br>clínica<br>de aprob.</th>
-                            <th>Emerg.</th>
-                            <th>Covax</th>
-                            <th>Labs</th>
-                            <th>Precio</th>
-                            <th>Paises</th>
-                            <th id="thEfectos">Efect.<br>Adversos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>@Model.ProduccionAnual</th>
-                            <th>@Model.FaseClinicaAprob</th>
-                            <th>@(Model.Emergencia ? "Si" : "No")</th>
-                            <th>@(Model.Covax ? "Si" : "No")</th>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Tipo</th>
+                        <th>Cant. dosis</th>
+                        <th>Lapso<br>días<br>entre<br> dosis</th>
+                        <th>Edad max</th>
+                        <th>Edad min</th>
+                        <th>Eficacia prev.</th>
+                        <th>Eficacia hosp.</th>
+                        <th>Eficacia CTI</th>
+                        <th>Temp. max</th>
+                        <th>Temp. min</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>@Model.Nombre</th>
+                        <th>@Model.Tipo.Descripcion</th>
+                        <th>@Model.CantidadDosis</th>
+                        <th>@Model.LapsoDiasDosis</th>
+                        <th>@Model.MaxEdad</th>
+                        <th>@Model.MinEdad</th>
+                        <th>@Model.EficaciaPrev %</th>
+                        <th>@Model.EficaciaHosp %</th>
+                        <th>@Model.EficaciaCti %</th>
+                        <th>@Model.MaxTemp °C</th>
+                        <th>@Model.MinTemp °C</th>
+                    </tr>
+                </tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producción anual</th>
+                        <th>Fase<br>clínica<br>de aprob.</th>
+                        <th>Emerg.</th>
+                        <th>Covax</th>
+                        <th>Labs</th>
+                        <th>Precio</th>
+                        <th>Paises</th>
+                        <th id="thEfectos">Efect.<br>Adversos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>@Model.ProduccionAnual</th>
+                        <th>@Model.FaseClinicaAprob</th>
+                        <th>@(Model.Emergencia ? "Si" : "No")</th>
+                        <th>@(Model.Covax ? "Si" : "No")</th>
 
-                            @if (@Model.Laboratorios.Count > 0)
-                            {
-                                <th>
-                                    @foreach (var lab in Model.Laboratorios)
-                                    {
-                                        @lab.Nombre<br>
-                                    }
-                                </th>
-                            }
-                            else
-                            {
-                                <th>N/a</th>
-                            }
-                            <th>$ @Model.Precio</th>
-                            <th>@Model.Paises</th>
-                            <th class="efectos"><span>@Model.EfectosAdversos</span> </th>
-                        </tr>
-                    </tbody>
-                </table>
+                        @if (@Model.Laboratorios.Count > 0)
+                        {
+                            <th>
+                                @foreach (var lab in Model.Laboratorios)
+                                {
+                                    @lab.Nombre<br>
+                                }
+                            </th>
+                        }
+                        else
+                        {
+                            <th>N/a</th>
+                        }
+                        <th>$ @Model.Precio</th>
+                        <th>@Model.Paises</th>
+                        <th class="efectos"><span>@Model.EfectosAdversos</span> </th>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="infoPersonal">
                 <select name="IdMutualista" required>
                     <option value="">Seleccione Mutualista (*)</option>
                     @foreach (Dominio.EntidadesNegocio.Mutualista item in ViewBag.Mutualistas)
