@@ -47,20 +47,6 @@ namespace Repositorio
             }
         }
 
-        public IEnumerable<CompraVacuna> FindAll(int id)
-        {
-            try
-            {
-                using (CoronaImportContext db = new CoronaImportContext())
-                {
-                    var resultado = db.CompraVacunas
-                        .Where(c => c.Mutualista.Id == id);
-                    return resultado.ToList(); 
-                }
-            }
-            catch (Exception ex) { return null; }
-        }
-
         public Vacuna FindById(int idVacuna)
         {
             try
@@ -85,12 +71,38 @@ namespace Repositorio
             }
         }
 
+        //TODO: este metodo lo comente porque deberia llamarse FindAll si pero en el repo de Mutualista. 
+        //(ademas no se esta usando pero lo necesitamos para mostrar estos datos en una vista)
+        //public IEnumerable<CompraVacuna> FindAll(int id)
+        //{
+        //    try
+        //    {
+        //        using (CoronaImportContext db = new CoronaImportContext())
+        //        {
+        //            var resultado = db.CompraVacunas
+        //                .Where(c => c.Mutualista.Id == id);
+        //            return resultado.ToList(); 
+        //        }
+        //    }
+        //    catch (Exception ex) { return null; }
+        //}
+
+        public IEnumerable<Vacuna> FindAll()
+        {
+            try
+            {
+                using (CoronaImportContext dataBase = new CoronaImportContext())
+                {
+                    dataBase.Configuration.LazyLoadingEnabled = false;
+                    dataBase.Configuration.ProxyCreationEnabled = false;
+                    return dataBase.Vacunas.Include(v => v.Tipo).ToList();                    
+                }
+            }
+            catch (Exception ex) { return null; }
+        }
+
         public IEnumerable<Models.VacunaFilterDTO> FindAllByFilters(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
         {
-
-            //Se podrán buscar por criterios combinados(más de un criterio simultáneamente) y en este caso se
-            //deberá seleccionar si es una búsqueda que debe cumplir con todos los criterios seleccionados o con
-            //cualquiera de ellos. Si no se especifica ningún filtro se desplegarán todas las vacunas
             try
             {
                 using (CoronaImportContext dataBase = new CoronaImportContext())
@@ -114,7 +126,7 @@ namespace Repositorio
                     //si flag any llega en true entro aca sino sigo flujo con todos los ifs
                     if (faseClinicaAprob != -1 && PrecioMin != -1 && PrecioMax != -1 && tipo != "" && paisAceptada != "")
                     {
-
+                        //TODO: separar en otro metodo para los criterios con OR
                     }
 
                     if (faseClinicaAprob != -1)
@@ -163,7 +175,8 @@ namespace Repositorio
 
                     if (compra.Mutualista != null)
                     {
-                        dataBase.Entry(compra.Mutualista).State = EntityState.Unchanged;
+                        compra.Mutualista.TopeComprasMensuales -= 1;
+                        dataBase.Entry(compra.Mutualista).State = EntityState.Modified;
                     }
                     if (compra.Vacuna != null)
                     {

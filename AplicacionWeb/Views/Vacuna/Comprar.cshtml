@@ -7,7 +7,7 @@
 <main>
     <small>Dashboard / <em>Comprar Vacuna <p style="color:red;">@ViewBag.mensaje</p></em></small>
     <div class="FormEmpleados">
-        <form method="post" action="/Vacuna/CompraVacuna" autocomplete="on">
+        <form method="post" action="/Vacuna/Comprar" autocomplete="on">
             <div class="infoPersonal">
                 <table>
                     <thead>
@@ -80,7 +80,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <select name="Mutualista" required>
+                <select name="IdMutualista" required>
                     <option value="">Seleccione Mutualista (*)</option>
                     @foreach (Dominio.EntidadesNegocio.Mutualista item in ViewBag.Mutualistas)
                     {
@@ -95,8 +95,6 @@
                         @Html.HiddenFor(model => model.CantidadDosis)
                     </span>
                 </div>
-                <input type="hidden" value="@Model.Id" name="Id">
-                <input type="hidden" value="@Model.Precio" name="Precio">
             </div>
             <div class="divFooter">
                 <span>Campos Obligatorios (*)</span>

@@ -12,6 +12,7 @@ namespace WebApplication.Controllers
 {
     public class VacunaController : Controller
     {
+        RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
         HttpClient cliente = new HttpClient();
         HttpResponseMessage response = new HttpResponseMessage();
         Uri vacunaUri = null;
@@ -28,9 +29,17 @@ namespace WebApplication.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            //IEnumerable<DtoVacunas> vacunas = serviciosVacunas.GetTodasLasVacunas();
-            //ViewBag.Vacunas = vacunas;
-            return View();
+            ViewModelImportador model = new ViewModelImportador();
+            RepositorioUsuario repositorioUsuario = new RepositorioUsuario();
+            model.Usuarios = repositorioUsuario.FindAll();
+            model.Vacunas = repositorioVacuna.FindAll();
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult Detalle(int? id)
+        {
+            return View(ViewModelVacuna.MapearAViewModelVacuna(repositorioVacuna.FindById((int)id)));
         }
 
         [HttpGet]
@@ -142,11 +151,10 @@ namespace WebApplication.Controllers
         public ActionResult Comprar(int? id)
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
-            RepositorioVacuna repoVacuna = new RepositorioVacuna();
 
             if ((string)Session["documento"] != null && Session["nombre"] != null)
             {
-                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repoVacuna.FindById((int)id));
+                ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repositorioVacuna.FindById((int)id));
                 if (viewModelVacuna != null)
                 {
                     ViewBag.Mutualistas = repoMutualista.FindAll();
@@ -157,24 +165,42 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Comprar(int? Mutualista, ViewModelVacuna viewModelVacuna)
+        public ActionResult Comprar(int? IdMutualista, ViewModelVacuna viewModelVacuna)
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
             RepositorioVacuna repoVacuna = new RepositorioVacuna();
-            Mutualista mutualista = repoMutualista.FindById((int)Mutualista);
+            Mutualista mutualista = repoMutualista.FindById((int)IdMutualista);
             Vacuna vacuna = repoVacuna.FindById(viewModelVacuna.Id);
 
             if (mutualista != null && vacuna != null)
             {
-                CompraVacuna compra = new CompraVacuna
+                decimal montoAutorizado = Mutualista.ObtenerMontoAutorizado(mutualista);
+                decimal montoCompra = Vacuna.ObtenerMontoCompra(viewModelVacuna.CantidadDosis, viewModelVacuna.Precio);
+                decimal montoComprasRealizadas = repoMutualista.CalcularMontoTotalCompras(viewModelVacuna.Id);
+                decimal saldoDisponible = montoAutorizado - montoComprasRealizadas;
+                if (saldoDisponible > 0 && montoAutorizado > 0 && montoCompra > 0)
                 {
-                    CantidadDosis = viewModelVacuna.CantidadDosis,
-                    Monto = viewModelVacuna.CantidadDosis * viewModelVacuna.Precio,
-                    PrecioUnitario = viewModelVacuna.Precio,
-                    Mutualista = mutualista,
-                    Vacuna = vacuna
-                };
-                repoVacuna.AddCompra(compra);
+                    if (mutualista.TopeComprasMensuales >= 1) {
+                        CompraVacuna compra = new CompraVacuna
+                        {
+                            CantidadDosis = viewModelVacuna.CantidadDosis,
+                            Monto = montoCompra,
+                            PrecioUnitario = viewModelVacuna.Precio,
+                            Mutualista = mutualista,
+                            Vacuna = vacuna
+                        };
+                        repoVacuna.AddCompra(compra);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("CantidadDosis", "La mutualista superó las compras mensuales");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("CantidadDosis", "No tiene saldo disponible para la compra");
+                }
+                
             }
             else
             {

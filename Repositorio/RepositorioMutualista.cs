@@ -77,5 +77,21 @@ namespace AccesoDatos.Repositorios
             }
             catch (Exception ex) { return null; }
         }
+
+        public decimal CalcularMontoTotalCompras (int id)
+        {
+            try
+            {
+                using (var db = new CoronaImportContext())
+                {
+                    var total =
+                        db.CompraVacunas
+                        .Where(c => c.Mutualista.Id == id)
+                        .Sum(c => c.Monto);
+                    return total;
+                }
+            }
+            catch (Exception ex) { return -1; }
+        }
     }
 }

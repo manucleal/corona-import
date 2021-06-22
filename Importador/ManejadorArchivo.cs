@@ -90,9 +90,9 @@ namespace Importador
             {
                 return new Usuario
                 {
-                    Documento = datos[0],
-                    Nombre = datos[1],
-                    Password = Usuario.GenerarPassword(datos[0])
+                    Documento = datos[0].Trim(),
+                    Nombre = datos[1].Trim(),
+                    Password = Usuario.GenerarPassword(datos[0].Trim())
                 };
             }
             return null;

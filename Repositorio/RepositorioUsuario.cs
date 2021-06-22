@@ -48,6 +48,18 @@ namespace Repositorio
             }
         }
 
+        public IEnumerable<Usuario> FindAll()
+        {
+            try
+            {
+                using (CoronaImportContext dataBase = new CoronaImportContext())
+                {
+                    return dataBase.Usuarios.ToList();
+                }
+            }
+            catch (Exception ex) { return null; }
+        }
+
         public Usuario Login(Usuario unUsuario)
         {
             Usuario usuariobd = this.FindById(unUsuario.Documento);
@@ -65,13 +77,12 @@ namespace Repositorio
 
         public Usuario ContadorLogin(Usuario usuario)
         {
-            using (CoronaImportContext db = new CoronaImportContext())
+            using (CoronaImportContext dataBase = new CoronaImportContext())
             {
-                var user = db.Usuarios.Where(u => u.Documento == usuario.Documento).FirstOrDefault();
+                var user = dataBase.Usuarios.Where(u => u.Documento == usuario.Documento).FirstOrDefault();
                 user.CantidadLogin += 1;
-                db.SaveChanges();
+                dataBase.SaveChanges();
                 return user;
-
             }
         }
 
