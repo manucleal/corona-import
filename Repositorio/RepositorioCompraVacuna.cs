@@ -17,7 +17,8 @@ namespace Repositorio
                 {
                     var resultado = db.CompraVacunas
                         .Where(c => c.Mutualista.Id == id)
-                        .Include(c => c.Vacuna);
+                        .Include(c => c.Vacuna)
+                        .Include(c => c.Mutualista);
                     return resultado.ToList();
                 }
             }

@@ -8,10 +8,12 @@ namespace AplicacionWeb.Models
 {
     public class ViewModelCompraVacuna
     {
-        public ViewModelCompraVacuna() { }
+        public decimal MontoAutorizado { get; set; }
+        public decimal SaldoDisponible { get; set; }
+        public int ComprasDisponibles { get; set; }
 
-        //indicando su fecha, la vacuna que compró, la cantidad de unidades de esa vacuna, 
-        //su precio unitario y el monto de cada compra.
+        public ViewModelCompraVacuna() { }
+        
         public IEnumerable<CompraVacuna> CompraVacunasMutualista { get; set; }
     }
 }

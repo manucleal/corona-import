@@ -31,8 +31,11 @@ namespace Dominio.EntidadesNegocio
         public int CantidadAfiliados { get; set; }
 
         [Required]
-        public int MontoMaxVacunasPorAfiliado { get; set; }        
-        
+        public int MontoMaxVacunasPorAfiliado { get; set; }
+
+        [Required]
+        public int ComprasRealizadas { get; set; }
+
         public Mutualista() { }
         
         public static decimal ObtenerMontoAutorizado(Mutualista mutualista)

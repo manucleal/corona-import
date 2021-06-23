@@ -27,8 +27,8 @@
                     <tr>
                         <th>@item.Mutualista.Nombre</th>
                         <th>@item.Vacuna.Nombre</th>
-                        <th>@item.PrecioUnitario</th>
-                        <th>@item.Monto</th>
+                        <th>$ @item.PrecioUnitario</th>
+                        <th>$ @item.Monto</th>
                         <th>@item.Fecha</th>
                     </tr>
                         }
@@ -40,33 +40,28 @@
                 </tbody>
             </table>
         </div>
-        <small>Vacunas / <em> importadas </em></small>
+        <small>Mutualista / <em> datos </em></small>
         <div id="tableEmpleados">
             <table>
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
+                        <th>Compras disponibles</th>
+                        <th>Monto autorizado para compras</th>
+                        <th>Saldo disponible</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.Vacunas.Count() > 0)
+                    @if (Model.CompraVacunasMutualista.Count() > 0)
                     {
-                        foreach (var item in Model.Vacunas)
-                        {
-                            <tr>
-                                <th>@item.Nombre</th>
-                                <th>@item.Tipo.Descripcion</th>
-                                <th>@item.Precio</th>
-                                <th><a href="/Vacuna/Detalle?id=@item.Id">Ver detalle</a></th>
-                            </tr>
-                        }
+                        <tr>
+                            <th>@Model.ComprasDisponibles</th>
+                            <th>$ @Model.MontoAutorizado</th>
+                            <th>$ @Model.SaldoDisponible</th>
+                        </tr>
                     }
                     else
                     {
-                        <tr><th colspan="15">No hay datos disponible</th></tr>
+                        < tr >< th colspan = "15" > No hay datos disponible </ th ></ tr >
                     }
                 </tbody>
             </table>
