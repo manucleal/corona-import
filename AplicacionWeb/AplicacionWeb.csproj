@@ -134,12 +134,14 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CompraController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Controllers\VacunaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModelCompraVacuna.cs" />
     <Compile Include="Models\ViewModelImportador.cs" />
     <Compile Include="Models\ViewModelUsuario.cs" />
     <Compile Include="Models\ViewModelMutualista.cs" />
@@ -191,6 +193,7 @@
     <Content Include="Views\Home\Importador.cshtml" />
     <Content Include="Views\Vacuna\Comprar.cshtml" />
     <Content Include="Views\Vacuna\Detalle.cshtml" />
+    <Content Include="Views\Compra\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

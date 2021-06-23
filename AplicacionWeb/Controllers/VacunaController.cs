@@ -165,31 +165,33 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Comprar(int? IdMutualista, ViewModelVacuna viewModelVacuna)
+        public ActionResult Comprar(int? IdMutualista, int? cantidadDosis, int? idVacuna)
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
             RepositorioVacuna repoVacuna = new RepositorioVacuna();
             Mutualista mutualista = repoMutualista.FindById((int)IdMutualista);
-            Vacuna vacuna = repoVacuna.FindById(viewModelVacuna.Id);
+            Vacuna vacuna = repoVacuna.FindById((int)idVacuna);
 
             if (mutualista != null && vacuna != null)
             {
                 decimal montoAutorizado = Mutualista.ObtenerMontoAutorizado(mutualista);
-                decimal montoCompra = Vacuna.ObtenerMontoCompra(viewModelVacuna.CantidadDosis, viewModelVacuna.Precio);
-                decimal montoComprasRealizadas = repoMutualista.CalcularMontoTotalCompras(viewModelVacuna.Id);
+                //TODO: cambiar metodo ObtenerMontoCompra a clase compra
+                decimal montoCompra = Vacuna.ObtenerMontoCompra((int)cantidadDosis, vacuna.Precio);
+                decimal montoComprasRealizadas = repoMutualista.CalcularMontoTotalCompras((int)idVacuna);
                 decimal saldoDisponible = montoAutorizado - montoComprasRealizadas;
                 if (saldoDisponible > 0 && montoAutorizado > 0 && montoCompra > 0)
                 {
                     if (mutualista.TopeComprasMensuales >= 1) {
                         CompraVacuna compra = new CompraVacuna
                         {
-                            CantidadDosis = viewModelVacuna.CantidadDosis,
+                            CantidadDosis = (int)cantidadDosis,
                             Monto = montoCompra,
-                            PrecioUnitario = viewModelVacuna.Precio,
+                            PrecioUnitario = vacuna.Precio,
                             Mutualista = mutualista,
                             Vacuna = vacuna
                         };
                         repoVacuna.AddCompra(compra);
+                        return RedirectToAction("Index", "Compra",mutualista);
                     }
                     else
                     {
