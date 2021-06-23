@@ -1,4 +1,4 @@
-﻿@model IEnumerable<AplicacionWeb.Models.ViewModelVacunaAPI>
+﻿@model AplicacionWeb.Models.ViewModelVacunaAPI
 @{
     ViewBag.H1 = "Listar Vacuna";
     ViewBag.Title = "Listar Vacuna";
@@ -8,26 +8,61 @@
 <body>
     <main>
         <form method="post" action="/Vacuna/IndexAuth" autocomplete="on">
-
-            <select name="TipoFiltro" id="selectFilter">
-                <option value="">Seleccione el filtro </option>
-                <option value="PorNombre">Nombre</option>
-                <option value="PorFaseAprob">Fase de aprobación</option>
-                <option value="PorPaisLab">País de laboratorio</option>
-                <option value="PorTipoVac">Tipo de Vacuna</option>
-                <option value="PorTopeInferior">Tope inferior de precio</option>
-                <option value="PorTopeSuperior">Tope superior de precio</option>
-                <option value="PorNombreLab">Nombre Laboratorio</option>
-            </select>
-
-            <input type="text" id="filtroText" name="filtroText" />
-            @*<input type="number" id="filtroNumber" onkeypress="return justNumbers(event);" min="1" pattern="^[1-9]" name="filtroNumber" />*@
-            <input type="text" id="filtroNumber" name="filtroNumber" />
-
-            <input type="submit" id="login" value="Buscar">
+            <div class="formInfo">
+                <fieldset>
+                    <legend>Criterios de Filtros:</legend>
+                    <select name="Filtro.Criterio">
+                        <option value="and">Todos</option>
+                        <option value="or">Alguno</option>
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend>Fase Clínica Aprobación:</legend>
+                    <select name="Filtro.FaseClinicaDeAprobacionFiltro">
+                        <option value="">Seleccione fase de aprobación</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend>Precio Mínimo:</legend>
+                    <input type="number" name="Filtro.PrecioMinFiltro" />
+                </fieldset>
+                <fieldset>
+                    <legend>Precio Máximo:</legend>
+                    <input type="number" name="Filtro.PrecioMaxFiltro" />
+                </fieldset>
+                <fieldset>
+                    <legend>Tipo de Vacuna:</legend>
+                    <select name="Filtro.TipoFiltro">
+                        <option value="">Seleccione el tipo</option>
+                        @foreach (var item in ViewBag.TiposVacuna)
+                        {
+                            <option value="@item.Descripcion">@item.Descripcion</option>
+                        }
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend>Laboratorio:</legend>
+                    <select name="Filtro.LaboratorioFiltro">
+                        <option value="">Seleccione el laboratorio</option>
+                        @foreach (var item in ViewBag.Laboratorios)
+                        {
+                            <option value="@item.Nombre">@item.Nombre</option>
+                        }
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend>País Aceptación:</legend>
+                    <input type="text" name="Filtro.PaisFiltro" />
+                </fieldset>
+                <input type="submit" class="botones" value="Buscar">
+            </div>
         </form>
 
-        <small>Dashboard / <em>Lista Vacunas <p style="color:red;">@ViewBag.mensaje</p></em></small>
+        <small><em>Lista Vacunas</em></small>
         <div id="tableEmpleados">
             <table>
                 <thead>
@@ -39,9 +74,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.Count() > 0)
+                    @if (Model.Vacunas.Count() > 0)
                     {
-                        foreach (AplicacionWeb.Models.ViewModelVacunaAPI item in Model)
+                        foreach (var item in Model.Vacunas)
                         {
                             <tr>
                                 <th>@item.Nombre</th>

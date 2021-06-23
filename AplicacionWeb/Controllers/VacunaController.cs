@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Web.Mvc;
 using Dominio.EntidadesNegocio;
 using AccesoDatos.Repositorios;
@@ -12,19 +13,12 @@ namespace WebApplication.Controllers
 {
     public class VacunaController : Controller
     {
-        RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
+        readonly string baseUrl = "http://localhost:49340/api/";
         HttpClient cliente = new HttpClient();
         HttpResponseMessage response = new HttpResponseMessage();
-        Uri vacunaUri = null;
-
-        public VacunaController()
-        {
-            cliente.BaseAddress = new Uri("http://localhost:49340");
-            vacunaUri = new Uri("http://localhost:49340/api/vacunas");
-            cliente.DefaultRequestHeaders.Accept.Clear();
-            cliente.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-        }
+        RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
+        RepositorioTipoVacuna repositorioTipoVacuna = new RepositorioTipoVacuna();
+        RepositorioLaboratorio repositorioLaboratorio = new RepositorioLaboratorio();
 
         [HttpGet]
         public ActionResult Index()
@@ -43,7 +37,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet]
-        public ActionResult IndexAuth()
+        public ActionResult IndexAuth(ModelFiltro data)
         {
             if ((string)Session["documento"] == null && (string)Session["nombre"] == null)
             {
@@ -52,36 +46,34 @@ namespace WebApplication.Controllers
                 return RedirectToAction("Index", "Vacuna");
             }
 
-            IEnumerable<ViewModelVacunaAPI> vacunasAPI = null;
-
+            ViewModelVacunaAPI model = new ViewModelVacunaAPI();
+            ViewBag.Laboratorios = repositorioLaboratorio.FindAll();
+            ViewBag.TiposVacuna = repositorioTipoVacuna.FindAll();
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-                client.BaseAddress = new Uri("http://localhost:49340/api/");
-                //HTTP GET
-                var responseTask = client.GetAsync("vacunas/filters");
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.BaseAddress = new Uri(baseUrl);
+                string url = "vacunas/filters" + BuildUrl(data);
+                var responseTask = client.GetAsync(url);
                 responseTask.Wait();
 
                 var result = responseTask.Result;
                 if (result.IsSuccessStatusCode)
                 {
-                    var readTask = result.Content.ReadAsAsync<IList<ViewModelVacunaAPI>>();
+                    var readTask = result.Content.ReadAsAsync<IList<VacunasAPI>>();
                     readTask.Wait();
-
-                    vacunasAPI = readTask.Result;
+                    model.Vacunas = readTask.Result;
                 }
-                else //web api sent error response 
+                else 
                 {
+                    //web api sent error response 
                     //log response status here..
-
-                    vacunasAPI = System.Linq.Enumerable.Empty<ViewModelVacunaAPI>();
-
+                    model.Vacunas = Enumerable.Empty<VacunasAPI>();
                     ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
                 }
             }
-            return View(vacunasAPI);
+            return View(model);
             //response = cliente.GetAsync(vacunaUri).Result;
             //if (response.IsSuccessStatusCode)
             //{
@@ -101,50 +93,19 @@ namespace WebApplication.Controllers
             //    TempData["ResultadoOperacion"] = "Error desconocido";
             //    return View("IndexAuth");
             //}
-
-            //ViewBag.Vacunas = vacunas;
             //return View();
         }
 
         [HttpPost]
-        public ActionResult IndexAuth(string tipoFiltro, string filtroText = "", int filtroNumber = 0)
+        public ActionResult IndexAuth(ViewModelVacunaAPI viewModelVacunaAPI)
         {
-            if (tipoFiltro != null && (filtroText != "" || filtroNumber >= 0))
+            
+            if(viewModelVacunaAPI != null)
             {
-                //switch (tipoFiltro)
-                //{
-                //    case "PorNombre":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorNombre(filtroText);
-                //        break;
-                //    case "PorFaseAprob":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorFaseAprob(filtroNumber);
-                //        break;
-                //    case "PorPaisLab":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorPaisLab(filtroText);
-                //        break;
-                //    case "PorTipoVac":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorTipoVac(filtroText);
-                //        break;
-                //    case "PorTopeInferior":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorTopeInferior(filtroNumber);
-                //        break;
-                //    case "PorTopeSuperior":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorTopeSuperior(filtroNumber);
-                //        break;
-                //    case "PorNombreLab":
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunasPorNombreLab(filtroText);
-                //        break;
-                //    default:
-                //        ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunas();
-                //        break;
-                //}
+                //TODO: implementar mensajes de error y validaciones.
             }
-            else
-            {
-                //ViewBag.Vacunas = serviciosVacunas.GetTodasLasVacunas();
-            }
-
-            return View("IndexAuth");
+            return RedirectToAction("IndexAuth", viewModelVacunaAPI.Filtro);
+            //return View(viewModelVacunaAPI.Data);
         }
 
         [HttpGet]
@@ -210,6 +171,43 @@ namespace WebApplication.Controllers
             }
 
             return RedirectToAction("IndexAuth", "Vacuna");
+        }
+
+        private static string BuildUrl(ModelFiltro modelFiltro)
+        {
+            string stringUrl = "?";
+
+            if (modelFiltro.FaseClinicaDeAprobacionFiltro != "" && modelFiltro.FaseClinicaDeAprobacionFiltro != null)
+            {
+                stringUrl += "faseClinicaAprob=" + modelFiltro.FaseClinicaDeAprobacionFiltro + "&";
+            }
+            if (modelFiltro.PrecioMinFiltro != "" && modelFiltro.PrecioMinFiltro != null)
+            {
+                stringUrl += "precioMin=" + modelFiltro.PrecioMinFiltro + "&";
+            }
+            if (modelFiltro.PrecioMaxFiltro != "" && modelFiltro.PrecioMaxFiltro != null)
+            {
+                stringUrl += "precioMax=" + modelFiltro.PrecioMaxFiltro + "&";
+            }
+            if (modelFiltro.TipoFiltro != "" && modelFiltro.TipoFiltro != null)
+            {
+                stringUrl += "tipo=" + modelFiltro.TipoFiltro + "&";
+            }
+            if (modelFiltro.LaboratorioFiltro != "" && modelFiltro.LaboratorioFiltro != null)
+            {
+                stringUrl += "laboratorio=" + modelFiltro.LaboratorioFiltro + "&";
+            }
+            if (modelFiltro.PaisFiltro != "" && modelFiltro.PaisFiltro != null)
+            {
+                stringUrl += "paisAceptada=" + modelFiltro.PaisFiltro;
+            }
+            if (stringUrl != "")
+            {
+                string ultimoCaracter = stringUrl[stringUrl.Length - 1].ToString();
+                int ultimoIndex = stringUrl.Length - 1;
+                if ("&".Equals(ultimoCaracter)) { stringUrl = stringUrl.Remove(ultimoIndex); };
+            }
+            return (modelFiltro.Criterio != "or" ? "/all" : "/any") + stringUrl;
         }
     }
 }

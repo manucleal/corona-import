@@ -51,30 +51,12 @@ namespace Repositorio
         {
             try
             {
-                //Conexion manejadorConexion = new Conexion();
-                //SqlConnection con = manejadorConexion.CrearConexion();
-                //SqlCommand cmd = new SqlCommand("SELECT * FROM TipoVacunas", con);
-
-                //manejadorConexion.AbrirConexion(con);
-                //SqlDataReader dataReader = cmd.ExecuteReader();
-                //manejadorConexion.CerrarConexion(con);
-                List<TipoVacuna> tipoVacunas = new List<TipoVacuna>();
-
-                //while (dataReader.Read())
-                //{
-                //    tipoVacunas.Add(new TipoVacuna
-                //    {
-                //        Id = (string)dataReader["Id"],
-                //        Descripcion = (string)dataReader["Descripcion"]
-                //    });
-                //}
-                return tipoVacunas;
+                using (CoronaImportContext dataBase = new CoronaImportContext())
+                {
+                    return dataBase.TipoVacunas.ToList();
+                }
             }
-            catch (Exception e)
-            {
-                System.Diagnostics.Debug.Assert(false, "Error al listar Tipo de Vacunas" + e.Message);
-                return null;
-            }
+            catch (Exception exp) { return null; }
         }
     }
 }

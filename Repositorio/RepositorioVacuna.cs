@@ -82,10 +82,51 @@ namespace Repositorio
                     return dataBase.Vacunas.Include(v => v.Tipo).ToList();                    
                 }
             }
-            catch (Exception ex) { return null; }
+            catch (Exception exp) { return null; }
+        }
+        public IEnumerable<Models.VacunaFilterDTO> FindAllByFiltersOR(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
+        {
+            try
+            {
+                using (CoronaImportContext dataBase = new CoronaImportContext())
+                {
+                    dataBase.Configuration.LazyLoadingEnabled = false;
+                    dataBase.Configuration.ProxyCreationEnabled = false;
+
+                    var resultado = dataBase.Vacunas
+                        .Include(v => v.Laboratorios)
+                        .Include(v => v.Tipo).ToList()
+                    .Select(v => new Models.VacunaFilterDTO
+                    {
+                        Id = v.Id,
+                        Nombre = v.Nombre,
+                        Tipo = v.Tipo.Descripcion,
+                        Precio = v.Precio,
+                        FaseClinicaDeAprobacion = v.FaseClinicaAprob,
+                        Paises = v.Paises,
+                        Labs = String.Join(",", v.Laboratorios.Select(l => l.Nombre).ToList())
+                    });
+
+                    resultado = resultado.Where(v =>
+                        (v.FaseClinicaDeAprobacion == faseClinicaAprob || faseClinicaAprob == -1) || (v.Tipo.Equals(tipo) || "".Equals(tipo)) || (v.Paises.ToUpper().Contains(paisAceptada.ToUpper()) || "".Equals(paisAceptada))
+                    //|| v.Precio >= PrecioMin
+                    //|| v.Precio <= PrecioMax
+                    // &&
+                    //(v.Paises.ToUpper().Contains(paisAceptada.ToUpper()) || paisAceptada.ToUpper().Contains(paisAceptada.ToUpper())) &&
+                    //(v.Labs.ToUpper().Contains(laboratorio.ToUpper()) || laboratorio.ToUpper().Contains(laboratorio.ToUpper()))
+                    );
+
+                    return resultado.ToList();
+                }
+            }
+            catch (Exception exp)
+            {
+                System.Diagnostics.Debug.Assert(false, "Error al filtrar Vacunas OR" + exp.Message);
+                return null;
+            }
         }
 
-        public IEnumerable<Models.VacunaFilterDTO> FindAllByFilters(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
+        public IEnumerable<Models.VacunaFilterDTO> FindAllByFiltersAND(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
         {
             try
             {
@@ -107,12 +148,6 @@ namespace Repositorio
                         Labs = String.Join(",", v.Laboratorios.Select(l => l.Nombre).ToList())
                     });
 
-                    //si flag any llega en true entro aca sino sigo flujo con todos los ifs
-                    if (faseClinicaAprob != -1 && PrecioMin != -1 && PrecioMax != -1 && tipo != "" && paisAceptada != "")
-                    {
-                        //TODO: separar en otro metodo para los criterios con OR
-                    }
-
                     if (faseClinicaAprob != -1)
                     {
                         resultado = resultado.Where(v => v.FaseClinicaDeAprobacion == faseClinicaAprob);
@@ -125,15 +160,15 @@ namespace Repositorio
                     {
                         resultado = resultado.Where(v => v.Precio <= PrecioMax);
                     }
-                    if (tipo != "")
+                    if (!"".Equals(tipo))
                     {
-                        resultado = resultado.Where(v => v.Tipo.ToUpper() == tipo.ToUpper());
+                        resultado = resultado.Where(v => v.Tipo.Equals(tipo));
                     }
-                    if (paisAceptada != "")
+                    if (!"".Equals(paisAceptada))
                     {
                         resultado = resultado.Where(v => v.Paises.ToUpper().Contains(paisAceptada.ToUpper()));
                     }
-                    if (laboratorio != "")
+                    if (!"".Equals(laboratorio))
                     {
                         resultado = resultado.Where(v => v.Labs.ToUpper().Contains(laboratorio.ToUpper()));
                     }
@@ -143,7 +178,7 @@ namespace Repositorio
             }
             catch (Exception exp)
             {
-                System.Diagnostics.Debug.Assert(false, "Error al filtrat Vacunas" + exp.Message);
+                System.Diagnostics.Debug.Assert(false, "Error al filtrar Vacunas AND" + exp.Message);
                 return null;
             }
         }
