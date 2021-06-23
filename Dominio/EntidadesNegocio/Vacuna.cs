@@ -115,7 +115,7 @@ namespace Dominio.EntidadesNegocio
 
         public static decimal ObtenerMontoCompra(int cantidadDosis, decimal precio)
         {
-            if (cantidadDosis < 1 && precio <= 1) return -1; 
+            if (cantidadDosis < 1 && precio <= 1) return -1;
             return cantidadDosis * precio;
         }
     }

@@ -14,7 +14,7 @@ namespace Dominio.EntidadesNegocio
         public int CantidadDosis { get; set; }
         public DateTime Fecha { get; set; }
         public decimal Monto { get; set; } 
-        public decimal PrecioUnitario { get; set; }
+        public decimal PrecioUnitario { get; set; } //quitar property
 
         public CompraVacuna() { }
     }

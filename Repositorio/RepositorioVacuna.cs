@@ -71,22 +71,6 @@ namespace Repositorio
             }
         }
 
-        //TODO: este metodo lo comente porque deberia llamarse FindAll si pero en el repo de Mutualista. 
-        //(ademas no se esta usando pero lo necesitamos para mostrar estos datos en una vista)
-        //public IEnumerable<CompraVacuna> FindAll(int id)
-        //{
-        //    try
-        //    {
-        //        using (CoronaImportContext db = new CoronaImportContext())
-        //        {
-        //            var resultado = db.CompraVacunas
-        //                .Where(c => c.Mutualista.Id == id);
-        //            return resultado.ToList(); 
-        //        }
-        //    }
-        //    catch (Exception ex) { return null; }
-        //}
-
         public IEnumerable<Vacuna> FindAll()
         {
             try

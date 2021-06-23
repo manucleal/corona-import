@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\VacunaFilterDTO.cs" />
+    <Compile Include="RepositorioCompraVacuna.cs" />
     <Compile Include="RepositorioMutualista.cs" />
     <Compile Include="RepositorioUsuario.cs" />
     <Compile Include="RepositorioLaboratorio.cs" />

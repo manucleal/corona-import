@@ -48,6 +48,7 @@
     <Compile Include="EntidadesNegocio\TipoVacuna.cs" />
     <Compile Include="EntidadesNegocio\Usuario.cs" />
     <Compile Include="EntidadesNegocio\Vacuna.cs" />
+    <Compile Include="InterfacesRepositorio\IRepositorioCompraVacuna.cs" />
     <Compile Include="InterfacesRepositorio\IRepositorioMutualista.cs" />
     <Compile Include="InterfacesRepositorio\IRepositorioUsuario.cs" />
     <Compile Include="InterfacesRepositorio\IRepositorioLaboratorio.cs" />
