@@ -10,9 +10,16 @@
         <form method="post" action="/Vacuna/IndexAuth" autocomplete="on">
             <div class="formInfo">
                 <fieldset>
+                    <legend>Criterios de Filtros:</legend>
+                    <select name="Filtro.Criterio">
+                        <option value="and">Todos</option>
+                        <option value="or">Alguno</option>
+                    </select>
+                </fieldset>
+                <fieldset>
                     <legend>Fase Clínica Aprobación:</legend>
-                    <select name="FaseClinicaDeAprobacionFiltro">
-                        <option value="-1">Seleccione fase de aprobación</option>
+                    <select name="Filtro.FaseClinicaDeAprobacionFiltro">
+                        <option value="">Seleccione fase de aprobación</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -21,15 +28,15 @@
                 </fieldset>
                 <fieldset>
                     <legend>Precio Mínimo:</legend>
-                    <input type="number" name="PrecioMinFiltro" />
+                    <input type="number" name="Filtro.PrecioMinFiltro" />
                 </fieldset>
                 <fieldset>
                     <legend>Precio Máximo:</legend>
-                    <input type="number" name="PrecioMaxFiltro" />
+                    <input type="number" name="Filtro.PrecioMaxFiltro" />
                 </fieldset>
                 <fieldset>
                     <legend>Tipo de Vacuna:</legend>
-                    <select name="TipoFiltro">
+                    <select name="Filtro.TipoFiltro">
                         <option value="">Seleccione el tipo</option>
                         @foreach (var item in ViewBag.TiposVacuna)
                         {
@@ -39,7 +46,7 @@
                 </fieldset>
                 <fieldset>
                     <legend>Laboratorio:</legend>
-                    <select name="LaboratorioFiltro">
+                    <select name="Filtro.LaboratorioFiltro">
                         <option value="">Seleccione el laboratorio</option>
                         @foreach (var item in ViewBag.Laboratorios)
                         {
@@ -49,10 +56,9 @@
                 </fieldset>
                 <fieldset>
                     <legend>País Aceptación:</legend>
-                    <input type="text" name="PaisFiltro" />
+                    <input type="text" name="Filtro.PaisFiltro" />
                 </fieldset>
-                @*<input type="number" id="filtroNumber" onkeypress="return justNumbers(event);" min="1" pattern="^[1-9]" name="filtroNumber" />*@
-                <input type="submit" id="login" value="Buscar">
+                <input type="submit" class="botones" value="Buscar">
             </div>
         </form>
 
