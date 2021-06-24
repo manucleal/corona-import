@@ -94,6 +94,13 @@ namespace Repositorio
                     dataBase.Configuration.LazyLoadingEnabled = false;
                     dataBase.Configuration.ProxyCreationEnabled = false;
 
+                    List<VacunaFilterDTO> vacunasPorFaseClinicaAprobacion = new List<VacunaFilterDTO>();
+                    List<VacunaFilterDTO> vacunasPorPrecioMin = new List<VacunaFilterDTO>();
+                    List<VacunaFilterDTO> vacunasPorPrecioMax = new List<VacunaFilterDTO>();
+                    List<VacunaFilterDTO> vacunasPorTipo = new List<VacunaFilterDTO>();
+                    List<VacunaFilterDTO> vacunasPorPaisAceptacion = new List<VacunaFilterDTO>();
+                    List<VacunaFilterDTO> vacunasPorLaboratorios = new List<VacunaFilterDTO>();
+
                     var resultado = dataBase.Vacunas
                         .Include(v => v.Laboratorios)
                         .Include(v => v.Tipo).ToList()
@@ -108,16 +115,39 @@ namespace Repositorio
                         Labs = String.Join(",", v.Laboratorios.Select(l => l.Nombre).ToList())
                     });
 
-                    resultado = resultado.Where(v =>
-                        (v.FaseClinicaDeAprobacion == faseClinicaAprob || faseClinicaAprob == -1) || (v.Tipo.Equals(tipo) || "".Equals(tipo)) || (v.Paises.ToUpper().Contains(paisAceptada.ToUpper()) || "".Equals(paisAceptada))
-                    //|| v.Precio >= PrecioMin
-                    //|| v.Precio <= PrecioMax
-                    // &&
-                    //(v.Paises.ToUpper().Contains(paisAceptada.ToUpper()) || paisAceptada.ToUpper().Contains(paisAceptada.ToUpper())) &&
-                    //(v.Labs.ToUpper().Contains(laboratorio.ToUpper()) || laboratorio.ToUpper().Contains(laboratorio.ToUpper()))
-                    );
 
-                    return resultado.ToList();
+                    if (faseClinicaAprob != -1)
+                    {
+                        vacunasPorFaseClinicaAprobacion = resultado.Where(v => v.FaseClinicaDeAprobacion == faseClinicaAprob).ToList();
+                    }
+                    if (PrecioMin != -1)
+                    {
+                        vacunasPorPrecioMin = vacunasPorFaseClinicaAprobacion.Union(resultado.Where(v => v.Precio >= PrecioMin)).ToList();
+                    }
+                    if (PrecioMax != -1)
+                    {
+                        vacunasPorPrecioMax = vacunasPorPrecioMin.Union(resultado.Where(v => v.Precio <= PrecioMax)).ToList();
+                    }
+                    if (!"".Equals(tipo))
+                    {
+                        vacunasPorTipo = vacunasPorPrecioMax.Union(resultado.Where(v => v.Tipo.Equals(tipo))).ToList();
+                    }
+                    if (!"".Equals(paisAceptada))
+                    {
+                        vacunasPorPaisAceptacion = vacunasPorTipo.Union(resultado.Where(v => v.Paises.ToUpper().Contains(paisAceptada.ToUpper()))).ToList();
+                    }
+                    if (!"".Equals(laboratorio))
+                    {
+                        vacunasPorLaboratorios = vacunasPorPaisAceptacion.Union(resultado.Where(v => v.Labs.ToUpper().Contains(laboratorio.ToUpper()))).ToList();
+                    }
+                    var vacunas = vacunasPorFaseClinicaAprobacion
+                                .Concat(vacunasPorPrecioMin)
+                                .Concat(vacunasPorPrecioMax)
+                                .Concat(vacunasPorTipo)
+                                .Concat(vacunasPorPaisAceptacion)
+                                .Concat(vacunasPorLaboratorios).ToList();
+
+                    return vacunas.Distinct().ToList();
                 }
             }
             catch (Exception exp)
