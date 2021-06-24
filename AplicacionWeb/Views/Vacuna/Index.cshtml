@@ -65,6 +65,64 @@
                 </tbody>
             </table>
         </div>
+        <small>Tipos de Vacunas / <em> importados </em></small>
+        <div id="tableEmpleados">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tipos.Count() > 0)
+                    {
+                        foreach (var item in Model.Tipos)
+                        {
+                            <tr>
+                                <th>@item.Id</th>
+                                <th>@item.Descripcion</th>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><th colspan="15">No hay datos disponible</th></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <small>Laboratorios / <em> importados </em></small>
+        <div id="tableEmpleados">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Pais Origen</th>
+                        <th>Experiencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tipos.Count() > 0)
+                    {
+                        foreach (var item in Model.Laboratorios)
+                        {
+                    <tr>
+                        <th>@item.Id</th>
+                        <th>@item.Nombre</th>
+                        <th>@item.PaisOrigen</th>
+                        <th>@(item.Experiencia ? "SI" : "NO")</th>
+                    </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><th colspan="15">No hay datos disponible</th></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </main>
 </body>
 </html>

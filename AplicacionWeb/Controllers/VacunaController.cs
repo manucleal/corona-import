@@ -17,6 +17,7 @@ namespace WebApplication.Controllers
         HttpClient cliente = new HttpClient();
         HttpResponseMessage response = new HttpResponseMessage();
         RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
+        RepositorioUsuario repositorioUsuario = new RepositorioUsuario();
         RepositorioTipoVacuna repositorioTipoVacuna = new RepositorioTipoVacuna();
         RepositorioLaboratorio repositorioLaboratorio = new RepositorioLaboratorio();
 
@@ -24,9 +25,10 @@ namespace WebApplication.Controllers
         public ActionResult Index()
         {
             ViewModelImportador model = new ViewModelImportador();
-            RepositorioUsuario repositorioUsuario = new RepositorioUsuario();
             model.Usuarios = repositorioUsuario.FindAll();
             model.Vacunas = repositorioVacuna.FindAll();
+            model.Tipos = repositorioTipoVacuna.FindAll();
+            model.Laboratorios = repositorioLaboratorio.FindAll();
             return View(model);
         }
 
@@ -41,7 +43,6 @@ namespace WebApplication.Controllers
         {
             if ((string)Session["documento"] == null)
             {
-                Session["documento"] = null;
                 return RedirectToAction("Index", "Vacuna");
             }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using System.Collections.Generic;
 using Dominio.InterfacesRepositorio;
 using Dominio.EntidadesNegocio;
@@ -96,7 +97,7 @@ namespace Repositorio
                     var resultado = dataBase.Vacunas
                         .Include(v => v.Laboratorios)
                         .Include(v => v.Tipo).ToList()
-                    .Select(v => new Models.VacunaFilterDTO
+                    .Select(v => new VacunaFilterDTO
                     {
                         Id = v.Id,
                         Nombre = v.Nombre,
@@ -138,7 +139,7 @@ namespace Repositorio
                     var resultado = dataBase.Vacunas
                         .Include(v => v.Laboratorios)
                         .Include(v => v.Tipo).ToList()
-                    .Select(v => new Models.VacunaFilterDTO {
+                    .Select(v => new VacunaFilterDTO {
                         Id = v.Id,
                         Nombre = v.Nombre,
                         Tipo = v.Tipo.Descripcion,

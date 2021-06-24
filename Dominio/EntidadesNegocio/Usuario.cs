@@ -60,7 +60,9 @@ namespace Dominio.EntidadesNegocio
         public static string GenerarPassword(string documento)
         {
             string[] dias = new string[7] { "Lun", "Mar", "Mier", "Jue", "Vie", "Sab", "Dom" };
-            return documento.Substring(0, 4) + "-" + dias[(int)new DateTime().DayOfWeek - 1];
+            int indexDiaSemana = (int)DateTime.Now.DayOfWeek;
+            string dia = dias[indexDiaSemana];
+            return documento.Substring(0, 4) + "-" + dia;
         }
 
         public static DateTime GenerarDateTime(string datos)

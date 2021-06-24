@@ -153,7 +153,7 @@ namespace Importador
                     FaseClinicaAprob = int.Parse(datos[14].Trim()),
                     Emergencia = (datos[15].Trim().ToUpper() == "SI") ? true : false,
                     EfectosAdversos = datos[16],
-                    Precio = decimal.Parse(datos[17].Trim()),
+                    Precio = decimal.Parse(datos[17].Trim().Replace(",",".")),
                     UltimaModificacion = Usuario.GenerarDateTime(datos[18]),
                     Covax = (datos[19].Trim().ToUpper() == "SI") ? true : false,
                     Laboratorios = BuscarYObtenerLaboratoriosVacuna(IdLaboratorio),
