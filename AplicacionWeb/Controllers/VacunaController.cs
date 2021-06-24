@@ -143,27 +143,40 @@ namespace WebApplication.Controllers
 
                 }
                 decimal saldoDisponible = montoAutorizado - montoComprasRealizadas;
-                if (saldoDisponible > 0 && montoAutorizado > 0 && montoCompra > 0)
+                //if (saldoDisponible > 0 && montoAutorizado > 0 && montoCompra > 0)
+                if (saldoDisponible <= 0)
                 {
-                    if (mutualista.TopeComprasMensuales >= 1) {
-                        CompraVacuna compra = new CompraVacuna
+                    if (saldoDisponible < montoCompra)
+                    {
+                        if (mutualista.TopeComprasMensuales >= 1)
                         {
-                            CantidadDosis = (int)cantidadDosis,
-                            Monto = montoCompra,
-                            Mutualista = mutualista,
-                            Vacuna = vacuna
-                        };
-                        repoVacuna.AddCompra(compra);
-                        return RedirectToAction("Index", "Compra",mutualista);
+                            CompraVacuna compra = new CompraVacuna
+                            {
+                                CantidadDosis = (int)cantidadDosis,
+                                Monto = montoCompra,
+                                Mutualista = mutualista,
+                                Vacuna = vacuna
+                            };
+                            repoVacuna.AddCompra(compra);
+                            return RedirectToAction("Index", "Compra", mutualista);
+                        }
+                        else
+                        {
+                            // return RedirectToAction();
+                            ModelState.AddModelError("CantidadDosis", "La mutualista superó el tope de compras mensuales");
+                        }
                     }
                     else
                     {
-                        ModelState.AddModelError("CantidadDosis", "La mutualista superó las compras mensuales");
+                        // return RedirectToAction();
+                        ModelState.AddModelError("CantidadDosis", "No tiene saldo suficiente para realizar esa compra");
                     }
+
                 }
                 else
                 {
-                    ModelState.AddModelError("CantidadDosis", "No tiene saldo disponible para la compra");
+                    // return RedirectToAction();
+                    ModelState.AddModelError("CantidadDosis", "Ya no tiene saldo disponible para la compra");
                 }
                 
             }
