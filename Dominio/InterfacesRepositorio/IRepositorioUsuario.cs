@@ -1,6 +1,5 @@
 ﻿using Dominio.EntidadesNegocio;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Dominio.InterfacesRepositorio
 {
@@ -9,6 +8,8 @@ namespace Dominio.InterfacesRepositorio
         bool Add(Usuario unUsuario);
 
         Usuario FindById(string documento);
+
+        IEnumerable<Usuario> FindAll();
 
         Usuario Login(Usuario unUsuario);
 

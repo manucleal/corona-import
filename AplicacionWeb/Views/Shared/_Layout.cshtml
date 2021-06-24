@@ -16,8 +16,8 @@
             <ul>
                 @if ((string)Session["documento"] != null)
                 {
+                    <li><a href="/Mutualista/Registro">Registrar Mutualista</a></li>
                     <li><a href="/Vacuna/IndexAuth">Lista Vacuna</a></li>
-                    <li><a href="/Usuario/RegistroMutualista">Registrar Mutualista</a></li>
                 }
                 else
                 {
@@ -33,11 +33,11 @@
                 @if (Session["documento"] != null)
                 {
                     <span>@Session["documento"]</span>
-                    <a href="/Usuario/Salir"><img src="~/Content/img/iconPersona.png" alt="icono de persona"></a>
+                    <a href="/Usuario/Salir"><img src="~/Content/img/iconPersona.png" alt="icono de persona"><br>Salir</a>
                 }
                 else
                 {
-                    <a href="/Usuario/Login"><span>Ingresar </span></a>
+                    <div class="position-midd"><a href="/Usuario/Login">Ingresar </a></div>
                 }
             </div>
         </header>
@@ -53,8 +53,6 @@
             <span></span>
         </div>
     </footer>
-    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="~/Scripts/dinamicFuncitons.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>*
+    <script type="text/javascript" src="~/Scripts/utils.js"></script>
 </body>
 </html>

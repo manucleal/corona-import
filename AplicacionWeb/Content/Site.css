@@ -37,7 +37,9 @@ h4{
     position: absolute;
     width: 100%;
 }
-
+.position-midd {
+    margin-top: 9%;
+}
 
 #contenedorLogin form{
     background-color: rgb(215,215,215);
@@ -389,9 +391,13 @@ table input:nth-child(1){
     border: 1px solid #ddd;
     padding: 3%;
 }
-.infoPersonal{
+.infoPersonal {
     float: left;
-    width: 48%;
+    width: 48%;    
+}
+
+#registrarMutualistaForm {
+    padding-left: 23%;
 }
 
 input[type=date] {
@@ -445,13 +451,11 @@ input[type=date] {
     background:rgb(190,190,190);
     border: none;
     font-size: 14px;
-    width: 15%;
-    line-height: 10px;
+    width: 15%; 
     box-sizing: border-box;
     padding: 1%;
     float: right;
     color: #fff;
-    letter-spacing: 0.3rem;
 }
 
 .divFooter input#limpiar{

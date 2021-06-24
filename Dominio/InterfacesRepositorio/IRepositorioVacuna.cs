@@ -1,4 +1,5 @@
 ﻿using Dominio.EntidadesNegocio;
+using Dominio.DtosRepositorio;
 using System.Collections.Generic;
 
 namespace Dominio.InterfacesRepositorio
@@ -11,18 +12,10 @@ namespace Dominio.InterfacesRepositorio
 
         IEnumerable<Vacuna> FindAll();
 
-        IEnumerable<Vacuna> FindAllByName(string nombre);
+        IEnumerable<VacunaFilterDTO> FindAllByFiltersOR(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada);
 
-        IEnumerable<Vacuna> FindAllByApprovalPhase(int FaseClinicaAprob);
+        IEnumerable<VacunaFilterDTO> FindAllByFiltersAND(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada);
 
-        IEnumerable<Vacuna> FindAllByCountry(string pais);
-
-        IEnumerable<Vacuna> FindAllByMaxPrice(decimal precioMax);
-
-        IEnumerable<Vacuna> FindAllByMinPrice(decimal precioMin);
-
-        IEnumerable<Vacuna> FindAllByTypeVac(string idTipo);
-
-        IEnumerable<Vacuna> FindAllByLabName(string nombreLab);
+        bool AddCompra(CompraVacuna compra);
     }
 }

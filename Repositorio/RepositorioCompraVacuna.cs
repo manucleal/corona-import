@@ -1,22 +1,23 @@
-﻿using AccesoDatos.Contexto;
+﻿using System;
+using AccesoDatos.Contexto;
 using Dominio.EntidadesNegocio;
-using System;
+using Dominio.InterfacesRepositorio;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
 namespace Repositorio
 {
-    public class RepositorioCompraVacuna
+    public class RepositorioCompraVacuna : IRepositorioCompraVacuna
     {
-        public IEnumerable<CompraVacuna> FindAllByMutualista(int id)
+        public IEnumerable<CompraVacuna> FindAllByMutualista(int codigo)
         {
             try
             {
                 using (CoronaImportContext db = new CoronaImportContext())
                 {
                     var resultado = db.CompraVacunas
-                        .Where(c => c.Mutualista.Id == id)
+                        .Where(c => c.Mutualista.Codigo == codigo)
                         .Include(c => c.Vacuna)
                         .Include(c => c.Mutualista);
                     return resultado.ToList();

@@ -6,16 +6,16 @@
 }
 
 <main>
-    <small>Dashboard / <em>Registrar Mutualista <p style="color:red;">@ViewBag.mensaje</p></em></small>
+    <small>Dashboard / <em>Registrar Mutualista </em></small>
     <div class="FormEmpleados">
-        <form method="post" @*action="/Usuario/RegistroMutualista"*@ autocomplete="on">
-            <div class="infoPersonal">
+        <form method="post" autocomplete="on">
+            <div id="registrarMutualistaForm" class="infoPersonal">
 
-                <input type="number" name="Id" placeholder="Número Registro (*)" required />
+                <input type="text" name="Codigo" onkeypress="return justNumbers(event);" min="1" pattern="^[1-9]\d*$" placeholder="Número Registro (*)" required />
                 <div class="has-error">
                     <span className="text-danger text-small d-block mb-2">
-                        @Html.ValidationMessageFor(model => model.Id, "", new { @class = "help-block" })
-                @Html.HiddenFor(model => model.Id)
+                        @Html.ValidationMessageFor(model => model.Codigo, "", new { @class = "help-block" })
+                        @Html.HiddenFor(model => model.Codigo)
                     </span>
                 </div>
 
@@ -23,7 +23,7 @@
                 <div class="has-error">
                     <span className="text-danger text-small d-block mb-2">
                         @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "help-block" })
-                @Html.HiddenFor(model => model.Nombre)
+                        @Html.HiddenFor(model => model.Nombre)
                     </span>
                 </div>
 
@@ -31,7 +31,7 @@
                 <div class="has-error">
                     <span className="text-danger text-small d-block mb-2">
                         @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "help-block" })
-                @Html.HiddenFor(model => model.Telefono)
+                        @Html.HiddenFor(model => model.Telefono)
                     </span>
                 </div>
 
@@ -39,7 +39,7 @@
                 <div class="has-error">
                     <span className="text-danger text-small d-block mb-2">
                         @Html.ValidationMessageFor(model => model.NombreContacto, "", new { @class = "help-block" })
-                @Html.HiddenFor(model => model.NombreContacto)
+                        @Html.HiddenFor(model => model.NombreContacto)
                     </span>
                 </div>
 
@@ -47,7 +47,7 @@
                 <div class="has-error">
                     <span className="text-danger text-small d-block mb-2">
                         @Html.ValidationMessageFor(model => model.TopeComprasMens, "", new { @class = "help-block" })
-                @Html.HiddenFor(model => model.TopeComprasMens)
+                        @Html.HiddenFor(model => model.TopeComprasMens)
                     </span>
                 </div>
 
@@ -55,7 +55,7 @@
                 <div class="has-error">
                     <span className="text-danger text-small d-block mb-2">
                         @Html.ValidationMessageFor(model => model.CantAfiliados, "", new { @class = "help-block" })
-        @Html.HiddenFor(model => model.CantAfiliados)
+                        @Html.HiddenFor(model => model.CantAfiliados)
                     </span>
                 </div>
 
@@ -63,7 +63,7 @@
                 <div class="has-error">
                     <span className="text-danger text-small d-block mb-2">
                         @Html.ValidationMessageFor(model => model.TopeGastoVacunaPorAfi, "", new { @class = "help-block" })
-                @Html.HiddenFor(model => model.TopeGastoVacunaPorAfi)
+                        @Html.HiddenFor(model => model.TopeGastoVacunaPorAfi)
                     </span>
                 </div>
 
@@ -77,4 +77,3 @@
         </form>
     </div>
 </main>
-

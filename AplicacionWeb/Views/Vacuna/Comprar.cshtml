@@ -82,9 +82,9 @@
             <div class="infoPersonal">
                 <select name="IdMutualista" required>
                     <option value="">Seleccione Mutualista (*)</option>
-                    @foreach (Dominio.EntidadesNegocio.Mutualista item in ViewBag.Mutualistas)
+                    @foreach (var item in ViewBag.Mutualistas)
                     {
-                        <option value="@item.Id">@item.Nombre</option>
+                        <option value="@item.Codigo">@item.Nombre</option>
                     }
                 </select>
 

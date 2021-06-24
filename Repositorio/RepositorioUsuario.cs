@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AccesoDatos.Contexto;
 using Dominio.EntidadesNegocio;
 using Dominio.InterfacesRepositorio;
@@ -24,7 +22,7 @@ namespace Repositorio
             }
             catch (Exception exp)
             {
-                System.Diagnostics.Debug.Assert(false, "Error al ingresar Usuario" + exp.Message);
+                //System.Diagnostics.Debug.Assert(false, "Error al ingresar Usuario" + exp.Message);
                 return false;
             }
         }

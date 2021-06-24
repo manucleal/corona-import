@@ -2,12 +2,13 @@
 using Dominio.EntidadesNegocio;
 using Repositorio;
 using AplicacionWeb.Models;
-using AccesoDatos.Repositorios;
 
 namespace AplicacionWeb.Controllers
 {
     public class UsuarioController : Controller
     {
+        private RepositorioUsuario repoUsuario = new RepositorioUsuario();
+
         public ActionResult ResetPassword()
         {
             if ((string)Session["documento"] != null)
@@ -19,8 +20,7 @@ namespace AplicacionWeb.Controllers
 
         [HttpPost]
         public ActionResult ResetPassword(ViewModelUsuario viewModelUsuario)
-        {
-            RepositorioUsuario repoUsuario = new RepositorioUsuario();
+        {            
             Usuario usuario = repoUsuario.FindById(viewModelUsuario.Documento);
             if (usuario != null)
             {
@@ -67,7 +67,6 @@ namespace AplicacionWeb.Controllers
             {
                 if (Usuario.VerificoPass(viewModelUsuario.Password))
                 {
-                    RepositorioUsuario repoUsuario = new RepositorioUsuario();
                     Usuario usuario = repoUsuario.Login(ViewModelUsuario.MapearAUsuario(viewModelUsuario));
 
                     if (usuario.Documento != null)
@@ -98,39 +97,6 @@ namespace AplicacionWeb.Controllers
         {
             Session["documento"] = null;
             return RedirectToAction("Index", "Vacuna");
-        }
-
-        public ActionResult RegistroMutualista()
-        {
-            if ((string)Session["documento"] != null)
-            {
-                return View();
-            }
-            return RedirectToAction("Index", "Vacuna");
-            
-        }
-
-        [HttpPost]
-        public ActionResult RegistroMutualista(ViewModelMutualista viewModelMutualista)
-        {
-            if (ModelState.IsValid)
-            {
-                RepositorioMutualista repoMutualista = new RepositorioMutualista();
-                Mutualista mutualista = repoMutualista.FindById(viewModelMutualista.Id);
-
-                if (mutualista != null)
-                {
-                    ModelState.AddModelError("Id", "Ya existe la mutualista");
-                    return View("RegistroMutualista");
-                }
-                if(repoMutualista.FindByName(viewModelMutualista.Nombre) != null)
-                {
-                    ModelState.AddModelError("Nombre", "El nombre de la mutualista debe ser único");
-                    return View("RegistroMutualista");
-                }
-                repoMutualista.Add(ViewModelMutualista.MapearAMutualista(viewModelMutualista));
-            }
-            return View();
         }
     }
 }

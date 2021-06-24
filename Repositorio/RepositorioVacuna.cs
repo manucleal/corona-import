@@ -1,16 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using Dominio.EntidadesNegocio;
-using AccesoDatos.Contexto;
+using System.Text;
+using System.Collections.Generic;
 using Dominio.InterfacesRepositorio;
+using Dominio.EntidadesNegocio;
+using Dominio.DtosRepositorio;
+using AccesoDatos.Contexto;
 using System.Data.Entity;
-using AccesoDatos.Repositorios;
 
 namespace Repositorio
 {
-    public class RepositorioVacuna
+    public class RepositorioVacuna : IRepositorioVacuna
     {
         public bool Add(Vacuna unaVacuna)
         {            
@@ -84,7 +84,8 @@ namespace Repositorio
             }
             catch (Exception exp) { return null; }
         }
-        public IEnumerable<Models.VacunaFilterDTO> FindAllByFiltersOR(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
+
+        public IEnumerable<VacunaFilterDTO> FindAllByFiltersOR(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
         {
             try
             {
@@ -96,7 +97,7 @@ namespace Repositorio
                     var resultado = dataBase.Vacunas
                         .Include(v => v.Laboratorios)
                         .Include(v => v.Tipo).ToList()
-                    .Select(v => new Models.VacunaFilterDTO
+                    .Select(v => new VacunaFilterDTO
                     {
                         Id = v.Id,
                         Nombre = v.Nombre,
@@ -126,7 +127,7 @@ namespace Repositorio
             }
         }
 
-        public IEnumerable<Models.VacunaFilterDTO> FindAllByFiltersAND(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
+        public IEnumerable<VacunaFilterDTO> FindAllByFiltersAND(int faseClinicaAprob, int PrecioMin, int PrecioMax, string tipo, string laboratorio, string paisAceptada)
         {
             try
             {
@@ -138,7 +139,7 @@ namespace Repositorio
                     var resultado = dataBase.Vacunas
                         .Include(v => v.Laboratorios)
                         .Include(v => v.Tipo).ToList()
-                    .Select(v => new Models.VacunaFilterDTO {
+                    .Select(v => new VacunaFilterDTO {
                         Id = v.Id,
                         Nombre = v.Nombre,
                         Tipo = v.Tipo.Descripcion,
