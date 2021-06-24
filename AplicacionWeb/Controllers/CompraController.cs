@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using AccesoDatos.Repositorios;
+using Repositorio;
 using AplicacionWeb.Models;
 using Dominio.EntidadesNegocio;
-using Repositorio;
 
 
 namespace AplicacionWeb.Controllers
@@ -19,8 +18,8 @@ namespace AplicacionWeb.Controllers
             RepositorioCompraVacuna repoCompraVacuna = new RepositorioCompraVacuna();
             ViewModelCompraVacuna model = new ViewModelCompraVacuna();
 
-            decimal montoTotalCompras = repoMutualista.CalcularMontoTotalCompras(mutualista.Id);
-            model.CompraVacunasMutualista = repoCompraVacuna.FindAllByMutualista(mutualista.Id);
+            decimal montoTotalCompras = repoMutualista.CalcularMontoTotalCompras(mutualista.Codigo);
+            model.CompraVacunasMutualista = repoCompraVacuna.FindAllByMutualista(mutualista.Codigo);
             model.MontoAutorizado = Mutualista.ObtenerMontoAutorizado(mutualista);
             model.SaldoDisponible = model.MontoAutorizado - (montoTotalCompras == -1 ? 0 : montoTotalCompras);
             model.ComprasDisponibles = mutualista.TopeComprasMensuales - mutualista.ComprasRealizadas;

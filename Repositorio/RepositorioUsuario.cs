@@ -22,7 +22,7 @@ namespace Repositorio
             }
             catch (Exception exp)
             {
-                System.Diagnostics.Debug.Assert(false, "Error al ingresar Usuario" + exp.Message);
+                //System.Diagnostics.Debug.Assert(false, "Error al ingresar Usuario" + exp.Message);
                 return false;
             }
         }

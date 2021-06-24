@@ -5,7 +5,7 @@ using AccesoDatos.Contexto;
 using Dominio.EntidadesNegocio;
 using Dominio.InterfacesRepositorio;
 
-namespace AccesoDatos.Repositorios
+namespace Repositorio
 {
     public class RepositorioMutualista : IRepositorioMutualista
     {
@@ -27,14 +27,14 @@ namespace AccesoDatos.Repositorios
             }
         }
 
-        public Mutualista FindById(int id)
+        public Mutualista FindById(int codigo)
         {
             try
             {
                 using (CoronaImportContext dataBase = new CoronaImportContext())
                 {
                     var resultado = dataBase.Mutualistas
-                        .Where(m => m.Id == id).FirstOrDefault();
+                        .Where(m => m.Codigo == codigo).FirstOrDefault();
 
                     return resultado;
                 }
@@ -78,7 +78,7 @@ namespace AccesoDatos.Repositorios
             catch (Exception ex) { return null; }
         }
 
-        public decimal CalcularMontoTotalCompras (int id)
+        public decimal CalcularMontoTotalCompras (int codigo)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace AccesoDatos.Repositorios
                 {
                     var total =
                         db.CompraVacunas
-                        .Where(c => c.Mutualista.Id == id)
+                        .Where(c => c.Mutualista.Codigo == codigo)
                         .Select(c => c.Monto)
                         .DefaultIfEmpty(0)
                         .Sum();

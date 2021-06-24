@@ -37,7 +37,9 @@ h4{
     position: absolute;
     width: 100%;
 }
-
+.position-midd {
+    margin-top: 9%;
+}
 
 #contenedorLogin form{
     background-color: rgb(215,215,215);

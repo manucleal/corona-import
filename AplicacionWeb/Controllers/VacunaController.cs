@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using Dominio.EntidadesNegocio;
-using AccesoDatos.Repositorios;
 using Repositorio;
 using AplicacionWeb.Models;
 using System.Net.Http;

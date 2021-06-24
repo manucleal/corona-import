@@ -16,7 +16,7 @@
             <ul>
                 @if ((string)Session["documento"] != null)
                 {
-                    <li><a href="/Usuario/RegistroMutualista">Registrar Mutualista</a></li>
+                    <li><a href="/Mutualista/Registro">Registrar Mutualista</a></li>
                     <li><a href="/Vacuna/IndexAuth">Lista Vacuna</a></li>
                 }
                 else
@@ -37,7 +37,7 @@
                 }
                 else
                 {
-                    <a href="/Usuario/Login"><span>Ingresar </span></a>
+                    <div class="position-midd"><a href="/Usuario/Login">Ingresar </a></div>
                 }
             </div>
         </header>
@@ -53,5 +53,6 @@
             <span></span>
         </div>
     </footer>
+    <script type="text/javascript" src="~/Scripts/utils.js"></script>
 </body>
 </html>
