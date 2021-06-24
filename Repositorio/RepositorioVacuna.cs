@@ -213,40 +213,5 @@ namespace Repositorio
                 return null;
             }
         }
-
-        public bool AddCompra(CompraVacuna compra)
-        {
-            try
-            {
-                using (CoronaImportContext dataBase = new CoronaImportContext())
-                {
-                    dataBase.Configuration.LazyLoadingEnabled = false;
-                    dataBase.Configuration.ProxyCreationEnabled = false;
-
-                    if (compra.Mutualista != null)
-                    {
-                        compra.Mutualista.ComprasRealizadas += 1;
-                        dataBase.Entry(compra.Mutualista).State = EntityState.Modified;
-                    }
-                    if (compra.Vacuna != null)
-                    {
-                        dataBase.Entry(compra.Vacuna).State = EntityState.Unchanged;
-                        dataBase.Entry(compra.Vacuna.Tipo).State = EntityState.Unchanged;
-                        foreach (Laboratorio lab in compra.Vacuna.Laboratorios)
-                        {
-                            dataBase.Entry(lab).State = EntityState.Unchanged;
-                        }
-                    }
-                    compra.Fecha = DateTime.Now;
-                    dataBase.CompraVacunas.Add(compra);
-                    dataBase.SaveChanges();
-                }
-                return true;
-            } catch (Exception exp)
-            {
-                System.Diagnostics.Debug.Assert(false, "Error al guardar una compra" + exp.Message);
-                return false;
-            }
-        }
     }
 }

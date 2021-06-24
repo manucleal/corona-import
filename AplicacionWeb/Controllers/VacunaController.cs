@@ -12,22 +12,38 @@ namespace WebApplication.Controllers
 {
     public class VacunaController : Controller
     {
-        readonly string baseUrl = "http://localhost:49340/api/";
-        HttpClient cliente = new HttpClient();
-        HttpResponseMessage response = new HttpResponseMessage();
-        RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
-        RepositorioUsuario repositorioUsuario = new RepositorioUsuario();
-        RepositorioTipoVacuna repositorioTipoVacuna = new RepositorioTipoVacuna();
-        RepositorioLaboratorio repositorioLaboratorio = new RepositorioLaboratorio();
+        private readonly string baseUrl = "http://localhost:49340/api/";
+        private HttpClient cliente = new HttpClient();
+        private HttpResponseMessage response = new HttpResponseMessage();
+        private RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
+        private RepositorioUsuario repositorioUsuario = new RepositorioUsuario();
+        private RepositorioTipoVacuna repositorioTipoVacuna = new RepositorioTipoVacuna();
+        private RepositorioLaboratorio repositorioLaboratorio = new RepositorioLaboratorio();
 
         [HttpGet]
         public ActionResult Index()
         {
             ViewModelImportador model = new ViewModelImportador();
-            model.Usuarios = repositorioUsuario.FindAll();
-            model.Vacunas = repositorioVacuna.FindAll();
-            model.Tipos = repositorioTipoVacuna.FindAll();
-            model.Laboratorios = repositorioLaboratorio.FindAll();
+            IEnumerable<Usuario> Usuarios = repositorioUsuario.FindAll();
+            IEnumerable<Vacuna> Vacunas = repositorioVacuna.FindAll();
+            IEnumerable<TipoVacuna> Tipos = repositorioTipoVacuna.FindAll();
+            IEnumerable<Laboratorio>  Laboratorios = repositorioLaboratorio.FindAll();
+            if (Usuarios != null)
+            {
+                model.Usuarios = Usuarios;
+            }
+            if (Vacunas != null)
+            {
+                model.Vacunas = Vacunas;
+            }
+            if (Tipos != null)
+            {
+                model.Tipos = Tipos;
+            }
+            if (Laboratorios != null)
+            {
+                model.Laboratorios = Laboratorios;
+            }
             return View(model);
         }
 
@@ -53,7 +69,7 @@ namespace WebApplication.Controllers
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.BaseAddress = new Uri(baseUrl);
-                string url = "vacunas/filters" + BuildUrl(data);
+                string url = "vacunas/filters" + BuildUrlVacunasFilters(data);
                 var responseTask = client.GetAsync(url);
                 responseTask.Wait();
 
@@ -66,8 +82,6 @@ namespace WebApplication.Controllers
                 }
                 else 
                 {
-                    //web api sent error response 
-                    //log response status here..
                     model.Vacunas = Enumerable.Empty<VacunasAPI>();
                     ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
                 }
@@ -120,6 +134,11 @@ namespace WebApplication.Controllers
                     ViewBag.Mutualistas = repoMutualista.FindAll();
                     return View("Comprar", viewModelVacuna);
                 }
+                else
+                {
+                    ViewBag.Mutualistas = Enumerable.Empty<Mutualista>();
+                } 
+
             }
             return RedirectToAction("Login", "Usuario");
         }
@@ -128,67 +147,75 @@ namespace WebApplication.Controllers
         public ActionResult Comprar(int? IdMutualista, int? cantidadDosis, int? idVacuna)
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
-            RepositorioVacuna repoVacuna = new RepositorioVacuna();
-            Mutualista mutualista = repoMutualista.FindById((int)IdMutualista);
-            Vacuna vacuna = repoVacuna.FindById((int)idVacuna);
+            Mutualista mutualista = repoMutualista.FindById((int)IdMutualista);// tengo id de mutualista que me llega por el select de la vista
+            Vacuna vacuna = repositorioVacuna.FindById((int)idVacuna);// tengo un input hidden en la vista con este id que me llega 
 
             if (mutualista != null && vacuna != null)
             {
-                decimal montoAutorizado = Mutualista.ObtenerMontoAutorizado(mutualista);
-                //TODO: cambiar metodo ObtenerMontoCompra a clase compra
-                decimal montoCompra = Vacuna.ObtenerMontoCompra((int)cantidadDosis, vacuna.Precio);
-                decimal montoComprasRealizadas = repoMutualista.CalcularMontoTotalCompras((int)idVacuna);
-                if (montoComprasRealizadas != -1)
-                {
-
-                }
-                decimal saldoDisponible = montoAutorizado - montoComprasRealizadas;
-                //if (saldoDisponible > 0 && montoAutorizado > 0 && montoCompra > 0)
-                if (saldoDisponible <= 0)
-                {
-                    if (saldoDisponible < montoCompra)
+                decimal montoAutorizado = Mutualista.ObtenerMontoAutorizado(mutualista);// mutualista.MontoMaxVacunasPorAfiliado * mutualista.CantidadAfiliados;
+                if(montoAutorizado != - 1) {
+                    //recibo cantidad de dosis del formulario compra vacuna
+                    decimal montoCompra = CompraVacuna.ObtenerMontoCompra((int)cantidadDosis, vacuna.Precio);
+                    decimal montoComprasRealizadas = repoMutualista.CalcularMontoTotalCompras((int)idVacuna);
+                    decimal saldoDisponible = montoAutorizado - (montoComprasRealizadas == -1 ? 0 : montoComprasRealizadas);
+                    
+                    if (saldoDisponible >= 0)
                     {
-                        if (mutualista.TopeComprasMensuales >= 1)
+                        if (saldoDisponible > montoCompra)
                         {
-                            CompraVacuna compra = new CompraVacuna
+                            if (mutualista.TopeComprasMensuales >= 1)
                             {
-                                CantidadDosis = (int)cantidadDosis,
-                                Monto = montoCompra,
-                                Mutualista = mutualista,
-                                Vacuna = vacuna
-                            };
-                            repoVacuna.AddCompra(compra);
-                            return RedirectToAction("Index", "Compra", mutualista);
+                                CompraVacuna compra = new CompraVacuna { CantidadDosis = (int)cantidadDosis, Monto = montoCompra, Mutualista = mutualista, Vacuna = vacuna };
+                                using (var client = new HttpClient())
+                                {                                   
+                                    cliente.DefaultRequestHeaders.Accept.Clear();
+                                    cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                    Uri url = new Uri("http://localhost:49340/api/compra/mutualista");
+                                    var tareaPost = cliente.PostAsJsonAsync(url, compra);                                    
+                                    var result = tareaPost.Result;
+                                    if (result.IsSuccessStatusCode)
+                                    {
+                                        return RedirectToAction("Index", "Compra", mutualista);
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }                              
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("CantidadDosis", "La mutualista superó el tope de compras mensuales");
+                                return RedirectToAction("Comprar", "Vacuna", idVacuna);
+                            }
                         }
                         else
                         {
-                            // return RedirectToAction();
-                            ModelState.AddModelError("CantidadDosis", "La mutualista superó el tope de compras mensuales");
+                            ModelState.AddModelError("CantidadDosis", "No tiene saldo suficiente para realizar esa compra");
+                            return RedirectToAction("Comprar", "Vacuna", idVacuna);
                         }
                     }
                     else
                     {
-                        // return RedirectToAction();
-                        ModelState.AddModelError("CantidadDosis", "No tiene saldo suficiente para realizar esa compra");
+                        ModelState.AddModelError("CantidadDosis", "Ya no tiene saldo disponible para la compra");
+                        return RedirectToAction("Comprar", "Vacuna", idVacuna);
                     }
-
                 }
                 else
                 {
-                    // return RedirectToAction();
-                    ModelState.AddModelError("CantidadDosis", "Ya no tiene saldo disponible para la compra");
-                }
-                
+                    ModelState.AddModelError("", "No tiene monto autorizado para la compra");
+                }                
             }
             else
             {
-                return RedirectToAction("IndexAuth","Vacuna");
+                ModelState.AddModelError("", "No se encontró la mutualista o la vacuna");
+                return RedirectToAction("Comprar","Vacuna", idVacuna);
             }
 
             return RedirectToAction("IndexAuth", "Vacuna");
         }
 
-        private static string BuildUrl(ModelFiltro modelFiltro)
+        private static string BuildUrlVacunasFilters(ModelFiltro modelFiltro)
         {
             string stringUrl = "?";
 
