@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 namespace Dominio.InterfacesRepositorio
 {
-    interface IRepositorioCompraVacuna
+    public interface IRepositorioCompraVacuna
     {
-        IEnumerable<CompraVacuna> FindAllByMutualista();
+        IEnumerable<CompraVacuna> FindAllByMutualista(int id);
     }
 }

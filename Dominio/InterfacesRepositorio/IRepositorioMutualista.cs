@@ -16,5 +16,7 @@ namespace Dominio.InterfacesRepositorio
         Mutualista FindByName(string nombre);
 
         IEnumerable<Mutualista> FindAll();
+
+        decimal CalcularMontoTotalCompras(int id);
     }
 }

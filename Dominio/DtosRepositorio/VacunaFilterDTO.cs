@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Dominio.EntidadesNegocio;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Repositorio.Models
+﻿namespace Dominio.DtosRepositorio
 {
     public class VacunaFilterDTO
     {
