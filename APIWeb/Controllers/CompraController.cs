@@ -9,6 +9,7 @@ namespace APIWeb.Controllers
     {
 
         private RepositorioCompraVacuna repositorioCompraVacuna = new RepositorioCompraVacuna();
+        private RepositorioVacuna repositorioVacuna = new RepositorioVacuna();
 
         [HttpGet]
         [Route("")]
@@ -31,13 +32,24 @@ namespace APIWeb.Controllers
         {
             try
             {
-                if (repositorioCompraVacuna.Add(Models.CompraDTO.MapearACompraVacuna(datos)))
-                {
-                    return Ok();
-                } else
-                {
-                    return InternalServerError(new Exception("No es posible guardar la compra"));
+                var vacuna = repositorioVacuna.FindById(datos.IdVacuna);
+                if (vacuna != null) {
+                    datos.Vacuna = Models.VacunaDTO.MapearAVacunaDTO(vacuna);
+                    var compra = Models.CompraDTO.MapearACompraVacuna(datos);
+                    if (repositorioCompraVacuna.Add(compra))
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return InternalServerError(new Exception("No es posible guardar la compra"));
+                    }
                 }
+                else
+                {
+                    return (BadRequest());
+                }
+ 
             }
             catch (Exception exp)
             {

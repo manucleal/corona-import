@@ -1,5 +1,4 @@
 ﻿using Dominio.EntidadesNegocio;
-using System.Text.Json
 
     namespace APIWeb.Models
 {
@@ -7,6 +6,7 @@ using System.Text.Json
     {
         public MutualistaDTO Mutualista { get; set; }
         public VacunaDTO Vacuna { get; set; }
+        public int IdVacuna { get; set; }
         public int CantidadDosis { get; set; }
         public decimal Monto { get; set; }
 
@@ -60,7 +60,7 @@ using System.Text.Json
     public class VacunaDTO
     {
         public int Id { get; set; }
-       public string Nombre { get; set; }
+        public string Nombre { get; set; }
         public int CantidadDosis { get; set; }
         public int LapsoDiasDosis { get; set; }
         public int MinEdad { get; set; }
@@ -78,8 +78,6 @@ using System.Text.Json
         public string Documento { get; set; }
         public TipoVacuna Tipo { get; set; }
         public string Paises { get; set; }
-        [JsonIgnore]
-        [IgnoreDataMember]
         public bool Covax { get; set; }
 
         public VacunaDTO() { }
@@ -89,6 +87,35 @@ using System.Text.Json
             if (vacuna == null)
                 return null;
             return new Vacuna
+            {
+                Id = vacuna.Id,
+                Nombre = vacuna.Nombre,
+                CantidadDosis = vacuna.CantidadDosis,
+                LapsoDiasDosis = vacuna.LapsoDiasDosis,
+                MaxEdad = vacuna.MaxEdad,
+                MinEdad = vacuna.MinEdad,
+                EficaciaPrev = vacuna.EficaciaPrev,
+                EficaciaHosp = vacuna.EficaciaHosp,
+                EficaciaCti = vacuna.EficaciaCti,
+                MinTemp = vacuna.MinTemp,
+                MaxTemp = vacuna.MaxTemp,
+                ProduccionAnual = vacuna.ProduccionAnual,
+                FaseClinicaAprob = vacuna.FaseClinicaAprob,
+                Emergencia = vacuna.Emergencia,
+                Precio = vacuna.Precio,
+                Documento = vacuna.Documento,
+                Tipo = vacuna.Tipo,
+                Paises = vacuna.Paises,
+                Covax = vacuna.Covax,
+                EfectosAdversos = vacuna.EfectosAdversos
+            };
+        }
+
+        public static VacunaDTO MapearAVacunaDTO(Vacuna vacuna)
+        {
+            if (vacuna == null)
+                return null;
+            return new VacunaDTO
             {
                 Id = vacuna.Id,
                 Nombre = vacuna.Nombre,
