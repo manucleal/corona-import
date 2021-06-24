@@ -7,7 +7,6 @@ namespace AplicacionWeb.Models
         public ViewModelUsuario() { }
 
         public string Documento { get; set; }
-        public string Nombre { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
 
@@ -18,7 +17,6 @@ namespace AplicacionWeb.Models
             return new Usuario
             {
                 Documento = viewModelUsuario.Documento,
-                Nombre = viewModelUsuario.Nombre,
                 Password = viewModelUsuario.Password
             };
         }

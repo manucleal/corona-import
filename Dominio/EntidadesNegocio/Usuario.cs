@@ -17,7 +17,6 @@ namespace Dominio.EntidadesNegocio
         [MinLength(7, ErrorMessage = "Documento incorrecto")]
         [MaxLength(8, ErrorMessage = "Documento incorrecto")]
         public string Documento { get; set; }
-        public string Nombre { get; set; }
         [Required(ErrorMessage = "El password es obligatorio")]
         [MinLength(6, ErrorMessage = "Debe superar 6 caracteres")]
         public string Password { get; set; }

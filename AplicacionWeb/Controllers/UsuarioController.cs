@@ -10,7 +10,7 @@ namespace AplicacionWeb.Controllers
     {
         public ActionResult ResetPassword()
         {
-            if ((string)Session["documento"] != null && Session["nombre"] != null)
+            if ((string)Session["documento"] != null)
             {
                 return View();
             }
@@ -54,7 +54,7 @@ namespace AplicacionWeb.Controllers
 
         public ActionResult Login()
         {
-            if ((string)Session["documento"] != null && (string)Session["nombre"] != null){
+            if ((string)Session["documento"] != null){
                 return RedirectToAction("IndexAuth", "Vacuna");
             }
             return View();
@@ -73,7 +73,6 @@ namespace AplicacionWeb.Controllers
                     if (usuario.Documento != null)
                     {
                         Session["documento"] = usuario.Documento;
-                        Session["nombre"] = usuario.Nombre;
                         //preguntar si es la primera vez que se loguea, si es asi lo mando a resetPass, sino sigo con el flujo normal
                         if (usuario.CantidadLogin < 2)
                         {
@@ -98,13 +97,12 @@ namespace AplicacionWeb.Controllers
         public ActionResult Salir()
         {
             Session["documento"] = null;
-            Session["nombre"] = null;
             return RedirectToAction("Index", "Vacuna");
         }
 
         public ActionResult RegistroMutualista()
         {
-            if ((string)Session["documento"] != null && (string)Session["nombre"] != null)
+            if ((string)Session["documento"] != null)
             {
                 return View();
             }

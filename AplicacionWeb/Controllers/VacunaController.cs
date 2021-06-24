@@ -39,10 +39,9 @@ namespace WebApplication.Controllers
         [HttpGet]
         public ActionResult IndexAuth(ModelFiltro data)
         {
-            if ((string)Session["documento"] == null && (string)Session["nombre"] == null)
+            if ((string)Session["documento"] == null)
             {
                 Session["documento"] = null;
-                Session["nombre"] = null;
                 return RedirectToAction("Index", "Vacuna");
             }
 
@@ -113,7 +112,7 @@ namespace WebApplication.Controllers
         {
             RepositorioMutualista repoMutualista = new RepositorioMutualista();
 
-            if ((string)Session["documento"] != null && Session["nombre"] != null)
+            if ((string)Session["documento"] != null)
             {
                 ViewModelVacuna viewModelVacuna = ViewModelVacuna.MapearAViewModelVacuna(repositorioVacuna.FindById((int)id));
                 if (viewModelVacuna != null)
@@ -139,6 +138,10 @@ namespace WebApplication.Controllers
                 //TODO: cambiar metodo ObtenerMontoCompra a clase compra
                 decimal montoCompra = Vacuna.ObtenerMontoCompra((int)cantidadDosis, vacuna.Precio);
                 decimal montoComprasRealizadas = repoMutualista.CalcularMontoTotalCompras((int)idVacuna);
+                if (montoComprasRealizadas != -1)
+                {
+
+                }
                 decimal saldoDisponible = montoAutorizado - montoComprasRealizadas;
                 if (saldoDisponible > 0 && montoAutorizado > 0 && montoCompra > 0)
                 {
@@ -147,7 +150,6 @@ namespace WebApplication.Controllers
                         {
                             CantidadDosis = (int)cantidadDosis,
                             Monto = montoCompra,
-                            PrecioUnitario = vacuna.Precio,
                             Mutualista = mutualista,
                             Vacuna = vacuna
                         };

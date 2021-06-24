@@ -87,11 +87,15 @@ namespace AccesoDatos.Repositorios
                     var total =
                         db.CompraVacunas
                         .Where(c => c.Mutualista.Id == id)
-                        .Sum(c => c.Monto);
+                        .Select(c => c.Monto)
+                        .DefaultIfEmpty(0)
+                        .Sum();
                     return total;
                 }
             }
-            catch (Exception ex) { return -1; }
+            catch (Exception ex) {
+                return -1;
+            }
         }
     }
 }
