@@ -15,5 +15,6 @@ namespace AplicacionWeb.Models
         public ViewModelCompraVacuna() { }
         
         public IEnumerable<CompraVacuna> CompraVacunasMutualista { get; set; }
+
     }
 }

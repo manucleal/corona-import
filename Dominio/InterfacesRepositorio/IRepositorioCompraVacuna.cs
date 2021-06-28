@@ -7,5 +7,7 @@ namespace Dominio.InterfacesRepositorio
     public interface IRepositorioCompraVacuna
     {
         IEnumerable<CompraVacuna> FindAllByMutualista(int id);
+
+        bool Add(CompraVacuna compra);
     }
 }

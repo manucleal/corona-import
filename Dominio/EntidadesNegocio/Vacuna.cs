@@ -112,11 +112,5 @@ namespace Dominio.EntidadesNegocio
             if (unaVacuna == null || unaVacuna.LapsoDiasDosis <= 0 || unaVacuna.LapsoDiasDosis > 300) return 0;
             return unaVacuna.LapsoDiasDosis;
         }
-
-        public static decimal ObtenerMontoCompra(int cantidadDosis, decimal precio)
-        {
-            if (cantidadDosis < 1 && precio <= 1) return -1;
-            return cantidadDosis * precio;
-        }
     }
 }

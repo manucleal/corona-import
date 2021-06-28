@@ -14,5 +14,11 @@ namespace Dominio.EntidadesNegocio
         public decimal Monto { get; set; } 
 
         public CompraVacuna() { }
+
+        public static decimal ObtenerMontoCompra(int cantidadDosis, decimal precio)
+        {
+            if (cantidadDosis < 1 && precio <= 1) return -1;
+            return cantidadDosis * precio;
+        }
     }
 }
